@@ -1,0 +1,102 @@
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\bin\Debug\SistemaTstLargoTreze.exe
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\bin\Debug\SistemaTstLargoTreze.pdb
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.csproj.AssemblyReference.cache
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.csproj.CoreCompileInputs.cache
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.exe
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.pdb
+C:\Users\guilherme.srocha18\Documents\Codex\2026-04-27\files-mentioned-by-the-user-8\bin\Debug\Assets\logo.png
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\bin\Debug\Assets\logo.png
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\bin\Debug\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\bin\Debug\SistemaTstLargoTreze.pdb
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.csproj.AssemblyReference.cache
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.csproj.CoreCompileInputs.cache
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Desktop\Codex\2026-04-27\files-mentioned-by-the-user-8\obj\Debug\SistemaTstLargoTreze.pdb
+C:\Users\yago.psantos2\Desktop\Sistema TST\bin\Debug\Assets\logo.png
+C:\Users\yago.psantos2\Desktop\Sistema TST\bin\Debug\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Desktop\Sistema TST\bin\Debug\SistemaTstLargoTreze.pdb
+C:\Users\yago.psantos2\Desktop\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.AssemblyReference.cache
+C:\Users\yago.psantos2\Desktop\Sistema TST\obj\Debug\SistemaTstLargoTreze.LoginForm.resources
+C:\Users\yago.psantos2\Desktop\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.GenerateResource.cache
+C:\Users\yago.psantos2\Desktop\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.CoreCompileInputs.cache
+C:\Users\yago.psantos2\Desktop\Sistema TST\obj\Debug\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Desktop\Sistema TST\obj\Debug\SistemaTstLargoTreze.pdb
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\Assets\logo.png
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\SistemaTstLargoTreze.exe.config
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\SistemaTstLargoTreze.pdb
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\BouncyCastle.Cryptography.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\Google.Protobuf.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\K4os.Compression.LZ4.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\K4os.Compression.LZ4.Streams.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\K4os.Hash.xxHash.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\MySql.Data.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Buffers.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Configuration.ConfigurationManager.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Diagnostics.DiagnosticSource.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.IO.Pipelines.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Memory.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Numerics.Vectors.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Threading.Tasks.Extensions.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\ZstdSharp.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\BouncyCastle.Cryptography.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\Google.Protobuf.pdb
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\Google.Protobuf.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\K4os.Compression.LZ4.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\K4os.Compression.LZ4.Streams.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\K4os.Hash.xxHash.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\MySql.Data.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Buffers.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Diagnostics.DiagnosticSource.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.IO.Pipelines.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Memory.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Numerics.Vectors.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\CodexBuild\System.Threading.Tasks.Extensions.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\Assets\logo.png
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\SistemaTstLargoTreze.exe.config
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\SistemaTstLargoTreze.pdb
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\BouncyCastle.Cryptography.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\Google.Protobuf.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\MySql.Data.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Buffers.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.IO.Pipelines.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Memory.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\ZstdSharp.dll
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\BouncyCastle.Cryptography.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\Google.Protobuf.pdb
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\Google.Protobuf.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\MySql.Data.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Buffers.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.IO.Pipelines.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Memory.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.AssemblyReference.cache
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.SuggestedBindingRedirects.cache
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.exe.config
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.LoginForm.resources
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.GenerateResource.cache
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.csproj.CoreCompileInputs.cache
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaT.1B838301.Up2Date
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.exe
+C:\Users\yago.psantos2\Documents\Codex\2026-04-28\files-mentioned-by-the-user-sistema\Sistema TST\obj\Debug\SistemaTstLargoTreze.pdb
