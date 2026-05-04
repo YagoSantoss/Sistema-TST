@@ -8,6 +8,7 @@ namespace SistemaTstLargoTreze
         private RoundButton btnSalvar;
         private RoundButton btnCancelar;
         private RoundButton btnAdicionarTestemunha;
+        private RoundButton btnVoltar;
 
         private bool _montandoConteudo = false;
 
@@ -82,6 +83,19 @@ namespace SistemaTstLargoTreze
             btnAdicionarTestemunha.BorderColor = UiColors.Border;
             btnAdicionarTestemunha.Click += BtnAdicionarTestemunha_Click;
             form.Controls.Add(btnAdicionarTestemunha);
+
+            btnVoltar = UiBuilder.SmallButton(
+                "Voltar",
+                190,
+                252,
+                75,
+                Color.White,
+                UiColors.BodyText
+            );
+
+            btnVoltar.BorderColor = UiColors.Border;
+            btnVoltar.Click += BtnVoltar_Click;
+            form.Controls.Add(btnVoltar);
 
             ContentPanel.ResumeLayout(false);
 

@@ -25,6 +25,11 @@ namespace SistemaTstLargoTreze
             MessageBox.Show("Nova testemunha adicionada.", "Testemunhas", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void BtnVoltar_Click(object sender, EventArgs e)
+        {
+            AppNavigator.Show(new CatBasicForm());
+        }
+
         private void TabDados_Click(object sender, EventArgs e)
         {
             AppNavigator.Show(new CatBasicForm());

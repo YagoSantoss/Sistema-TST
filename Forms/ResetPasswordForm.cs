@@ -26,9 +26,16 @@ namespace SistemaTstLargoTreze
                 return;
             }
 
-            AppState.ResetPendingPassword(txtNovaSenha.Text);
-            MessageBox.Show("Senha redefinida com sucesso.", "Redefinir senha", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            AppNavigator.Show(new LoginForm());
+            try
+            {
+                AppState.ResetPendingPassword(txtNovaSenha.Text);
+                MessageBox.Show("Senha redefinida com sucesso.", "Redefinir senha", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                AppNavigator.Show(new LoginForm());
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex.Message);
+            }
         }
 
         private void LinkLogin_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

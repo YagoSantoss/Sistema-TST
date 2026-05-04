@@ -10,6 +10,7 @@ namespace SistemaTstLargoTreze
         private ComboBox cmbEmpregado;
         private ComboBox cmbTipoCat;
         private ComboBox cmbLocalAcidente;
+        private ComboBox cmbEmitente;
         private CueTextBox txtDataAcidente;
         private CueTextBox txtHoraAcidente;
         private CueTextBox txtDataObito;
@@ -179,7 +180,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(
                 form,
                 "EMITENTE DA CAT",
-                UiBuilder.Combo("Empregador", 0, 0, metadeW),
+                cmbEmitente = UiBuilder.Combo("Empregador", 0, 0, metadeW),
                 margem + metadeW + gap,
                 232,
                 metadeW,
@@ -277,6 +278,7 @@ namespace SistemaTstLargoTreze
             form.Controls.Add(txtDescricao);
 
             CarregarCat();
+            CarregarRascunho();
         }
 
         private void BuildCatHeader(Panel form, int activeTab, int largura)
@@ -438,8 +440,84 @@ namespace SistemaTstLargoTreze
             txtDescricao.Text = cat.Descricao;
         }
 
+        private void CarregarRascunho()
+        {
+            if (_catId > 0 || CatDraftState.Current == null || cmbEmpregado == null)
+                return;
+
+            CatDraft draft = CatDraftState.Current;
+            txtDataAcidente.Text = draft.DataAcidente ?? string.Empty;
+            txtHoraAcidente.Text = draft.HoraAcidente ?? string.Empty;
+            txtDataObito.Text = draft.DataObito ?? string.Empty;
+            cmbTipoCat.Text = string.IsNullOrWhiteSpace(draft.TipoCat) ? "Inicial" : draft.TipoCat;
+            SelectComboItem(cmbEmpregado, draft.EmpregadoId);
+            cmbEmitente.Text = string.IsNullOrWhiteSpace(draft.Emitente) ? "Empregador" : draft.Emitente;
+            cmbLocalAcidente.Text = string.IsNullOrWhiteSpace(draft.LocalAcidente) ? "No estabelecimento do empregador" : draft.LocalAcidente;
+            txtEntradaTrabalho.Text = draft.EntradaTrabalho ?? string.Empty;
+            txtSaidaTrabalho.Text = draft.SaidaTrabalho ?? string.Empty;
+            txtDescricao.Text = draft.Descricao ?? string.Empty;
+        }
+
+        private void SalvarRascunho()
+        {
+            ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
+
+            CatDraftState.Current = new CatDraft
+            {
+                DataAcidente = txtDataAcidente.Text.Trim(),
+                HoraAcidente = txtHoraAcidente.Text.Trim(),
+                DataObito = txtDataObito.Text.Trim(),
+                TipoCat = cmbTipoCat.Text.Trim(),
+                EmpregadoId = empregado == null ? 0 : empregado.Id,
+                Emitente = cmbEmitente.Text.Trim(),
+                LocalAcidente = cmbLocalAcidente.Text.Trim(),
+                EntradaTrabalho = txtEntradaTrabalho.Text.Trim(),
+                SaidaTrabalho = txtSaidaTrabalho.Text.Trim(),
+                Descricao = txtDescricao.Text.Trim()
+            };
+        }
+
+        private bool ValidarObrigatorios(out string mensagem)
+        {
+            ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
+
+            if (string.IsNullOrWhiteSpace(txtDataAcidente.Text) ||
+                string.IsNullOrWhiteSpace(txtHoraAcidente.Text) ||
+                string.IsNullOrWhiteSpace(cmbTipoCat.Text) ||
+                empregado == null ||
+                empregado.Id <= 0 ||
+                string.IsNullOrWhiteSpace(cmbEmitente.Text) ||
+                string.IsNullOrWhiteSpace(cmbLocalAcidente.Text) ||
+                string.IsNullOrWhiteSpace(txtDescricao.Text))
+            {
+                mensagem = "Preencha todos os campos obrigatorios marcados com asterisco antes de avancar.";
+                return false;
+            }
+
+            System.DateTime dataAcidente;
+            if (!System.DateTime.TryParseExact(txtDataAcidente.Text.Trim(), "dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out dataAcidente))
+            {
+                mensagem = "Informe a data do acidente no formato dd/mm/yyyy.";
+                return false;
+            }
+
+            System.TimeSpan horaAcidente;
+            if (!System.TimeSpan.TryParseExact(txtHoraAcidente.Text.Trim(), @"hh\:mm", null, out horaAcidente))
+            {
+                mensagem = "Informe a hora do acidente no formato hh:mm.";
+                return false;
+            }
+
+            mensagem = string.Empty;
+            return true;
+        }
+
         private void SalvarCat()
         {
+            string mensagem;
+            if (!ValidarObrigatorios(out mensagem))
+                throw new System.InvalidOperationException(mensagem);
+
             ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
             if (empregado == null || empregado.Id <= 0)
                 throw new System.InvalidOperationException("Selecione o empregado.");
@@ -463,6 +541,8 @@ namespace SistemaTstLargoTreze
                 Situacao = catExistente == null ? "Aberta" : catExistente.Situacao,
                 ResultadoAso = catExistente == null ? "Aguardando ASO" : catExistente.ResultadoAso
             });
+
+            CatDraftState.Clear();
         }
 
         private void SelectComboItem(ComboBox combo, int id)

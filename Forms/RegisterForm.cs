@@ -23,7 +23,7 @@ namespace SistemaTstLargoTreze
                 return;
             }
 
-            if (!txtEmail.Text.Contains("@"))
+            if (!ValidationHelper.IsValidEmail(txtEmail.Text))
             {
                 ShowError("Informe um e-mail válido.");
                 return;

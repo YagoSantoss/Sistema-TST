@@ -20,50 +20,49 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildAuthStage(76, 176, 1190, 520, true);
+            CreateAuthCard(472, 75, 380, 520);
 
-            CreateAuthCard(472, 75, 290, 420);
+            CardPanel.Controls.Add(UiBuilder.CenterLabel("Crie sua conta", 0, 30, 380, 36, 19F, FontStyle.Bold, UiColors.Navy));
 
-            CardPanel.Controls.Add(UiBuilder.CenterLabel("Crie sua conta", 0, 28, 290, 34, 16F, FontStyle.Bold, UiColors.Navy));
-
-            CardPanel.Controls.Add(UiBuilder.Label("Nome completo", 25, 80, 230, 18, 8F, FontStyle.Bold, UiColors.Navy));
-            txtNome = UiBuilder.TextBox("Digite seu nome completo", 25, 100, 240);
+            CardPanel.Controls.Add(UiBuilder.Label("Nome completo", 40, 92, 300, 18, 9F, FontStyle.Bold, UiColors.Navy));
+            txtNome = UiBuilder.TextBox("Digite seu nome completo", 40, 116, 300);
             CardPanel.Controls.Add(txtNome);
 
-            CardPanel.Controls.Add(UiBuilder.Label("E-mail", 25, 143, 230, 18, 8F, FontStyle.Bold, UiColors.Navy));
-            txtEmail = UiBuilder.TextBox("Digite seu e-mail", 25, 163, 240);
+            CardPanel.Controls.Add(UiBuilder.Label("E-mail", 40, 164, 300, 18, 9F, FontStyle.Bold, UiColors.Navy));
+            txtEmail = UiBuilder.TextBox("Digite seu e-mail", 40, 188, 300);
             CardPanel.Controls.Add(txtEmail);
 
-            CardPanel.Controls.Add(UiBuilder.Label("Senha", 25, 206, 230, 18, 8F, FontStyle.Bold, UiColors.Navy));
-            txtSenha = UiBuilder.TextBox("Crie sua senha", 25, 226, 198);
+            CardPanel.Controls.Add(UiBuilder.Label("Senha", 40, 236, 300, 18, 9F, FontStyle.Bold, UiColors.Navy));
+            txtSenha = UiBuilder.TextBox("Crie sua senha", 40, 260, 246);
             txtSenha.UseSystemPasswordChar = true;
             CardPanel.Controls.Add(txtSenha);
 
-            btnMostrarSenha = UiBuilder.Button("Ver", 227, 226, 38, 30, Color.White, UiColors.AccentBlue);
+            btnMostrarSenha = UiBuilder.Button("Ver", 296, 260, 44, 30, Color.White, UiColors.AccentBlue);
             btnMostrarSenha.BorderColor = UiColors.Border;
             btnMostrarSenha.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
             btnMostrarSenha.Click += BtnMostrarSenha_Click;
             CardPanel.Controls.Add(btnMostrarSenha);
 
-            CardPanel.Controls.Add(UiBuilder.Label("Confirmar senha", 25, 269, 230, 18, 8F, FontStyle.Bold, UiColors.Navy));
-            txtConfirmarSenha = UiBuilder.TextBox("Confirme sua senha", 25, 289, 198);
+            CardPanel.Controls.Add(UiBuilder.Label("Confirmar senha", 40, 308, 300, 18, 9F, FontStyle.Bold, UiColors.Navy));
+            txtConfirmarSenha = UiBuilder.TextBox("Confirme sua senha", 40, 332, 246);
             txtConfirmarSenha.UseSystemPasswordChar = true;
             CardPanel.Controls.Add(txtConfirmarSenha);
 
-            btnMostrarConfirmacao = UiBuilder.Button("Ver", 227, 289, 38, 30, Color.White, UiColors.AccentBlue);
+            btnMostrarConfirmacao = UiBuilder.Button("Ver", 296, 332, 44, 30, Color.White, UiColors.AccentBlue);
             btnMostrarConfirmacao.BorderColor = UiColors.Border;
             btnMostrarConfirmacao.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
             btnMostrarConfirmacao.Click += BtnMostrarConfirmacao_Click;
             CardPanel.Controls.Add(btnMostrarConfirmacao);
 
-            btnCadastrar = UiBuilder.Button("Cadastrar", 25, 345, 240, 32, UiColors.Orange, Color.White);
+            btnCadastrar = UiBuilder.Button("Cadastrar", 40, 404, 300, 34, UiColors.Orange, Color.White);
             btnCadastrar.Click += BtnCadastrar_Click;
             CardPanel.Controls.Add(btnCadastrar);
 
-            linkLogin = UiBuilder.Link("Já tem uma conta? Faça login", 25, 383, 240, 22);
+            linkLogin = UiBuilder.Link("Ja tem uma conta? Faca login", 40, 452, 300, 22);
             linkLogin.LinkClicked += LinkLogin_LinkClicked;
             CardPanel.Controls.Add(linkLogin);
 
-            lblErro = UiBuilder.CenterLabel("", 25, 62, 240, 18, 7.5F, FontStyle.Bold, UiColors.Red);
+            lblErro = UiBuilder.CenterLabel("", 40, 70, 300, 18, 7.5F, FontStyle.Bold, UiColors.Red);
             lblErro.Visible = false;
             CardPanel.Controls.Add(lblErro);
 

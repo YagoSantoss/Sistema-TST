@@ -93,6 +93,7 @@ namespace SistemaTstLargoTreze
                     AddTextField(card, "Nome do exame", "Nome do exame", 182, 100, 370, true);
                     AddComboField(card, "Tipo", new[] { "Laboratorial", "Clinico", "Especializado", "Imagem" }, 22, 172, 255, true);
                     AddComboField(card, "Periodicidade", new[] { "Anual", "Bienal", "Semestral", "Admissional", "Conforme risco" }, 307, 172, 245, true);
+                    AddAttachmentField(card, "Anexo imagem", 22, 244, 410);
                     break;
 
                 case CadastroBaseTipo.AmbienteTrabalho:
@@ -122,6 +123,19 @@ namespace SistemaTstLargoTreze
             combo.SelectedIndex = 0;
             UiBuilder.AddField(parent, label, combo, x, y, width, required);
             _campos[label] = combo;
+        }
+
+        private void AddAttachmentField(Panel parent, string label, int x, int y, int width)
+        {
+            CueTextBox textBox = UiBuilder.TextBox("Selecione uma imagem ou foto", x, y + 24, width);
+            textBox.ReadOnly = true;
+            UiBuilder.AddField(parent, label, textBox, x, y, width, false);
+            _campos[label] = textBox;
+
+            RoundButton selecionar = UiBuilder.SmallButton("Selecionar", x + width + 10, y + 24, 90, Color.White, UiColors.BodyText);
+            selecionar.BorderColor = UiColors.Border;
+            selecionar.Click += SelecionarAnexo_Click;
+            parent.Controls.Add(selecionar);
         }
 
         private void MontarRodape(RoundPanel card)
@@ -209,6 +223,20 @@ namespace SistemaTstLargoTreze
             Close();
         }
 
+        private void SelecionarAnexo_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Title = "Selecionar imagem do exame";
+                dialog.Filter = "Imagens|*.jpg;*.jpeg;*.png;*.bmp;*.gif|Todos os arquivos|*.*";
+
+                if (dialog.ShowDialog(this) == DialogResult.OK)
+                {
+                    SetValue("Anexo imagem", dialog.FileName);
+                }
+            }
+        }
+
         private void CarregarCadastro()
         {
             if (!_edicao || _id <= 0)
@@ -238,6 +266,7 @@ namespace SistemaTstLargoTreze
                             SetValue("Nome do exame", exame.Nome);
                             SetValue("Tipo", exame.Tipo);
                             SetValue("Periodicidade", exame.Periodicidade);
+                            SetValue("Anexo imagem", exame.AnexoImagem);
                         }
                         break;
 
@@ -264,6 +293,10 @@ namespace SistemaTstLargoTreze
             switch (_tipo)
             {
                 case CadastroBaseTipo.Medico:
+                    string email = Value("E-mail");
+                    if (!string.IsNullOrWhiteSpace(email) && !ValidationHelper.IsValidEmail(email))
+                        throw new InvalidOperationException("Informe um e-mail valido para o medico.");
+
                     CadastrosRepository.SaveMedico(new MedicoRecord
                     {
                         Id = _id,
@@ -271,7 +304,7 @@ namespace SistemaTstLargoTreze
                         Crm = Required("CRM"),
                         OrgaoUf = Required("Orgao / UF"),
                         Especialidade = Required("Especialidade"),
-                        Email = Value("E-mail")
+                        Email = email
                     });
                     break;
 
@@ -282,7 +315,8 @@ namespace SistemaTstLargoTreze
                         Codigo = Required("Codigo"),
                         Nome = Required("Nome do exame"),
                         Tipo = Required("Tipo"),
-                        Periodicidade = Required("Periodicidade")
+                        Periodicidade = Required("Periodicidade"),
+                        AnexoImagem = Value("Anexo imagem")
                     });
                     break;
 

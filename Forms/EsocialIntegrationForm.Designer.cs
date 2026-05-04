@@ -15,8 +15,8 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "Integração eSocial",
-                "Painel de gestão e envio de eventos",
+                "Painel de Gestão",
+                "Indicadores de CAT e ASO",
                 DashboardMenu.Esocial
             );
 
@@ -51,15 +51,16 @@ namespace SistemaTstLargoTreze
                 larguraDisponivel = 790;
 
             int larguraCardMetrica = (larguraDisponivel - (espacamento * 3)) / 4;
+            CatStatusResumo resumo = CarregarResumoCats();
 
             AddMetricCard(
                 ContentPanel,
                 margem,
                 18,
                 larguraCardMetrica,
-                "EVENTOS GERADOS",
-                "0",
-                "Sem registros",
+                "CATs GERADAS",
+                resumo.Total.ToString(),
+                resumo.Total == 1 ? "1 registro" : resumo.Total + " registros",
                 UiColors.AccentBlue,
                 Color.FromArgb(231, 241, 254)
             );
@@ -69,9 +70,9 @@ namespace SistemaTstLargoTreze
                 margem + larguraCardMetrica + espacamento,
                 18,
                 larguraCardMetrica,
-                "ACEITOS",
-                "0",
-                "Sem registros",
+                "APTOS",
+                resumo.Aptos.ToString(),
+                resumo.Aptos == 1 ? "1 CAT apta" : resumo.Aptos + " CATs aptas",
                 UiColors.Green,
                 Color.FromArgb(217, 248, 234)
             );
@@ -82,8 +83,8 @@ namespace SistemaTstLargoTreze
                 18,
                 larguraCardMetrica,
                 "AGUARDANDO",
-                "0",
-                "Sem pendencias",
+                resumo.Aguardando.ToString(),
+                resumo.Aguardando == 1 ? "1 pendente" : resumo.Aguardando + " pendentes",
                 UiColors.Orange,
                 Color.FromArgb(255, 246, 206)
             );
@@ -93,9 +94,9 @@ namespace SistemaTstLargoTreze
                 margem + ((larguraCardMetrica + espacamento) * 3),
                 18,
                 larguraCardMetrica,
-                "REJEITADOS",
-                "0",
-                "Sem registros",
+                "INAPTOS",
+                resumo.Inaptos.ToString(),
+                resumo.Inaptos == 1 ? "1 CAT inapta" : resumo.Inaptos + " CATs inaptas",
                 UiColors.Red,
                 Color.FromArgb(255, 230, 232)
             );
@@ -173,6 +174,18 @@ namespace SistemaTstLargoTreze
             card.Controls.Add(pill);
         }
 
+        private CatStatusResumo CarregarResumoCats()
+        {
+            try
+            {
+                return CadastrosRepository.GetCatStatusResumo();
+            }
+            catch
+            {
+                return new CatStatusResumo();
+            }
+        }
+
         private void MontarPainelEventos(int largura)
         {
             RoundPanel eventsCard = UiBuilder.Card(18, 120, largura, 250);
@@ -181,7 +194,7 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(
                 UiBuilder.Label(
-                    "📡 Painel de Integração — Gestão de Eventos eSocial",
+                    "📊 Painel de Gestão — Indicadores de CAT",
                     16,
                     14,
                     largura - 260,
@@ -232,7 +245,7 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(
                 UiBuilder.CenterLabel(
-                    "Nenhum evento gerado",
+                    "Nenhuma CAT gerada",
                     0,
                     130,
                     largura,

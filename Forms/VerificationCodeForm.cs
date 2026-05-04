@@ -43,7 +43,19 @@ namespace SistemaTstLargoTreze
 
         private void LinkReenviar_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            MessageBox.Show("Codigo reenviado para o e-mail cadastrado.", "Codigo de verificacao", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            lblErro.Visible = false;
+
+            try
+            {
+                AppState.ResendPasswordRecoveryCode();
+                MessageBox.Show("Codigo reenviado para o e-mail cadastrado.", "Codigo de verificacao", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                lblErro.Text = "Nao foi possivel reenviar o codigo.";
+                lblErro.Visible = true;
+                MessageBox.Show(ex.Message, "Codigo de verificacao", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

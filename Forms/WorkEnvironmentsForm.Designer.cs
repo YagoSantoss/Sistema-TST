@@ -276,16 +276,17 @@ namespace SistemaTstLargoTreze
             x += statusW;
 
             btnEditar = UiBuilder.SmallButton(
-                "✎",
-                x + 18,
-                7,
-                34,
+                "✎ Editar",
+                x + 8,
+                8,
+                68,
                 Color.White,
                 UiColors.BodyText
             );
 
             btnEditar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnEditar.BorderColor = UiColors.Border;
+            btnEditar.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
             btnEditar.Tag = id;
             btnEditar.Click += BtnEditar_Click;
             row.Controls.Add(btnEditar);

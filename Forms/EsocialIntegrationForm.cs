@@ -12,12 +12,13 @@ namespace SistemaTstLargoTreze
 
         private void BtnSincronizar_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Sincronização com eSocial concluída.", "Integração eSocial", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Indicadores atualizados com os dados do banco.", "Painel de Gestao", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MontarConteudoEsocial();
         }
 
         private void BtnEnviarTodos_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Eventos pendentes enviados para o eSocial.", "Integração eSocial", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("Acompanhe as CATs geradas e seus resultados no painel.", "Painel de Gestao", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void BtnGerarS2240_Click(object sender, EventArgs e)

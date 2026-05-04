@@ -7,8 +7,6 @@ namespace SistemaTstLargoTreze
     public partial class DoctorsForm
     {
         private RoundButton btnNovo;
-        private RoundButton btnInserir;
-        private RoundButton btnEditar;
 
         private bool _montandoConteudo = false;
 
@@ -176,31 +174,6 @@ namespace SistemaTstLargoTreze
 
         private void MontarRodape(RoundPanel table, int largura)
         {
-            btnInserir = UiBuilder.SmallButton(
-                "+ Inserir",
-                16,
-                165,
-                70,
-                UiColors.AccentBlue,
-                Color.White
-            );
-
-            btnInserir.Click += BtnNovo_Click;
-            table.Controls.Add(btnInserir);
-
-            btnEditar = UiBuilder.SmallButton(
-                "✎ Editar",
-                94,
-                165,
-                70,
-                Color.White,
-                UiColors.BodyText
-            );
-
-            btnEditar.BorderColor = UiColors.Border;
-            btnEditar.Click += BtnEditar_Click;
-            table.Controls.Add(btnEditar);
-
             Label total = UiBuilder.Label(
                 TotalMedicosTexto(),
                 largura - 170,

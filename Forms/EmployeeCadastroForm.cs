@@ -6,6 +6,7 @@ namespace SistemaTstLargoTreze
 {
     public class EmployeeCadastroForm : Form
     {
+        private readonly int _empregadoId;
         private CueTextBox txtMatricula;
         private CueTextBox txtNome;
         private CueTextBox txtCpf;
@@ -14,18 +15,26 @@ namespace SistemaTstLargoTreze
         private CueTextBox txtAdmissao;
         private CueTextBox txtVencimentoAso;
         private ComboBox cmbStatusAso;
+        private ComboBox cmbMedico;
 
         public EmployeeCadastroForm()
+            : this(0)
         {
+        }
+
+        public EmployeeCadastroForm(int empregadoId)
+        {
+            _empregadoId = empregadoId;
             InitializeComponent();
+            CarregarEmpregado();
         }
 
         private void InitializeComponent()
         {
             SuspendLayout();
 
-            Text = "Novo empregado";
-            ClientSize = new Size(650, 430);
+            Text = _empregadoId > 0 ? "Editar empregado" : "Novo empregado";
+            ClientSize = new Size(650, 500);
             Font = new Font("Segoe UI", 9F);
             BackColor = UiColors.PageBg;
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -33,10 +42,10 @@ namespace SistemaTstLargoTreze
             MinimizeBox = false;
             StartPosition = FormStartPosition.CenterParent;
 
-            RoundPanel card = UiBuilder.Card(18, 18, 614, 394);
+            RoundPanel card = UiBuilder.Card(18, 18, 614, 464);
             Controls.Add(card);
 
-            card.Controls.Add(UiBuilder.Label("Novo empregado", 22, 18, 360, 25, 13F, FontStyle.Bold, UiColors.AccentBlue));
+            card.Controls.Add(UiBuilder.Label(_empregadoId > 0 ? "Editar empregado" : "Novo empregado", 22, 18, 360, 25, 13F, FontStyle.Bold, UiColors.AccentBlue));
             card.Controls.Add(UiBuilder.Label("Cadastre o funcionario para uso em CAT, ASO e riscos.", 22, 43, 470, 18, 8F, FontStyle.Regular, UiColors.MutedText));
             card.Controls.Add(new Panel { Location = new Point(0, 76), Size = new Size(614, 1), BackColor = UiColors.Border });
 
@@ -66,14 +75,17 @@ namespace SistemaTstLargoTreze
             cmbStatusAso.SelectedIndex = 0;
             UiBuilder.AddField(card, "Status ASO", cmbStatusAso, 402, 244, 190, false);
 
-            card.Controls.Add(new Panel { Location = new Point(0, 322), Size = new Size(614, 1), BackColor = UiColors.Border });
+            cmbMedico = CriarComboMedicos(570);
+            UiBuilder.AddField(card, "Medico responsavel", cmbMedico, 22, 316, 570, false);
 
-            RoundButton cancelar = UiBuilder.SmallButton("Cancelar", 430, 346, 78, Color.White, UiColors.BodyText);
+            card.Controls.Add(new Panel { Location = new Point(0, 392), Size = new Size(614, 1), BackColor = UiColors.Border });
+
+            RoundButton cancelar = UiBuilder.SmallButton("Cancelar", 430, 416, 78, Color.White, UiColors.BodyText);
             cancelar.BorderColor = UiColors.Border;
             cancelar.Click += (sender, e) => Close();
             card.Controls.Add(cancelar);
 
-            RoundButton salvar = UiBuilder.SmallButton("Cadastrar", 520, 346, 82, UiColors.AccentBlue, Color.White);
+            RoundButton salvar = UiBuilder.SmallButton(_empregadoId > 0 ? "Salvar" : "Cadastrar", 520, 416, 82, UiColors.AccentBlue, Color.White);
             salvar.Click += Salvar_Click;
             card.Controls.Add(salvar);
 
@@ -90,8 +102,11 @@ namespace SistemaTstLargoTreze
 
             try
             {
+                ComboItem medico = cmbMedico.SelectedItem as ComboItem;
+
                 CadastrosRepository.SaveEmpregado(new EmpregadoRecord
                 {
+                    Id = _empregadoId,
                     Matricula = txtMatricula.Text.Trim(),
                     Nome = txtNome.Text.Trim(),
                     Cpf = txtCpf.Text.Trim(),
@@ -99,7 +114,8 @@ namespace SistemaTstLargoTreze
                     Cargo = txtCargo.Text.Trim(),
                     DataAdmissao = txtAdmissao.Text.Trim(),
                     DataVencimentoAso = txtVencimentoAso.Text.Trim(),
-                    StatusAso = cmbStatusAso.Text
+                    StatusAso = cmbStatusAso.Text,
+                    MedicoId = medico != null && medico.Id > 0 ? (int?)medico.Id : null
                 });
 
                 DialogResult = DialogResult.OK;
@@ -108,6 +124,81 @@ namespace SistemaTstLargoTreze
             catch (Exception ex)
             {
                 MessageBox.Show("Nao foi possivel salvar o empregado no MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private ComboBox CriarComboMedicos(int width)
+        {
+            ComboBox combo = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 9F)
+            };
+
+            combo.Items.Add(new ComboItem(0, "-- Sem medico vinculado --"));
+
+            try
+            {
+                foreach (MedicoRecord medico in CadastrosRepository.GetMedicos())
+                {
+                    combo.Items.Add(new ComboItem(medico.Id, medico.Nome + " - " + medico.Crm));
+                }
+            }
+            catch
+            {
+                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+            }
+
+            combo.SelectedIndex = 0;
+            return combo;
+        }
+
+        private void CarregarEmpregado()
+        {
+            if (_empregadoId <= 0)
+                return;
+
+            try
+            {
+                EmpregadoRecord empregado = CadastrosRepository.GetEmpregado(_empregadoId);
+                if (empregado == null)
+                    return;
+
+                txtMatricula.Text = empregado.Matricula;
+                txtNome.Text = empregado.Nome;
+                txtCpf.Text = empregado.Cpf;
+                txtSetor.Text = empregado.Setor;
+                txtCargo.Text = empregado.Cargo;
+                txtAdmissao.Text = empregado.DataAdmissao;
+                txtVencimentoAso.Text = empregado.DataVencimentoAso;
+                SelecionarTexto(cmbStatusAso, empregado.StatusAso);
+
+                if (empregado.MedicoId.HasValue)
+                    SelecionarComboItem(cmbMedico, empregado.MedicoId.Value);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel carregar o empregado do MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void SelecionarTexto(ComboBox combo, string texto)
+        {
+            int index = combo.Items.IndexOf(texto);
+            if (index >= 0)
+                combo.SelectedIndex = index;
+        }
+
+        private void SelecionarComboItem(ComboBox combo, int id)
+        {
+            for (int i = 0; i < combo.Items.Count; i++)
+            {
+                ComboItem item = combo.Items[i] as ComboItem;
+                if (item != null && item.Id == id)
+                {
+                    combo.SelectedIndex = i;
+                    return;
+                }
             }
         }
     }

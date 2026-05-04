@@ -12,6 +12,7 @@ namespace SistemaTstLargoTreze
         private RoundButton btnInserir;
         private RoundButton btnEditar;
         private RoundButton btnExcluir;
+        private readonly HashSet<int> _empregadosSelecionados = new HashSet<int>();
 
         private bool _montandoConteudo = false;
 
@@ -294,7 +295,7 @@ namespace SistemaTstLargoTreze
                         larguraTabela,
                         y,
                         empregado.Id,
-                        false,
+                        _empregadosSelecionados.Contains(empregado.Id),
                         empregado.Matricula,
                         empregado.Nome,
                         empregado.Cpf,
@@ -398,7 +399,16 @@ namespace SistemaTstLargoTreze
 
             int x = 5;
 
-            row.Controls.Add(UiBuilder.Cell(selected ? "☑" : "☐", x, 0, checkW, selected ? UiColors.AccentBlue : UiColors.BodyText, FontStyle.Regular));
+            CheckBox check = new CheckBox
+            {
+                Location = new Point(x + 9, 8),
+                Size = new Size(16, 16),
+                Checked = selected,
+                Tag = empregadoId,
+                Cursor = Cursors.Hand
+            };
+            check.CheckedChanged += EmployeeCheck_CheckedChanged;
+            row.Controls.Add(check);
             x += checkW;
 
             row.Controls.Add(UiBuilder.Cell(matricula, x, 0, matriculaW, UiColors.AccentBlue, FontStyle.Bold));

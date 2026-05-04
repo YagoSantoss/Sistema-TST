@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS empregados (
     data_admissao DATE,
     data_vencimento_aso DATE,
     status_aso VARCHAR(40) NOT NULL DEFAULT 'Pendente',
+    medico_id INT NULL,
     ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
@@ -51,11 +52,17 @@ CREATE TABLE IF NOT EXISTS tipos_exames (
     nome VARCHAR(180) NOT NULL,
     tipo VARCHAR(80) NOT NULL,
     periodicidade VARCHAR(80) NOT NULL,
+    anexo_imagem VARCHAR(500),
     ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_tipos_exames_nome (nome)
 ) ENGINE=InnoDB;
+
+ALTER TABLE empregados
+    ADD CONSTRAINT fk_empregados_medico
+    FOREIGN KEY (medico_id) REFERENCES medicos (id)
+    ON DELETE SET NULL;
 
 CREATE TABLE IF NOT EXISTS ambientes_trabalho (
     id INT AUTO_INCREMENT PRIMARY KEY,

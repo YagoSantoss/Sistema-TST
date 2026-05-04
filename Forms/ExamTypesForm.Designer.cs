@@ -1,5 +1,7 @@
 using System.Drawing;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -7,8 +9,6 @@ namespace SistemaTstLargoTreze
     public partial class ExamTypesForm
     {
         private RoundButton btnNovo;
-        private RoundButton btnInserir;
-        private RoundButton btnEditar;
 
         private bool _montandoConteudo = false;
 
@@ -120,10 +120,11 @@ namespace SistemaTstLargoTreze
             table.Controls.Add(header);
 
             int codigoW = 120;
-            int tipoW = 190;
-            int periodicidadeW = 170;
+            int tipoW = 150;
+            int periodicidadeW = 140;
+            int anexoW = 95;
             int acoesW = 90;
-            int nomeW = largura - codigoW - tipoW - periodicidadeW - acoesW - 24;
+            int nomeW = largura - codigoW - tipoW - periodicidadeW - anexoW - acoesW - 24;
 
             if (nomeW < 230)
                 nomeW = 230;
@@ -141,6 +142,9 @@ namespace SistemaTstLargoTreze
 
             header.Controls.Add(UiBuilder.HeaderCell("PERIODICIDADE", x, 0, periodicidadeW));
             x += periodicidadeW;
+
+            header.Controls.Add(UiBuilder.HeaderCell("ANEXO", x, 0, anexoW));
+            x += anexoW;
 
             header.Controls.Add(UiBuilder.HeaderCell("AÇÕES", x, 0, acoesW));
         }
@@ -160,7 +164,7 @@ namespace SistemaTstLargoTreze
                 int y = 83;
                 foreach (TipoExameRecord exame in exames)
                 {
-                    AddExamRow(table, largura, y, exame.Id, exame.Codigo, exame.Nome, exame.Tipo, exame.Periodicidade);
+                    AddExamRow(table, largura, y, exame.Id, exame.Codigo, exame.Nome, exame.Tipo, exame.Periodicidade, exame.AnexoImagem);
                     y += 38;
                 }
             }
@@ -172,31 +176,6 @@ namespace SistemaTstLargoTreze
 
         private void MontarRodape(RoundPanel table, int largura)
         {
-            btnInserir = UiBuilder.SmallButton(
-                "+ Inserir",
-                16,
-                235,
-                70,
-                UiColors.AccentBlue,
-                Color.White
-            );
-
-            btnInserir.Click += BtnNovo_Click;
-            table.Controls.Add(btnInserir);
-
-            btnEditar = UiBuilder.SmallButton(
-                "✎ Editar",
-                94,
-                235,
-                70,
-                Color.White,
-                UiColors.BodyText
-            );
-
-            btnEditar.BorderColor = UiColors.Border;
-            btnEditar.Click += BtnEditar_Click;
-            table.Controls.Add(btnEditar);
-
             Label total = UiBuilder.Label(
                 TotalExamesTexto(),
                 largura - 170,
@@ -220,7 +199,8 @@ namespace SistemaTstLargoTreze
             string codigo,
             string nome,
             string tipo,
-            string periodicidade)
+            string periodicidade,
+            string anexoImagem)
         {
             Panel row = new Panel
             {
@@ -233,10 +213,11 @@ namespace SistemaTstLargoTreze
             table.Controls.Add(row);
 
             int codigoW = 120;
-            int tipoW = 190;
-            int periodicidadeW = 170;
+            int tipoW = 150;
+            int periodicidadeW = 140;
+            int anexoW = 95;
             int acoesW = 90;
-            int nomeW = largura - codigoW - tipoW - periodicidadeW - acoesW - 24;
+            int nomeW = largura - codigoW - tipoW - periodicidadeW - anexoW - acoesW - 24;
 
             if (nomeW < 230)
                 nomeW = 230;
@@ -303,20 +284,59 @@ namespace SistemaTstLargoTreze
 
             x += periodicidadeW;
 
+            if (!string.IsNullOrWhiteSpace(anexoImagem))
+            {
+                RoundButton verAnexo = UiBuilder.SmallButton(
+                    "Ver",
+                    x + 8,
+                    8,
+                    48,
+                    Color.White,
+                    UiColors.AccentBlue
+                );
+
+                verAnexo.BorderColor = UiColors.Border;
+                verAnexo.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+                verAnexo.Tag = anexoImagem;
+                verAnexo.Click += AbrirAnexo_Click;
+                row.Controls.Add(verAnexo);
+            }
+            else
+            {
+                row.Controls.Add(UiBuilder.Label("-", x + 8, 2, anexoW, 34, 8F, FontStyle.Regular, UiColors.MutedText));
+            }
+
+            x += anexoW;
+
             RoundButton edit = UiBuilder.SmallButton(
-                "✎",
-                x + 18,
-                7,
-                34,
+                "✎ Editar",
+                x + 8,
+                8,
+                68,
                 Color.White,
                 UiColors.BodyText
             );
 
             edit.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             edit.BorderColor = UiColors.Border;
+            edit.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
             edit.Tag = id;
             edit.Click += BtnEditar_Click;
             row.Controls.Add(edit);
+        }
+
+        private void AbrirAnexo_Click(object sender, System.EventArgs e)
+        {
+            Control control = sender as Control;
+            string caminho = control == null ? string.Empty : control.Tag as string;
+
+            if (string.IsNullOrWhiteSpace(caminho) || !File.Exists(caminho))
+            {
+                MessageBox.Show("O arquivo anexado nao foi encontrado.", "Anexo do exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Process.Start(caminho);
         }
 
         private string TotalExamesTexto()

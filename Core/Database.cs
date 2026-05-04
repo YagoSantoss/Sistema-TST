@@ -57,6 +57,34 @@ namespace SistemaTstLargoTreze
                 }
             }
 
+            if (!ColumnExists(connection, "tipos_exames", "anexo_imagem"))
+            {
+                using (MySqlCommand command = new MySqlCommand("ALTER TABLE tipos_exames ADD COLUMN anexo_imagem VARCHAR(500) NULL AFTER periodicidade", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (!ColumnExists(connection, "empregados", "medico_id"))
+            {
+                using (MySqlCommand command = new MySqlCommand("ALTER TABLE empregados ADD COLUMN medico_id INT NULL AFTER status_aso", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (!ConstraintExists(connection, "fk_empregados_medico"))
+            {
+                using (MySqlCommand command = new MySqlCommand(
+                    @"ALTER TABLE empregados
+                      ADD CONSTRAINT fk_empregados_medico
+                      FOREIGN KEY (medico_id) REFERENCES medicos (id)
+                      ON DELETE SET NULL", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
             schemaChecked = true;
         }
 
@@ -71,6 +99,19 @@ namespace SistemaTstLargoTreze
             {
                 command.Parameters.AddWithValue("@table", tableName);
                 command.Parameters.AddWithValue("@column", columnName);
+                return Convert.ToInt32(command.ExecuteScalar()) > 0;
+            }
+        }
+
+        private static bool ConstraintExists(MySqlConnection connection, string constraintName)
+        {
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT COUNT(*)
+                  FROM information_schema.TABLE_CONSTRAINTS
+                  WHERE TABLE_SCHEMA = DATABASE()
+                    AND CONSTRAINT_NAME = @constraint", connection))
+            {
+                command.Parameters.AddWithValue("@constraint", constraintName);
                 return Convert.ToInt32(command.ExecuteScalar()) > 0;
             }
         }
@@ -93,6 +134,7 @@ namespace SistemaTstLargoTreze
         public string Nome { get; set; }
         public string Tipo { get; set; }
         public string Periodicidade { get; set; }
+        public string AnexoImagem { get; set; }
     }
 
     public sealed class AmbienteTrabalhoRecord
@@ -115,6 +157,8 @@ namespace SistemaTstLargoTreze
         public string DataAdmissao { get; set; }
         public string DataVencimentoAso { get; set; }
         public string StatusAso { get; set; }
+        public int? MedicoId { get; set; }
+        public string MedicoNome { get; set; }
     }
 
     public sealed class CatRecord
@@ -144,6 +188,14 @@ namespace SistemaTstLargoTreze
         public string TipoExame { get; set; }
         public string Resultado { get; set; }
         public string Observacoes { get; set; }
+    }
+
+    public sealed class CatStatusResumo
+    {
+        public int Aptos { get; set; }
+        public int Inaptos { get; set; }
+        public int Aguardando { get; set; }
+        public int Total { get; set; }
     }
 
     public sealed class ComboItem
@@ -209,7 +261,10 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@nome", name);
                 command.Parameters.AddWithValue("@email", email);
                 command.Parameters.AddWithValue("@senha_hash", Database.HashPassword(password));
-                command.ExecuteNonQuery();
+                int affectedRows = command.ExecuteNonQuery();
+
+                if (affectedRows == 0)
+                    throw new InvalidOperationException("E-mail nao encontrado no banco de dados.");
             }
         }
 
@@ -315,7 +370,7 @@ namespace SistemaTstLargoTreze
 
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT id, codigo, nome, tipo, periodicidade
+                @"SELECT id, codigo, nome, tipo, periodicidade, anexo_imagem
                   FROM tipos_exames
                   WHERE ativo = 1
                   ORDER BY nome", connection))
@@ -329,7 +384,8 @@ namespace SistemaTstLargoTreze
                         Codigo = reader.GetString("codigo"),
                         Nome = reader.GetString("nome"),
                         Tipo = reader.GetString("tipo"),
-                        Periodicidade = reader.GetString("periodicidade")
+                        Periodicidade = reader.GetString("periodicidade"),
+                        AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem")
                     });
                 }
             }
@@ -341,7 +397,7 @@ namespace SistemaTstLargoTreze
         {
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT id, codigo, nome, tipo, periodicidade
+                @"SELECT id, codigo, nome, tipo, periodicidade, anexo_imagem
                   FROM tipos_exames
                   WHERE id = @id
                   LIMIT 1", connection))
@@ -359,7 +415,8 @@ namespace SistemaTstLargoTreze
                         Codigo = reader.GetString("codigo"),
                         Nome = reader.GetString("nome"),
                         Tipo = reader.GetString("tipo"),
-                        Periodicidade = reader.GetString("periodicidade")
+                        Periodicidade = reader.GetString("periodicidade"),
+                        AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem")
                     };
                 }
             }
@@ -371,16 +428,17 @@ namespace SistemaTstLargoTreze
             using (MySqlCommand command = new MySqlCommand(
                 exame.Id > 0
                     ? @"UPDATE tipos_exames
-                        SET codigo = @codigo, nome = @nome, tipo = @tipo, periodicidade = @periodicidade
+                        SET codigo = @codigo, nome = @nome, tipo = @tipo, periodicidade = @periodicidade, anexo_imagem = @anexo_imagem
                         WHERE id = @id"
-                    : @"INSERT INTO tipos_exames (codigo, nome, tipo, periodicidade)
-                        VALUES (@codigo, @nome, @tipo, @periodicidade)", connection))
+                    : @"INSERT INTO tipos_exames (codigo, nome, tipo, periodicidade, anexo_imagem)
+                        VALUES (@codigo, @nome, @tipo, @periodicidade, @anexo_imagem)", connection))
             {
                 command.Parameters.AddWithValue("@id", exame.Id);
                 command.Parameters.AddWithValue("@codigo", exame.Codigo);
                 command.Parameters.AddWithValue("@nome", exame.Nome);
                 command.Parameters.AddWithValue("@tipo", exame.Tipo);
                 command.Parameters.AddWithValue("@periodicidade", exame.Periodicidade);
+                command.Parameters.AddWithValue("@anexo_imagem", EmptyToDbNull(exame.AnexoImagem));
                 command.ExecuteNonQuery();
             }
         }
@@ -466,10 +524,12 @@ namespace SistemaTstLargoTreze
 
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT id, matricula, nome, cpf, setor, cargo, data_admissao, data_vencimento_aso, status_aso
-                  FROM empregados
-                  WHERE ativo = 1
-                  ORDER BY nome", connection))
+                @"SELECT e.id, e.matricula, e.nome, e.cpf, e.setor, e.cargo, e.data_admissao,
+                         e.data_vencimento_aso, e.status_aso, e.medico_id, m.nome AS medico_nome
+                  FROM empregados e
+                  LEFT JOIN medicos m ON m.id = e.medico_id
+                  WHERE e.ativo = 1
+                  ORDER BY e.nome", connection))
             using (MySqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -484,12 +544,50 @@ namespace SistemaTstLargoTreze
                         Cargo = reader.IsDBNull(reader.GetOrdinal("cargo")) ? string.Empty : reader.GetString("cargo"),
                         DataAdmissao = reader.IsDBNull(reader.GetOrdinal("data_admissao")) ? string.Empty : reader.GetDateTime("data_admissao").ToString("dd/MM/yyyy"),
                         DataVencimentoAso = reader.IsDBNull(reader.GetOrdinal("data_vencimento_aso")) ? string.Empty : reader.GetDateTime("data_vencimento_aso").ToString("dd/MM/yyyy"),
-                        StatusAso = reader.GetString("status_aso")
+                        StatusAso = reader.GetString("status_aso"),
+                        MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
+                        MedicoNome = reader.IsDBNull(reader.GetOrdinal("medico_nome")) ? string.Empty : reader.GetString("medico_nome")
                     });
                 }
             }
 
             return empregados;
+        }
+
+        public static EmpregadoRecord GetEmpregado(int id)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT e.id, e.matricula, e.nome, e.cpf, e.setor, e.cargo, e.data_admissao,
+                         e.data_vencimento_aso, e.status_aso, e.medico_id, m.nome AS medico_nome
+                  FROM empregados e
+                  LEFT JOIN medicos m ON m.id = e.medico_id
+                  WHERE e.id = @id
+                  LIMIT 1", connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        return null;
+
+                    return new EmpregadoRecord
+                    {
+                        Id = reader.GetInt32("id"),
+                        Matricula = reader.GetString("matricula"),
+                        Nome = reader.GetString("nome"),
+                        Cpf = reader.GetString("cpf"),
+                        Setor = reader.IsDBNull(reader.GetOrdinal("setor")) ? string.Empty : reader.GetString("setor"),
+                        Cargo = reader.IsDBNull(reader.GetOrdinal("cargo")) ? string.Empty : reader.GetString("cargo"),
+                        DataAdmissao = reader.IsDBNull(reader.GetOrdinal("data_admissao")) ? string.Empty : reader.GetDateTime("data_admissao").ToString("dd/MM/yyyy"),
+                        DataVencimentoAso = reader.IsDBNull(reader.GetOrdinal("data_vencimento_aso")) ? string.Empty : reader.GetDateTime("data_vencimento_aso").ToString("dd/MM/yyyy"),
+                        StatusAso = reader.GetString("status_aso"),
+                        MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
+                        MedicoNome = reader.IsDBNull(reader.GetOrdinal("medico_nome")) ? string.Empty : reader.GetString("medico_nome")
+                    };
+                }
+            }
         }
 
         public static void SaveEmpregado(EmpregadoRecord empregado)
@@ -499,10 +597,11 @@ namespace SistemaTstLargoTreze
                 empregado.Id > 0
                     ? @"UPDATE empregados
                         SET matricula = @matricula, nome = @nome, cpf = @cpf, setor = @setor, cargo = @cargo,
-                            data_admissao = @data_admissao, data_vencimento_aso = @data_vencimento_aso, status_aso = @status_aso
+                            data_admissao = @data_admissao, data_vencimento_aso = @data_vencimento_aso,
+                            status_aso = @status_aso, medico_id = @medico_id
                         WHERE id = @id"
-                    : @"INSERT INTO empregados (matricula, nome, cpf, setor, cargo, data_admissao, data_vencimento_aso, status_aso)
-                        VALUES (@matricula, @nome, @cpf, @setor, @cargo, @data_admissao, @data_vencimento_aso, @status_aso)", connection))
+                    : @"INSERT INTO empregados (matricula, nome, cpf, setor, cargo, data_admissao, data_vencimento_aso, status_aso, medico_id)
+                        VALUES (@matricula, @nome, @cpf, @setor, @cargo, @data_admissao, @data_vencimento_aso, @status_aso, @medico_id)", connection))
             {
                 command.Parameters.AddWithValue("@id", empregado.Id);
                 command.Parameters.AddWithValue("@matricula", empregado.Matricula);
@@ -513,7 +612,26 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@data_admissao", DateToDbNull(empregado.DataAdmissao));
                 command.Parameters.AddWithValue("@data_vencimento_aso", DateToDbNull(empregado.DataVencimentoAso));
                 command.Parameters.AddWithValue("@status_aso", string.IsNullOrWhiteSpace(empregado.StatusAso) ? "Pendente" : empregado.StatusAso);
+                command.Parameters.AddWithValue("@medico_id", empregado.MedicoId.HasValue && empregado.MedicoId.Value > 0 ? (object)empregado.MedicoId.Value : DBNull.Value);
                 command.ExecuteNonQuery();
+            }
+        }
+
+        public static void DeleteEmpregados(IEnumerable<int> ids)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                foreach (int id in ids)
+                {
+                    using (MySqlCommand command = new MySqlCommand(
+                        @"UPDATE empregados
+                          SET ativo = 0
+                          WHERE id = @id", connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
         }
 
@@ -547,6 +665,36 @@ namespace SistemaTstLargoTreze
             }
 
             return cats;
+        }
+
+        public static CatStatusResumo GetCatStatusResumo()
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT
+                      COUNT(*) AS total,
+                      SUM(CASE WHEN LOWER(TRIM(COALESCE(resultado_aso, ''))) IN ('apto', 'apta') THEN 1 ELSE 0 END) AS aptos,
+                      SUM(CASE WHEN LOWER(TRIM(COALESCE(resultado_aso, ''))) IN ('inapto', 'inapta') THEN 1 ELSE 0 END) AS inaptos,
+                      SUM(CASE
+                            WHEN resultado_aso IS NULL
+                              OR TRIM(resultado_aso) = ''
+                              OR LOWER(TRIM(resultado_aso)) LIKE 'aguardando%'
+                            THEN 1 ELSE 0
+                          END) AS aguardando
+                  FROM cats", connection))
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                if (!reader.Read())
+                    return new CatStatusResumo();
+
+                return new CatStatusResumo
+                {
+                    Total = reader.IsDBNull(reader.GetOrdinal("total")) ? 0 : Convert.ToInt32(reader["total"]),
+                    Aptos = reader.IsDBNull(reader.GetOrdinal("aptos")) ? 0 : Convert.ToInt32(reader["aptos"]),
+                    Inaptos = reader.IsDBNull(reader.GetOrdinal("inaptos")) ? 0 : Convert.ToInt32(reader["inaptos"]),
+                    Aguardando = reader.IsDBNull(reader.GetOrdinal("aguardando")) ? 0 : Convert.ToInt32(reader["aguardando"])
+                };
+            }
         }
 
         public static List<CatRecord> GetCatsPorEmpregado(int empregadoId)
@@ -618,7 +766,7 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@descricao", EmptyToDbNull(cat.Descricao));
                 command.Parameters.AddWithValue("@tipo_cat", EmptyToDbNull(cat.TipoCat));
                 command.Parameters.AddWithValue("@situacao", string.IsNullOrWhiteSpace(cat.Situacao) ? "Aberta" : cat.Situacao);
-                command.Parameters.AddWithValue("@resultado_aso", string.IsNullOrWhiteSpace(cat.ResultadoAso) ? "Aguardando ASO" : cat.ResultadoAso);
+                command.Parameters.AddWithValue("@resultado_aso", NormalizarResultadoAso(cat.ResultadoAso));
                 command.ExecuteNonQuery();
             }
         }
@@ -635,7 +783,7 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@cat_id", aso.CatId.HasValue && aso.CatId.Value > 0 ? (object)aso.CatId.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@data_aso", DateToDbNull(aso.DataAso));
                 command.Parameters.AddWithValue("@tipo_exame", aso.TipoExame);
-                command.Parameters.AddWithValue("@resultado", aso.Resultado);
+                command.Parameters.AddWithValue("@resultado", NormalizarResultadoAso(aso.Resultado));
                 command.Parameters.AddWithValue("@observacoes", EmptyToDbNull(aso.Observacoes));
                 command.ExecuteNonQuery();
             }
@@ -650,7 +798,7 @@ namespace SistemaTstLargoTreze
                       WHERE id = @cat_id", connection))
                 {
                     command.Parameters.AddWithValue("@cat_id", aso.CatId.Value);
-                    command.Parameters.AddWithValue("@resultado_aso", aso.Resultado);
+                    command.Parameters.AddWithValue("@resultado_aso", NormalizarResultadoAso(aso.Resultado));
                     command.ExecuteNonQuery();
                 }
             }
@@ -717,6 +865,25 @@ namespace SistemaTstLargoTreze
         private static object EmptyToDbNull(string value)
         {
             return string.IsNullOrWhiteSpace(value) ? (object)DBNull.Value : value.Trim();
+        }
+
+        private static string NormalizarResultadoAso(string resultado)
+        {
+            if (string.IsNullOrWhiteSpace(resultado))
+                return "Aguardando ASO";
+
+            string valor = resultado.Trim();
+
+            if (string.Equals(valor, "apto", StringComparison.OrdinalIgnoreCase))
+                return "Apto";
+
+            if (string.Equals(valor, "inapto", StringComparison.OrdinalIgnoreCase))
+                return "Inapto";
+
+            if (valor.StartsWith("aguardando", StringComparison.OrdinalIgnoreCase))
+                return "Aguardando ASO";
+
+            return valor;
         }
 
         private static object DateToDbNull(string value)

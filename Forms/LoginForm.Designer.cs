@@ -34,16 +34,16 @@ namespace SistemaTstLargoTreze
             KeyDown += LoginForm_KeyDown;
 
             BuildAuthStage(76, 176, 1190, 520, false);
-            CreateAuthCard(490, 126, 240, 300);
+            CreateAuthCard(490, 126, 340, 390);
 
             CardPanel.Controls.Add(
                 UiBuilder.CenterLabel(
                     "Bem-vindo",
                     0,
-                    26,
-                    240,
                     30,
-                    14F,
+                    340,
+                    34,
+                    18F,
                     FontStyle.Bold,
                     UiColors.Navy
                 )
@@ -53,10 +53,10 @@ namespace SistemaTstLargoTreze
                 UiBuilder.CenterLabel(
                     "Acesse o Sistema TST - Largo Treze",
                     0,
-                    58,
-                    240,
+                    68,
+                    340,
                     18,
-                    7.5F,
+                    9F,
                     FontStyle.Regular,
                     Color.Gray
                 )
@@ -65,41 +65,41 @@ namespace SistemaTstLargoTreze
             CardPanel.Controls.Add(
                 UiBuilder.Label(
                     "E-mail",
-                    20,
-                    92,
-                    190,
+                    32,
+                    112,
+                    270,
                     18,
-                    8F,
+                    9F,
                     FontStyle.Bold,
                     UiColors.Navy
                 )
             );
 
-            txtUsuario = UiBuilder.TextBox("Digite seu e-mail cadastrado", 20, 112, 200);
+            txtUsuario = UiBuilder.TextBox("Digite seu e-mail cadastrado", 32, 136, 276);
             CardPanel.Controls.Add(txtUsuario);
 
             CardPanel.Controls.Add(
                 UiBuilder.Label(
                     "Senha",
-                    20,
-                    150,
-                    190,
+                    32,
+                    184,
+                    270,
                     18,
-                    8F,
+                    9F,
                     FontStyle.Bold,
                     UiColors.Navy
                 )
             );
 
-            txtSenha = UiBuilder.TextBox("Digite sua senha", 20, 170, 158);
+            txtSenha = UiBuilder.TextBox("Digite sua senha", 32, 208, 224);
             txtSenha.UseSystemPasswordChar = true;
             CardPanel.Controls.Add(txtSenha);
 
             btnMostrarSenha = UiBuilder.Button(
                 "Ver",
-                182,
-                170,
-                38,
+                264,
+                208,
+                44,
                 30,
                 Color.White,
                 UiColors.AccentBlue
@@ -113,7 +113,7 @@ namespace SistemaTstLargoTreze
             chkLembrar = new CheckBox
             {
                 Text = "Lembrar-me",
-                Location = new Point(20, 207),
+                Location = new Point(32, 248),
                 Size = new Size(110, 20),
                 Font = new Font("Segoe UI", 8F),
                 ForeColor = UiColors.BodyText,
@@ -124,10 +124,10 @@ namespace SistemaTstLargoTreze
 
             btnEntrar = UiBuilder.Button(
                 "Entrar",
-                20,
-                237,
-                200,
-                30,
+                32,
+                284,
+                276,
+                34,
                 UiColors.Orange,
                 Color.White
             );
@@ -135,12 +135,12 @@ namespace SistemaTstLargoTreze
             btnEntrar.Click += BtnEntrar_Click;
             CardPanel.Controls.Add(btnEntrar);
 
-            linkCadastro = UiBuilder.Link("Criar conta", 20, 268, 90, 20);
+            linkCadastro = UiBuilder.Link("Criar conta", 32, 326, 120, 20);
             linkCadastro.TextAlign = ContentAlignment.MiddleLeft;
             linkCadastro.LinkClicked += LinkCadastro_LinkClicked;
             CardPanel.Controls.Add(linkCadastro);
 
-            linkEsqueci = UiBuilder.Link("Esqueci a senha", 116, 268, 104, 20);
+            linkEsqueci = UiBuilder.Link("Esqueci a senha", 178, 326, 130, 20);
             linkEsqueci.TextAlign = ContentAlignment.MiddleRight;
             linkEsqueci.LinkClicked += LinkEsqueci_LinkClicked;
             CardPanel.Controls.Add(linkEsqueci);
@@ -148,8 +148,8 @@ namespace SistemaTstLargoTreze
             lblErro = UiBuilder.CenterLabel(
                 "",
                 0,
-                286,
-                240,
+                352,
+                340,
                 16,
                 7.5F,
                 FontStyle.Bold,

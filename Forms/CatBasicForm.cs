@@ -55,11 +55,27 @@ namespace SistemaTstLargoTreze
 
         private void TabTestemunhas_Click(object sender, EventArgs e)
         {
+            string mensagem;
+            if (!ValidarObrigatorios(out mensagem))
+            {
+                MessageBox.Show(mensagem, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SalvarRascunho();
             AppNavigator.Show(new CatWitnessesForm());
         }
 
         private void TabComplementares_Click(object sender, EventArgs e)
         {
+            string mensagem;
+            if (!ValidarObrigatorios(out mensagem))
+            {
+                MessageBox.Show(mensagem, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            SalvarRascunho();
             AppNavigator.Show(new CatMedicalForm());
         }
     }

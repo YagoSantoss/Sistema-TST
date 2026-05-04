@@ -87,12 +87,12 @@ namespace SistemaTstLargoTreze
             AddMenuButton("👨‍⚕  Médicos", DashboardMenu.Doctors, active, 266, string.Empty);
             AddMenuButton("🔬  Tipos de Exame", DashboardMenu.ExamTypes, active, 296, string.Empty);
             AddMenuButton("🏢  Ambientes de Trabalho", DashboardMenu.WorkEnvironments, active, 326, string.Empty);
-            AddMenuButton("📡  Integração eSocial", DashboardMenu.Esocial, active, 356, string.Empty);
+            AddMenuButton("📊  Painel de Gestão", DashboardMenu.Esocial, active, 356, string.Empty);
 
             Panel footer = new Panel
             {
                 Anchor = AnchorStyles.Left | AnchorStyles.Bottom,
-                Location = new Point(0, SidebarPanel.Height - 48),
+                Location = new Point(0, SidebarPanel.Height - 70),
                 Size = new Size(SidebarWidth, 1),
                 BackColor = Color.FromArgb(28, 78, 120)
             };
@@ -100,9 +100,9 @@ namespace SistemaTstLargoTreze
 
             PillLabel avatar = new PillLabel
             {
-                Text = "RO",
+                Text = UsuarioIniciais(),
                 Anchor = AnchorStyles.Left | AnchorStyles.Bottom,
-                Location = new Point(15, SidebarPanel.Height - 36),
+                Location = new Point(15, SidebarPanel.Height - 58),
                 Size = new Size(28, 28),
                 FillColor = UiColors.DarkNavy,
                 ForeColor = Color.White,
@@ -111,13 +111,20 @@ namespace SistemaTstLargoTreze
             };
             SidebarPanel.Controls.Add(avatar);
 
-            Label nome = UiBuilder.Label("Rafael Oliveira", 50, SidebarPanel.Height - 40, 125, 18, 8F, FontStyle.Bold, Color.White);
+            Label nome = UiBuilder.Label(UsuarioNome(), 50, SidebarPanel.Height - 62, 125, 18, 8F, FontStyle.Bold, Color.White);
             nome.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             SidebarPanel.Controls.Add(nome);
 
-            Label cargo = UiBuilder.Label("Médico Coordenador", 50, SidebarPanel.Height - 24, 130, 15, 7F, FontStyle.Regular, UiColors.MutedText);
+            Label cargo = UiBuilder.Label("Usuario logado", 50, SidebarPanel.Height - 46, 130, 15, 7F, FontStyle.Regular, UiColors.MutedText);
             cargo.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             SidebarPanel.Controls.Add(cargo);
+
+            RoundButton sairConta = UiBuilder.SmallButton("Sair da conta", 50, SidebarPanel.Height - 27, 100, Color.White, UiColors.Red);
+            sairConta.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
+            sairConta.BorderColor = UiColors.Border;
+            sairConta.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+            sairConta.Click += Logout_Click;
+            SidebarPanel.Controls.Add(sairConta);
         }
 
         private void AddMenuButton(string text, DashboardMenu menu, DashboardMenu active, int top, string badge)
@@ -156,6 +163,28 @@ namespace SistemaTstLargoTreze
                 SidebarPanel.Controls.Add(pill);
                 pill.BringToFront();
             }
+        }
+
+        private string UsuarioNome()
+        {
+            if (AppState.CurrentUser != null && !string.IsNullOrWhiteSpace(AppState.CurrentUser.Name))
+                return AppState.CurrentUser.Name.Trim();
+
+            return "Usuario";
+        }
+
+        private string UsuarioIniciais()
+        {
+            string nome = UsuarioNome();
+            string[] partes = nome.Split(new[] { ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+
+            if (partes.Length == 0)
+                return "U";
+
+            if (partes.Length == 1)
+                return partes[0].Substring(0, 1).ToUpperInvariant();
+
+            return (partes[0].Substring(0, 1) + partes[partes.Length - 1].Substring(0, 1)).ToUpperInvariant();
         }
 
         private void BuildHeader(string title, string subtitle)

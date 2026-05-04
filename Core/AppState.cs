@@ -1,3 +1,6 @@
+using System;
+using System.Security.Cryptography;
+
 namespace SistemaTstLargoTreze
 {
     public sealed class UserAccount
@@ -13,6 +16,7 @@ namespace SistemaTstLargoTreze
         public static UserAccount CurrentUser { get; private set; }
         public static string PendingRecoveryEmail { get; private set; }
         public static string VerificationCode { get; private set; } = "123456";
+        public static DateTime? VerificationCodeExpiresAt { get; private set; }
 
         public static bool ValidateLogin(string login, string password)
         {
@@ -40,17 +44,50 @@ namespace SistemaTstLargoTreze
         public static void BeginPasswordRecovery(string email)
         {
             PendingRecoveryEmail = email;
-            VerificationCode = "123456";
+            VerificationCode = GenerateVerificationCode();
+            VerificationCodeExpiresAt = DateTime.Now.AddMinutes(10);
+            EmailService.SendPasswordRecoveryCode(email, VerificationCode);
+        }
+
+        public static void ResendPasswordRecoveryCode()
+        {
+            if (string.IsNullOrWhiteSpace(PendingRecoveryEmail))
+                throw new InvalidOperationException("Informe o e-mail novamente para reenviar o codigo.");
+
+            VerificationCode = GenerateVerificationCode();
+            VerificationCodeExpiresAt = DateTime.Now.AddMinutes(10);
+            EmailService.SendPasswordRecoveryCode(PendingRecoveryEmail, VerificationCode);
         }
 
         public static bool CheckVerificationCode(string code)
         {
-            return code == VerificationCode;
+            return !string.IsNullOrWhiteSpace(PendingRecoveryEmail) &&
+                   VerificationCodeExpiresAt.HasValue &&
+                   VerificationCodeExpiresAt.Value >= DateTime.Now &&
+                   code == VerificationCode;
         }
 
         public static void ResetPendingPassword(string password)
         {
+            if (string.IsNullOrWhiteSpace(PendingRecoveryEmail))
+                throw new System.InvalidOperationException("Inicie a recuperacao de senha pelo e-mail cadastrado.");
+
             UserRepository.UpdatePassword(PendingRecoveryEmail, password);
+            PendingRecoveryEmail = null;
+            VerificationCode = null;
+            VerificationCodeExpiresAt = null;
+        }
+
+        private static string GenerateVerificationCode()
+        {
+            byte[] bytes = new byte[4];
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(bytes);
+            }
+
+            int value = Math.Abs(BitConverter.ToInt32(bytes, 0)) % 1000000;
+            return value.ToString("D6");
         }
     }
 }
