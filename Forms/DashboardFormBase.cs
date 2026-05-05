@@ -239,7 +239,7 @@ namespace SistemaTstLargoTreze
             switch (menu)
             {
                 case DashboardMenu.Risk:
-                    AppNavigator.Show(new RiskFactorsForm());
+                    AppNavigator.Show(new RiskFactorsListForm());
                     break;
 
                 case DashboardMenu.Cat:
@@ -247,7 +247,7 @@ namespace SistemaTstLargoTreze
                     break;
 
                 case DashboardMenu.Aso:
-                    AppNavigator.Show(new AsoForm());
+                    AppNavigator.Show(new AsoListForm());
                     break;
 
                 case DashboardMenu.Employees:

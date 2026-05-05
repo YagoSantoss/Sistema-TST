@@ -49,7 +49,7 @@ namespace SistemaTstLargoTreze
             if (larguraDisponivel < 790)
                 larguraDisponivel = 790;
 
-            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 400);
+            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 470);
             form.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(form);
 
@@ -187,6 +187,26 @@ namespace SistemaTstLargoTreze
                 UiBuilder.TextBox("Código do agravo (se aplicável)", 0, 0, metadeW),
                 xDir,
                 292,
+                metadeW,
+                false
+            );
+
+            UiBuilder.AddField(
+                form,
+                "DURACAO DO TRATAMENTO",
+                UiBuilder.TextBox("Ex.: 15 dias", 0, 0, metadeW),
+                xEsq,
+                352,
+                metadeW,
+                false
+            );
+
+            UiBuilder.AddField(
+                form,
+                "LATERALIDADE",
+                UiBuilder.Combo("Nao aplicavel", 0, 0, metadeW),
+                xDir,
+                352,
                 metadeW,
                 false
             );

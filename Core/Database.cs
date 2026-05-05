@@ -85,7 +85,23 @@ namespace SistemaTstLargoTreze
                 }
             }
 
+            EnsureActiveColumn(connection, "ambientes_trabalho");
+            EnsureActiveColumn(connection, "cats");
+            EnsureActiveColumn(connection, "asos");
+            EnsureActiveColumn(connection, "fatores_risco");
+
             schemaChecked = true;
+        }
+
+        private static void EnsureActiveColumn(MySqlConnection connection, string tableName)
+        {
+            if (ColumnExists(connection, tableName, "ativo"))
+                return;
+
+            using (MySqlCommand command = new MySqlCommand("ALTER TABLE " + tableName + " ADD COLUMN ativo TINYINT(1) NOT NULL DEFAULT 1", connection))
+            {
+                command.ExecuteNonQuery();
+            }
         }
 
         private static bool ColumnExists(MySqlConnection connection, string tableName, string columnName)
@@ -188,6 +204,17 @@ namespace SistemaTstLargoTreze
         public string TipoExame { get; set; }
         public string Resultado { get; set; }
         public string Observacoes { get; set; }
+    }
+
+    public sealed class RiskFactorRecord
+    {
+        public int Id { get; set; }
+        public string EmpregadoNome { get; set; }
+        public string AmbienteNome { get; set; }
+        public string TipoFator { get; set; }
+        public string Agente { get; set; }
+        public string DataAvaliacao { get; set; }
+        public string InicioExposicao { get; set; }
     }
 
     public sealed class CatStatusResumo
@@ -451,6 +478,7 @@ namespace SistemaTstLargoTreze
             using (MySqlCommand command = new MySqlCommand(
                 @"SELECT id, codigo, ambiente, setor, status
                   FROM ambientes_trabalho
+                  WHERE ativo = 1
                   ORDER BY ambiente", connection))
             using (MySqlDataReader reader = command.ExecuteReader())
             {
@@ -476,7 +504,7 @@ namespace SistemaTstLargoTreze
             using (MySqlCommand command = new MySqlCommand(
                 @"SELECT id, codigo, ambiente, setor, status
                   FROM ambientes_trabalho
-                  WHERE id = @id
+                  WHERE id = @id AND ativo = 1
                   LIMIT 1", connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -516,6 +544,21 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@status", ambiente.Status);
                 command.ExecuteNonQuery();
             }
+        }
+
+        public static void DeleteMedicos(IEnumerable<int> ids)
+        {
+            SoftDeleteByIds("medicos", ids);
+        }
+
+        public static void DeleteTiposExames(IEnumerable<int> ids)
+        {
+            SoftDeleteByIds("tipos_exames", ids);
+        }
+
+        public static void DeleteAmbientes(IEnumerable<int> ids)
+        {
+            SoftDeleteByIds("ambientes_trabalho", ids);
         }
 
         public static List<EmpregadoRecord> GetEmpregados()
@@ -645,11 +688,12 @@ namespace SistemaTstLargoTreze
                          c.data_comunicacao, c.local_acidente, c.descricao, c.tipo_cat, c.situacao, c.resultado_aso
                   FROM cats c
                   INNER JOIN empregados e ON e.id = c.empregado_id
-                  WHERE @termo = ''
+                  WHERE c.ativo = 1
+                    AND (@termo = ''
                      OR e.nome LIKE @busca
                      OR e.matricula LIKE @busca
                      OR c.tipo_cat LIKE @busca
-                     OR c.situacao LIKE @busca
+                     OR c.situacao LIKE @busca)
                   ORDER BY c.data_acidente DESC, c.id DESC", connection))
             {
                 command.Parameters.AddWithValue("@termo", termo ?? string.Empty);
@@ -681,7 +725,8 @@ namespace SistemaTstLargoTreze
                               OR LOWER(TRIM(resultado_aso)) LIKE 'aguardando%'
                             THEN 1 ELSE 0
                           END) AS aguardando
-                  FROM cats", connection))
+                  FROM cats
+                  WHERE ativo = 1", connection))
             using (MySqlDataReader reader = command.ExecuteReader())
             {
                 if (!reader.Read())
@@ -707,7 +752,7 @@ namespace SistemaTstLargoTreze
                          c.data_comunicacao, c.local_acidente, c.descricao, c.tipo_cat, c.situacao, c.resultado_aso
                   FROM cats c
                   INNER JOIN empregados e ON e.id = c.empregado_id
-                  WHERE c.empregado_id = @empregado_id
+                  WHERE c.ativo = 1 AND c.empregado_id = @empregado_id
                   ORDER BY c.data_acidente DESC, c.id DESC", connection))
             {
                 command.Parameters.AddWithValue("@empregado_id", empregadoId);
@@ -732,7 +777,7 @@ namespace SistemaTstLargoTreze
                          c.data_comunicacao, c.local_acidente, c.descricao, c.tipo_cat, c.situacao, c.resultado_aso
                   FROM cats c
                   INNER JOIN empregados e ON e.id = c.empregado_id
-                  WHERE c.id = @id
+                  WHERE c.ativo = 1 AND c.id = @id
                   LIMIT 1", connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -771,6 +816,11 @@ namespace SistemaTstLargoTreze
             }
         }
 
+        public static void DeleteCats(IEnumerable<int> ids)
+        {
+            SoftDeleteByIds("cats", ids);
+        }
+
         public static void SaveAso(AsoRecord aso)
         {
             using (MySqlConnection connection = Database.OpenConnection())
@@ -804,6 +854,40 @@ namespace SistemaTstLargoTreze
             }
         }
 
+        public static List<AsoRecord> GetAsos(string termo)
+        {
+            List<AsoRecord> asos = new List<AsoRecord>();
+
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT a.id, a.empregado_id, e.nome AS empregado_nome, a.medico_id, m.nome AS medico_nome,
+                         a.cat_id, a.data_aso, a.tipo_exame, a.resultado, a.observacoes
+                  FROM asos a
+                  INNER JOIN empregados e ON e.id = a.empregado_id
+                  INNER JOIN medicos m ON m.id = a.medico_id
+                  WHERE a.ativo = 1
+                    AND (@termo = ''
+                     OR e.nome LIKE @busca
+                     OR m.nome LIKE @busca
+                     OR a.tipo_exame LIKE @busca
+                     OR a.resultado LIKE @busca)
+                  ORDER BY a.data_aso DESC, a.id DESC", connection))
+            {
+                command.Parameters.AddWithValue("@termo", termo ?? string.Empty);
+                command.Parameters.AddWithValue("@busca", "%" + (termo ?? string.Empty) + "%");
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        asos.Add(ReadAso(reader));
+                    }
+                }
+            }
+
+            return asos;
+        }
+
         public static List<AsoRecord> GetAsosPorEmpregado(int empregadoId)
         {
             List<AsoRecord> asos = new List<AsoRecord>();
@@ -815,7 +899,7 @@ namespace SistemaTstLargoTreze
                   FROM asos a
                   INNER JOIN empregados e ON e.id = a.empregado_id
                   INNER JOIN medicos m ON m.id = a.medico_id
-                  WHERE a.empregado_id = @empregado_id
+                  WHERE a.ativo = 1 AND a.empregado_id = @empregado_id
                   ORDER BY a.data_aso DESC, a.id DESC", connection))
             {
                 command.Parameters.AddWithValue("@empregado_id", empregadoId);
@@ -824,24 +908,97 @@ namespace SistemaTstLargoTreze
                 {
                     while (reader.Read())
                     {
-                        asos.Add(new AsoRecord
-                        {
-                            Id = reader.GetInt32("id"),
-                            EmpregadoId = reader.GetInt32("empregado_id"),
-                            EmpregadoNome = reader.GetString("empregado_nome"),
-                            MedicoId = reader.GetInt32("medico_id"),
-                            MedicoNome = reader.GetString("medico_nome"),
-                            CatId = reader.IsDBNull(reader.GetOrdinal("cat_id")) ? (int?)null : reader.GetInt32("cat_id"),
-                            DataAso = reader.GetDateTime("data_aso").ToString("dd/MM/yyyy"),
-                            TipoExame = reader.GetString("tipo_exame"),
-                            Resultado = reader.GetString("resultado"),
-                            Observacoes = reader.IsDBNull(reader.GetOrdinal("observacoes")) ? string.Empty : reader.GetString("observacoes")
-                        });
+                        asos.Add(ReadAso(reader));
                     }
                 }
             }
 
             return asos;
+        }
+
+        public static void DeleteAsos(IEnumerable<int> ids)
+        {
+            SoftDeleteByIds("asos", ids);
+        }
+
+        public static List<RiskFactorRecord> GetFatoresRisco(string termo)
+        {
+            List<RiskFactorRecord> riscos = new List<RiskFactorRecord>();
+
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT f.id, e.nome AS empregado_nome, a.ambiente AS ambiente_nome,
+                         f.tipo_fator, f.agente, f.data_avaliacao, f.inicio_exposicao
+                  FROM fatores_risco f
+                  LEFT JOIN empregados e ON e.id = f.empregado_id
+                  LEFT JOIN ambientes_trabalho a ON a.id = f.ambiente_id
+                  WHERE f.ativo = 1
+                    AND (@termo = ''
+                     OR e.nome LIKE @busca
+                     OR a.ambiente LIKE @busca
+                     OR f.tipo_fator LIKE @busca
+                     OR f.agente LIKE @busca)
+                  ORDER BY f.data_avaliacao DESC, f.id DESC", connection))
+            {
+                command.Parameters.AddWithValue("@termo", termo ?? string.Empty);
+                command.Parameters.AddWithValue("@busca", "%" + (termo ?? string.Empty) + "%");
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        riscos.Add(new RiskFactorRecord
+                        {
+                            Id = reader.GetInt32("id"),
+                            EmpregadoNome = reader.IsDBNull(reader.GetOrdinal("empregado_nome")) ? string.Empty : reader.GetString("empregado_nome"),
+                            AmbienteNome = reader.IsDBNull(reader.GetOrdinal("ambiente_nome")) ? string.Empty : reader.GetString("ambiente_nome"),
+                            TipoFator = reader.GetString("tipo_fator"),
+                            Agente = reader.GetString("agente"),
+                            DataAvaliacao = reader.IsDBNull(reader.GetOrdinal("data_avaliacao")) ? string.Empty : reader.GetDateTime("data_avaliacao").ToString("dd/MM/yyyy"),
+                            InicioExposicao = reader.IsDBNull(reader.GetOrdinal("inicio_exposicao")) ? string.Empty : reader.GetDateTime("inicio_exposicao").ToString("dd/MM/yyyy")
+                        });
+                    }
+                }
+            }
+
+            return riscos;
+        }
+
+        public static void DeleteFatoresRisco(IEnumerable<int> ids)
+        {
+            SoftDeleteByIds("fatores_risco", ids);
+        }
+
+        private static void SoftDeleteByIds(string tableName, IEnumerable<int> ids)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                foreach (int id in ids)
+                {
+                    using (MySqlCommand command = new MySqlCommand("UPDATE " + tableName + " SET ativo = 0 WHERE id = @id", connection))
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+        }
+
+        private static AsoRecord ReadAso(MySqlDataReader reader)
+        {
+            return new AsoRecord
+            {
+                Id = reader.GetInt32("id"),
+                EmpregadoId = reader.GetInt32("empregado_id"),
+                EmpregadoNome = reader.GetString("empregado_nome"),
+                MedicoId = reader.GetInt32("medico_id"),
+                MedicoNome = reader.GetString("medico_nome"),
+                CatId = reader.IsDBNull(reader.GetOrdinal("cat_id")) ? (int?)null : reader.GetInt32("cat_id"),
+                DataAso = reader.GetDateTime("data_aso").ToString("dd/MM/yyyy"),
+                TipoExame = reader.GetString("tipo_exame"),
+                Resultado = reader.GetString("resultado"),
+                Observacoes = reader.IsDBNull(reader.GetOrdinal("observacoes")) ? string.Empty : reader.GetString("observacoes")
+            };
         }
 
         private static CatRecord ReadCat(MySqlDataReader reader)

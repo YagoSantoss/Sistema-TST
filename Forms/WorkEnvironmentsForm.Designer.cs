@@ -8,6 +8,8 @@ namespace SistemaTstLargoTreze
     {
         private RoundButton btnNovo;
         private RoundButton btnEditar;
+        private RoundButton btnExcluir;
+        private readonly HashSet<int> _selecionados = new HashSet<int>();
 
         private bool _montandoConteudo = false;
 
@@ -119,16 +121,19 @@ namespace SistemaTstLargoTreze
             table.Controls.Add(header);
 
             int codigoW = 120;
+            int checkW = 34;
             int setorW = 220;
             int statusW = 120;
             int acoesW = 90;
-            int ambienteW = largura - codigoW - setorW - statusW - acoesW - 24;
+            int ambienteW = largura - checkW - codigoW - setorW - statusW - acoesW - 24;
 
             if (ambienteW < 260)
                 ambienteW = 260;
 
-            int x = 12;
+            int x = 5;
 
+            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("CÓDIGO", x, 0, codigoW));
             x += codigoW;
 
@@ -171,6 +176,11 @@ namespace SistemaTstLargoTreze
 
         private void MontarRodape(RoundPanel table, int largura)
         {
+            btnExcluir = UiBuilder.SmallButton("Excluir", 16, 195, 78, Color.White, UiColors.Red);
+            btnExcluir.BorderColor = UiColors.Border;
+            btnExcluir.Click += BtnExcluir_Click;
+            table.Controls.Add(btnExcluir);
+
             Label total = UiBuilder.Label(
                 TotalAmbientesTexto(),
                 largura - 180,
@@ -207,15 +217,21 @@ namespace SistemaTstLargoTreze
             table.Controls.Add(row);
 
             int codigoW = 120;
+            int checkW = 34;
             int setorW = 220;
             int statusW = 120;
             int acoesW = 90;
-            int ambienteW = largura - codigoW - setorW - statusW - acoesW - 24;
+            int ambienteW = largura - checkW - codigoW - setorW - statusW - acoesW - 24;
 
             if (ambienteW < 260)
                 ambienteW = 260;
 
-            int x = 12;
+            int x = 5;
+
+            CheckBox check = new CheckBox { Location = new Point(x + 9, 11), Size = new Size(16, 16), Checked = _selecionados.Contains(id), Tag = id, Cursor = Cursors.Hand };
+            check.CheckedChanged += Selecionado_CheckedChanged;
+            row.Controls.Add(check);
+            x += checkW;
 
             row.Controls.Add(
                 UiBuilder.Label(

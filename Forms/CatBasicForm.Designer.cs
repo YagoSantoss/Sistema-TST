@@ -58,7 +58,7 @@ namespace SistemaTstLargoTreze
             if (larguraDisponivel < 790)
                 larguraDisponivel = 790;
 
-            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 500);
+            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 560);
             form.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(form);
 
@@ -276,6 +276,28 @@ namespace SistemaTstLargoTreze
             txtDescricao.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
             form.Controls.Add(txtDescricao);
+
+            int rodapeW = (largura - (margem * 2) - gap) / 2;
+            UiBuilder.AddField(
+                form,
+                "DATA DO COMUNICADO",
+                UiBuilder.TextBox(System.DateTime.Today.ToString("dd/MM/yyyy"), 0, 0, rodapeW),
+                margem,
+                478,
+                rodapeW,
+                true
+            );
+
+            CheckBox aposentado = new CheckBox
+            {
+                Text = "Funcionario aposentado",
+                Location = new Point(margem + rodapeW + gap, 505),
+                Size = new Size(220, 22),
+                BackColor = Color.Transparent,
+                Font = new Font("Segoe UI", 8F, FontStyle.Bold),
+                ForeColor = UiColors.BodyText
+            };
+            form.Controls.Add(aposentado);
 
             CarregarCat();
             CarregarRascunho();

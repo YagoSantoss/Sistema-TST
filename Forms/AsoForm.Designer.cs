@@ -456,12 +456,12 @@ namespace SistemaTstLargoTreze
 
         private ComboBox CriarComboTipoAso(int width)
         {
-            ComboBox combo = UiBuilder.Combo("Periódico", 0, 0, width);
-            combo.Items.Add("Admissional");
-            combo.Items.Add("Demissional");
-            combo.Items.Add("Retorno ao trabalho");
-            combo.Items.Add("Mudança de risco");
-            combo.Items.Add("Relacionado a CAT");
+            ComboBox combo = UiBuilder.Combo("Periodico - Tabela 27", 0, 0, width);
+            combo.Items.Add("Admissional - Tabela 27");
+            combo.Items.Add("Demissional - Tabela 27");
+            combo.Items.Add("Retorno ao trabalho - Tabela 27");
+            combo.Items.Add("Mudanca de risco - Tabela 27");
+            combo.Items.Add("Relacionado a CAT - Tabela 27");
             return combo;
         }
 

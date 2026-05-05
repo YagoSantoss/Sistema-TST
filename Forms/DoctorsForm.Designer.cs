@@ -7,6 +7,8 @@ namespace SistemaTstLargoTreze
     public partial class DoctorsForm
     {
         private RoundButton btnNovo;
+        private RoundButton btnExcluir;
+        private readonly HashSet<int> _selecionados = new HashSet<int>();
 
         private bool _montandoConteudo = false;
 
@@ -118,17 +120,20 @@ namespace SistemaTstLargoTreze
             table.Controls.Add(header);
 
             int nomeW = (int)(largura * 0.25);
+            int checkW = 34;
             int crmW = 120;
             int orgaoW = 130;
             int especialidadeW = (int)(largura * 0.23);
             int acoesW = 90;
-            int emailW = largura - nomeW - crmW - orgaoW - especialidadeW - acoesW - 20;
+            int emailW = largura - checkW - nomeW - crmW - orgaoW - especialidadeW - acoesW - 20;
 
             if (emailW < 150)
                 emailW = 150;
 
-            int x = 12;
+            int x = 5;
 
+            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("NOME", x, 0, nomeW));
             x += nomeW;
 
@@ -174,6 +179,8 @@ namespace SistemaTstLargoTreze
 
         private void MontarRodape(RoundPanel table, int largura)
         {
+            MontarBotaoExcluir(table);
+
             Label total = UiBuilder.Label(
                 TotalMedicosTexto(),
                 largura - 170,
@@ -211,16 +218,29 @@ namespace SistemaTstLargoTreze
             table.Controls.Add(row);
 
             int nomeW = (int)(largura * 0.25);
+            int checkW = 34;
             int crmW = 120;
             int orgaoW = 130;
             int especialidadeW = (int)(largura * 0.23);
             int acoesW = 90;
-            int emailW = largura - nomeW - crmW - orgaoW - especialidadeW - acoesW - 20;
+            int emailW = largura - checkW - nomeW - crmW - orgaoW - especialidadeW - acoesW - 20;
 
             if (emailW < 150)
                 emailW = 150;
 
-            int x = 12;
+            int x = 5;
+
+            CheckBox check = new CheckBox
+            {
+                Location = new Point(x + 9, 11),
+                Size = new Size(16, 16),
+                Checked = _selecionados.Contains(id),
+                Tag = id,
+                Cursor = Cursors.Hand
+            };
+            check.CheckedChanged += Selecionado_CheckedChanged;
+            row.Controls.Add(check);
+            x += checkW;
 
             row.Controls.Add(
                 UiBuilder.Label(
@@ -325,6 +345,14 @@ namespace SistemaTstLargoTreze
             {
                 return "MySQL indisponivel";
             }
+        }
+
+        private void MontarBotaoExcluir(RoundPanel table)
+        {
+            btnExcluir = UiBuilder.SmallButton("Excluir", 16, 165, 78, Color.White, UiColors.Red);
+            btnExcluir.BorderColor = UiColors.Border;
+            btnExcluir.Click += BtnExcluir_Click;
+            table.Controls.Add(btnExcluir);
         }
     }
 }

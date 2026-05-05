@@ -43,69 +43,18 @@ namespace SistemaTstLargoTreze
             ContentPanel.Controls.Clear();
 
             int margem = 18;
-            int espacamento = 18;
 
             int larguraDisponivel = ContentPanel.ClientSize.Width - (margem * 2);
 
             if (larguraDisponivel < 790)
                 larguraDisponivel = 790;
 
-            int larguraCard = (larguraDisponivel - (espacamento * 3)) / 4;
-
-            AddMetricCard(
-                ContentPanel,
-                margem,
-                18,
-                larguraCard,
-                "TOTAL ATIVOS",
-                "0",
-                "Sem registros",
-                UiColors.AccentBlue,
-                Color.FromArgb(231, 241, 254)
-            );
-
-            AddMetricCard(
-                ContentPanel,
-                margem + larguraCard + espacamento,
-                18,
-                larguraCard,
-                "ASO VENCIDOS",
-                "0",
-                "Sem pendencias",
-                UiColors.Red,
-                Color.FromArgb(255, 230, 232)
-            );
-
-            AddMetricCard(
-                ContentPanel,
-                margem + ((larguraCard + espacamento) * 2),
-                18,
-                larguraCard,
-                "CAT ABERTAS",
-                "0",
-                "Sem registros",
-                UiColors.Orange,
-                UiColors.OrangeSoft
-            );
-
-            AddMetricCard(
-                ContentPanel,
-                margem + ((larguraCard + espacamento) * 3),
-                18,
-                larguraCard,
-                "EVENTOS ESOCIAL",
-                "0",
-                "Sem pendencias",
-                UiColors.AccentBlue,
-                Color.FromArgb(231, 241, 254)
-            );
-
-            int alturaTabela = ContentPanel.ClientSize.Height - 135;
+            int alturaTabela = ContentPanel.ClientSize.Height - 36;
 
             if (alturaTabela < 270)
                 alturaTabela = 270;
 
-            RoundPanel table = UiBuilder.Card(margem, 120, larguraDisponivel, alturaTabela);
+            RoundPanel table = UiBuilder.Card(margem, 18, larguraDisponivel, alturaTabela);
             table.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
             ContentPanel.Controls.Add(table);
 

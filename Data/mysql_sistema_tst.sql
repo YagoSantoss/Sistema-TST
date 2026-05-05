@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS ambientes_trabalho (
     ambiente VARCHAR(180) NOT NULL,
     setor VARCHAR(100) NOT NULL,
     status VARCHAR(40) NOT NULL DEFAULT 'Ativo',
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_ambientes_setor (setor)
@@ -84,6 +85,7 @@ CREATE TABLE IF NOT EXISTS asos (
     tipo_exame VARCHAR(80) NOT NULL,
     resultado VARCHAR(40) NOT NULL,
     observacoes TEXT,
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_asos_empregado (empregado_id),
@@ -119,6 +121,7 @@ CREATE TABLE IF NOT EXISTS cats (
     tipo_cat VARCHAR(80),
     situacao VARCHAR(40) NOT NULL DEFAULT 'Aberta',
     resultado_aso VARCHAR(40) NOT NULL DEFAULT 'Aguardando ASO',
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_cats_empregado (empregado_id),
@@ -158,6 +161,7 @@ CREATE TABLE IF NOT EXISTS fatores_risco (
     usa_epi TINYINT(1) NOT NULL DEFAULT 0,
     epi_eficaz TINYINT(1) NOT NULL DEFAULT 0,
     epi_descricao TEXT,
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_fatores_empregado

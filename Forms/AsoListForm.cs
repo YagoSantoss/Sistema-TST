@@ -5,16 +5,16 @@ using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
 {
-    public class CatListForm : DashboardFormBase
+    public class AsoListForm : DashboardFormBase
     {
         private CueTextBox txtBusca;
         private string _termoBusca = string.Empty;
         private bool _montandoConteudo;
         private readonly HashSet<int> _selecionados = new HashSet<int>();
 
-        public CatListForm()
+        public AsoListForm()
         {
-            BuildDashboardShell("CAT - Acidente de Trabalho", "S-2210 - Consulta e cadastro de CAT", DashboardMenu.Cat);
+            BuildDashboardShell("Monitoramento da Saude / ASO", "S-2220 - Consulta e registro de ASO", DashboardMenu.Aso);
             ContentPanel.AutoScroll = true;
             MontarConteudo();
             ContentPanel.Resize += (sender, e) => MontarConteudo();
@@ -38,15 +38,15 @@ namespace SistemaTstLargoTreze
             table.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(table);
 
-            table.Controls.Add(UiBuilder.Label("CAT cadastradas", 16, 12, largura - 240, 20, 9F, FontStyle.Bold, UiColors.AccentBlue));
-            table.Controls.Add(UiBuilder.Label("Pesquise, abra ou cadastre comunicacoes de acidente de trabalho", 16, 30, largura - 240, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
+            table.Controls.Add(UiBuilder.Label("ASOs registrados", 16, 12, largura - 240, 20, 9F, FontStyle.Bold, UiColors.AccentBlue));
+            table.Controls.Add(UiBuilder.Label("Pesquise, consulte ou registre monitoramentos de saude ocupacional", 16, 30, largura - 240, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
 
-            RoundButton novo = UiBuilder.SmallButton("+ Nova CAT", largura - 105, 16, 88, UiColors.AccentBlue, Color.White);
+            RoundButton novo = UiBuilder.SmallButton("+ Novo ASO", largura - 105, 16, 88, UiColors.AccentBlue, Color.White);
             novo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            novo.Click += (sender, e) => AppNavigator.Show(new CatBasicForm());
+            novo.Click += (sender, e) => AppNavigator.Show(new AsoForm());
             table.Controls.Add(novo);
 
-            txtBusca = UiBuilder.TextBox("Buscar por empregado, matricula, tipo ou situacao", 16, 62, largura - 130);
+            txtBusca = UiBuilder.TextBox("Buscar por empregado, medico, exame ou resultado", 16, 62, largura - 130);
             txtBusca.Text = _termoBusca;
             txtBusca.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             table.Controls.Add(txtBusca);
@@ -62,7 +62,7 @@ namespace SistemaTstLargoTreze
 
             MontarCabecalho(table, largura);
             MontarLinhas(table, largura);
-            MontarRodape(table, largura);
+            MontarRodape(table);
 
             ContentPanel.ResumeLayout(false);
             _montandoConteudo = false;
@@ -81,12 +81,11 @@ namespace SistemaTstLargoTreze
 
             int dataW = 120;
             int checkW = 34;
-            int tipoW = 120;
-            int situacaoW = 110;
-            int resultadoW = 130;
+            int tipoW = 160;
+            int medicoW = 210;
+            int resultadoW = 120;
             int acoesW = 90;
-            int empregadoW = (int)(largura * 0.28);
-            int localW = largura - checkW - empregadoW - dataW - tipoW - situacaoW - resultadoW - acoesW - 20;
+            int empregadoW = largura - checkW - dataW - tipoW - medicoW - resultadoW - acoesW - 20;
             int x = 5;
 
             header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
@@ -97,11 +96,9 @@ namespace SistemaTstLargoTreze
             x += dataW;
             header.Controls.Add(UiBuilder.HeaderCell("TIPO", x, 0, tipoW));
             x += tipoW;
-            header.Controls.Add(UiBuilder.HeaderCell("LOCAL", x, 0, localW));
-            x += localW;
-            header.Controls.Add(UiBuilder.HeaderCell("SITUACAO", x, 0, situacaoW));
-            x += situacaoW;
-            header.Controls.Add(UiBuilder.HeaderCell("RESULTADO ASO", x, 0, resultadoW));
+            header.Controls.Add(UiBuilder.HeaderCell("MEDICO", x, 0, medicoW));
+            x += medicoW;
+            header.Controls.Add(UiBuilder.HeaderCell("RESULTADO", x, 0, resultadoW));
             x += resultadoW;
             header.Controls.Add(UiBuilder.HeaderCell("ACOES", x, 0, acoesW));
         }
@@ -110,81 +107,65 @@ namespace SistemaTstLargoTreze
         {
             try
             {
-                List<CatRecord> cats = CadastrosRepository.GetCats(_termoBusca);
+                List<AsoRecord> asos = CadastrosRepository.GetAsos(_termoBusca);
 
-                if (cats.Count == 0)
+                if (asos.Count == 0)
                 {
-                    table.Controls.Add(UiBuilder.CenterLabel("Nenhuma CAT cadastrada", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    table.Controls.Add(UiBuilder.CenterLabel("Nenhum ASO registrado", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
                     return;
                 }
 
                 int y = 138;
-                foreach (CatRecord cat in cats)
+                foreach (AsoRecord aso in asos)
                 {
-                    AddCatRow(table, largura, y, cat);
+                    AddAsoRow(table, largura, y, aso);
                     y += 38;
                 }
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar as CATs do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os ASOs do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
-        private void AddCatRow(Panel table, int largura, int y, CatRecord cat)
+        private void AddAsoRow(Panel table, int largura, int y, AsoRecord aso)
         {
-            Panel row = new Panel
-            {
-                Location = new Point(0, y),
-                Size = new Size(largura, 38),
-                BackColor = Color.White,
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
-            };
+            Panel row = new Panel { Location = new Point(0, y), Size = new Size(largura, 38), BackColor = Color.White, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right };
             table.Controls.Add(row);
 
             int dataW = 120;
             int checkW = 34;
-            int tipoW = 120;
-            int situacaoW = 110;
-            int resultadoW = 130;
+            int tipoW = 160;
+            int medicoW = 210;
+            int resultadoW = 120;
             int acoesW = 90;
-            int empregadoW = (int)(largura * 0.28);
-            int localW = largura - checkW - empregadoW - dataW - tipoW - situacaoW - resultadoW - acoesW - 20;
+            int empregadoW = largura - checkW - dataW - tipoW - medicoW - resultadoW - acoesW - 20;
             int x = 5;
 
-            CheckBox check = new CheckBox
-            {
-                Location = new Point(x + 9, 11),
-                Size = new Size(16, 16),
-                Checked = _selecionados.Contains(cat.Id),
-                Tag = cat.Id,
-                Cursor = Cursors.Hand
-            };
+            CheckBox check = new CheckBox { Location = new Point(x + 9, 11), Size = new Size(16, 16), Checked = _selecionados.Contains(aso.Id), Tag = aso.Id, Cursor = Cursors.Hand };
             check.CheckedChanged += Selecionado_CheckedChanged;
             row.Controls.Add(check);
             x += checkW;
 
-            row.Controls.Add(UiBuilder.Label(cat.EmpregadoNome, x, 2, empregadoW, 34, 8F, FontStyle.Bold, UiColors.BodyText));
+            row.Controls.Add(UiBuilder.Label(aso.EmpregadoNome, x, 2, empregadoW, 34, 8F, FontStyle.Bold, UiColors.BodyText));
             x += empregadoW;
-            row.Controls.Add(UiBuilder.Cell(cat.DataAcidente, x, 2, dataW, UiColors.AccentBlue, FontStyle.Bold));
+            row.Controls.Add(UiBuilder.Cell(aso.DataAso, x, 2, dataW, UiColors.AccentBlue, FontStyle.Bold));
             x += dataW;
-            row.Controls.Add(UiBuilder.Cell(cat.TipoCat, x, 2, tipoW, UiColors.BodyText, FontStyle.Regular));
+            row.Controls.Add(UiBuilder.Label(aso.TipoExame, x, 2, tipoW, 34, 8F, FontStyle.Regular, UiColors.BodyText));
             x += tipoW;
-            row.Controls.Add(UiBuilder.Label(cat.LocalAcidente, x, 2, localW, 34, 8F, FontStyle.Regular, UiColors.BodyText));
-            x += localW;
-            row.Controls.Add(UiBuilder.Pill(cat.Situacao, x + 8, 9, 80, UiColors.OrangeSoft, UiColors.Orange));
-            x += situacaoW;
-            row.Controls.Add(UiBuilder.Pill(cat.ResultadoAso, x + 6, 9, 110, ResultadoAsoBack(cat.ResultadoAso), ResultadoAsoColor(cat.ResultadoAso)));
+            row.Controls.Add(UiBuilder.Label(aso.MedicoNome, x, 2, medicoW, 34, 8F, FontStyle.Regular, UiColors.BodyText));
+            x += medicoW;
+            row.Controls.Add(UiBuilder.Pill(aso.Resultado, x + 8, 9, 90, ResultadoBack(aso.Resultado), ResultadoColor(aso.Resultado)));
             x += resultadoW;
 
             RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 12, 7, 58, Color.White, UiColors.BodyText);
             abrir.BorderColor = UiColors.Border;
-            abrir.Tag = cat.Id;
-            abrir.Click += (sender, e) => AppNavigator.Show(new CatBasicForm((int)((Control)sender).Tag));
+            abrir.Tag = aso.EmpregadoId;
+            abrir.Click += (sender, e) => AppNavigator.Show(new AsoHistoryForm((int)((Control)sender).Tag));
             row.Controls.Add(abrir);
         }
 
-        private void MontarRodape(RoundPanel table, int largura)
+        private void MontarRodape(RoundPanel table)
         {
             RoundButton excluir = UiBuilder.SmallButton("Excluir", 16, 420, 78, Color.White, UiColors.Red);
             excluir.BorderColor = UiColors.Border;
@@ -212,45 +193,33 @@ namespace SistemaTstLargoTreze
         {
             if (_selecionados.Count == 0)
             {
-                MessageBox.Show("Selecione uma ou mais CATs para excluir.", "CAT", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione um ou mais ASOs para excluir.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show("Deseja excluir as CATs selecionadas?", "CAT", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBox.Show("Deseja excluir os ASOs selecionados?", "ASO", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
             try
             {
-                CadastrosRepository.DeleteCats(new List<int>(_selecionados));
+                CadastrosRepository.DeleteAsos(new List<int>(_selecionados));
                 _selecionados.Clear();
                 MontarConteudo();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private Color ResultadoAsoColor(string resultado)
+        private Color ResultadoColor(string resultado)
         {
-            if (resultado == "Apto")
-                return UiColors.Green;
-
-            if (resultado == "Inapto")
-                return UiColors.Red;
-
-            return UiColors.MutedText;
+            return resultado == "Inapto" ? UiColors.Red : UiColors.Green;
         }
 
-        private Color ResultadoAsoBack(string resultado)
+        private Color ResultadoBack(string resultado)
         {
-            if (resultado == "Apto")
-                return Color.FromArgb(217, 248, 234);
-
-            if (resultado == "Inapto")
-                return Color.FromArgb(255, 233, 232);
-
-            return Color.FromArgb(245, 250, 255);
+            return resultado == "Inapto" ? Color.FromArgb(255, 233, 232) : Color.FromArgb(217, 248, 234);
         }
     }
 }

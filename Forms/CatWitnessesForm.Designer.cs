@@ -50,7 +50,7 @@ namespace SistemaTstLargoTreze
             if (larguraDisponivel < 790)
                 larguraDisponivel = 790;
 
-            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 290);
+            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 350);
             form.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(form);
 
@@ -74,7 +74,7 @@ namespace SistemaTstLargoTreze
             btnAdicionarTestemunha = UiBuilder.SmallButton(
                 "+ Adicionar Testemunha",
                 18,
-                252,
+                312,
                 160,
                 Color.White,
                 UiColors.BodyText
@@ -87,7 +87,7 @@ namespace SistemaTstLargoTreze
             btnVoltar = UiBuilder.SmallButton(
                 "Voltar",
                 190,
-                252,
+                312,
                 75,
                 Color.White,
                 UiColors.BodyText
@@ -110,7 +110,7 @@ namespace SistemaTstLargoTreze
             RoundPanel witness = new RoundPanel
             {
                 Location = new Point(margem, 160),
-                Size = new Size(largura - (margem * 2), 82),
+                Size = new Size(largura - (margem * 2), 142),
                 Radius = 8,
                 FillColor = Color.FromArgb(248, 251, 254),
                 BorderColor = UiColors.Border,
@@ -179,6 +179,16 @@ namespace SistemaTstLargoTreze
                 x,
                 32,
                 telefoneW,
+                false
+            );
+
+            UiBuilder.AddField(
+                witness,
+                "ENDERECO",
+                UiBuilder.TextBox("Endereco da testemunha", 0, 0, larguraInterna),
+                12,
+                90,
+                larguraInterna,
                 false
             );
         }
