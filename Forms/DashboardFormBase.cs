@@ -87,7 +87,7 @@ namespace SistemaTstLargoTreze
             AddMenuButton("👨‍⚕  Médicos", DashboardMenu.Doctors, active, 266, string.Empty);
             AddMenuButton("🔬  Tipos de Exame", DashboardMenu.ExamTypes, active, 296, string.Empty);
             AddMenuButton("🏢  Ambientes de Trabalho", DashboardMenu.WorkEnvironments, active, 326, string.Empty);
-            AddMenuButton("📊  Painel de Gestão", DashboardMenu.Esocial, active, 356, string.Empty);
+            AddMenuButton("📊  Integração eSocial", DashboardMenu.Esocial, active, 356, string.Empty);
 
             Panel footer = new Panel
             {

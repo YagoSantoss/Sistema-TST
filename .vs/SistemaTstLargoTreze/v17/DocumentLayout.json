@@ -3,6 +3,14 @@
   "WorkspaceRootPath": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\forms\\examtypesform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\examtypesform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|c:\\users\\yago.psantos2\\documents\\codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\sistema tst\\forms\\doctorsform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\doctorsform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\forms\\employeesform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\employeesform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -11,7 +19,7 @@
       "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\employeesform.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|c:\\users\\yago.psantos2\\documents\\codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\sistema tst\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
+      "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
       "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
     },
     {
@@ -45,14 +53,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\forms\\workenvironmentsform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\workenvironmentsform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\forms\\examtypesform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\examtypesform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\forms\\doctorsform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|solutionrelative:forms\\doctorsform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3BDAE50C-75D8-4B78-8DF1-357B2A0D61F2}|SistemaTstLargoTreze.csproj|C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\forms\\asoform.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -154,7 +154,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -162,19 +162,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "ForgotPasswordForm.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\ForgotPasswordForm.Designer.cs",
-              "RelativeDocumentMoniker": "Forms\\ForgotPasswordForm.Designer.cs",
-              "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\ForgotPasswordForm.Designer.cs",
-              "RelativeToolTip": "Forms\\ForgotPasswordForm.Designer.cs",
-              "ViewState": "AgIAAEMAAAAAAAAAAADwv2sAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T18:27:53.982Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "EsocialIntegrationForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\EsocialIntegrationForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\EsocialIntegrationForm.Designer.cs",
@@ -186,7 +174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "WorkEnvironmentsForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\WorkEnvironmentsForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\WorkEnvironmentsForm.Designer.cs",
@@ -198,44 +186,43 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 0,
               "Title": "ExamTypesForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\ExamTypesForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\ExamTypesForm.Designer.cs",
               "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\ExamTypesForm.Designer.cs",
               "RelativeToolTip": "Forms\\ExamTypesForm.Designer.cs",
-              "ViewState": "AgIAAAMBAAAAAAAAAAAYwC0BAAABAAAAAAAAAA==",
+              "ViewState": "AgIAAJsAAAAAAAAAAAAIwKsAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T18:25:09.536Z"
+              "WhenOpened": "2026-04-28T18:25:09.536Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "EmployeesForm.cs [Design]",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\EmployeesForm.cs",
               "RelativeDocumentMoniker": "Forms\\EmployeesForm.cs",
               "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\EmployeesForm.cs [Design]",
               "RelativeToolTip": "Forms\\EmployeesForm.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-27T19:35:43.903Z",
-              "EditorCaption": " [Design]"
+              "WhenOpened": "2026-04-27T19:35:43.903Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "EmployeesForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\EmployeesForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\EmployeesForm.Designer.cs",
               "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\EmployeesForm.Designer.cs",
               "RelativeToolTip": "Forms\\EmployeesForm.Designer.cs",
-              "ViewState": "AgIAALoAAAAAAAAAAAAAAL8AAAB4AAAAAAAAAA==",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAqwM0AAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T18:13:31.029Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-28T18:13:31.029Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "App.config",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\App.config",
               "RelativeDocumentMoniker": "App.config",
@@ -243,12 +230,36 @@
               "RelativeToolTip": "App.config",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2026-05-04T19:52:07.585Z",
+              "WhenOpened": "2026-05-04T19:52:07.585Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DoctorsForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\DoctorsForm.Designer.cs",
+              "RelativeDocumentMoniker": "Forms\\DoctorsForm.Designer.cs",
+              "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\DoctorsForm.Designer.cs",
+              "RelativeToolTip": "Forms\\DoctorsForm.Designer.cs",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAUwDEBAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-28T18:24:17.389Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 9,
+              "Title": "ForgotPasswordForm.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\ForgotPasswordForm.Designer.cs",
+              "RelativeDocumentMoniker": "Forms\\ForgotPasswordForm.Designer.cs",
+              "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\ForgotPasswordForm.Designer.cs",
+              "RelativeToolTip": "Forms\\ForgotPasswordForm.Designer.cs",
+              "ViewState": "AgIAAEMAAAAAAAAAAADwv2sAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-28T18:27:53.982Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
               "Title": "CatBasicForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\CatBasicForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\CatBasicForm.Designer.cs",
@@ -260,7 +271,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "SettingsForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\SettingsForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\SettingsForm.Designer.cs",
@@ -272,7 +283,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "EmailService.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Core\\EmailService.cs",
               "RelativeDocumentMoniker": "Core\\EmailService.cs",
@@ -284,7 +295,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "CatWitnessesForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\CatWitnessesForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\CatWitnessesForm.Designer.cs",
@@ -296,7 +307,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "CatMedicalForm.Designer.cs",
               "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\CatMedicalForm.Designer.cs",
               "RelativeDocumentMoniker": "Forms\\CatMedicalForm.Designer.cs",
@@ -305,18 +316,6 @@
               "ViewState": "AgIAAAoBAAAAAAAAAAAYwDQBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-28T19:09:11.718Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "DoctorsForm.Designer.cs",
-              "DocumentMoniker": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\DoctorsForm.Designer.cs",
-              "RelativeDocumentMoniker": "Forms\\DoctorsForm.Designer.cs",
-              "ToolTip": "C:\\Users\\yago.psantos2\\Documents\\Codex\\2026-04-28\\files-mentioned-by-the-user-sistema\\Sistema TST\\Forms\\DoctorsForm.Designer.cs",
-              "RelativeToolTip": "Forms\\DoctorsForm.Designer.cs",
-              "ViewState": "AgIAACoBAAAAAAAAAAAYwFQBAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-28T18:24:17.389Z"
             },
             {
               "$type": "Document",

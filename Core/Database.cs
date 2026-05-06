@@ -65,6 +65,46 @@ namespace SistemaTstLargoTreze
                 }
             }
 
+            if (!ColumnExists(connection, "tipos_exames", "empregado_id"))
+            {
+                using (MySqlCommand command = new MySqlCommand("ALTER TABLE tipos_exames ADD COLUMN empregado_id INT NULL AFTER anexo_imagem", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (!ColumnExists(connection, "tipos_exames", "medico_id"))
+            {
+                using (MySqlCommand command = new MySqlCommand("ALTER TABLE tipos_exames ADD COLUMN medico_id INT NULL AFTER empregado_id", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (!ConstraintExists(connection, "fk_tipos_exames_empregado"))
+            {
+                using (MySqlCommand command = new MySqlCommand(
+                    @"ALTER TABLE tipos_exames
+                      ADD CONSTRAINT fk_tipos_exames_empregado
+                      FOREIGN KEY (empregado_id) REFERENCES empregados (id)
+                      ON DELETE SET NULL", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
+            if (!ConstraintExists(connection, "fk_tipos_exames_medico"))
+            {
+                using (MySqlCommand command = new MySqlCommand(
+                    @"ALTER TABLE tipos_exames
+                      ADD CONSTRAINT fk_tipos_exames_medico
+                      FOREIGN KEY (medico_id) REFERENCES medicos (id)
+                      ON DELETE SET NULL", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+
             if (!ColumnExists(connection, "empregados", "medico_id"))
             {
                 using (MySqlCommand command = new MySqlCommand("ALTER TABLE empregados ADD COLUMN medico_id INT NULL AFTER status_aso", connection))
@@ -151,6 +191,10 @@ namespace SistemaTstLargoTreze
         public string Tipo { get; set; }
         public string Periodicidade { get; set; }
         public string AnexoImagem { get; set; }
+        public int? EmpregadoId { get; set; }
+        public string PacienteNome { get; set; }
+        public int? MedicoId { get; set; }
+        public string MedicoNome { get; set; }
     }
 
     public sealed class AmbienteTrabalhoRecord
@@ -202,6 +246,17 @@ namespace SistemaTstLargoTreze
         public int? CatId { get; set; }
         public string DataAso { get; set; }
         public string TipoExame { get; set; }
+        public string Resultado { get; set; }
+        public string Observacoes { get; set; }
+    }
+
+    public sealed class AsoExameRecord
+    {
+        public int Id { get; set; }
+        public int AsoId { get; set; }
+        public int TipoExameId { get; set; }
+        public string TipoExameNome { get; set; }
+        public string DataExame { get; set; }
         public string Resultado { get; set; }
         public string Observacoes { get; set; }
     }
@@ -397,10 +452,13 @@ namespace SistemaTstLargoTreze
 
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT id, codigo, nome, tipo, periodicidade, anexo_imagem
-                  FROM tipos_exames
-                  WHERE ativo = 1
-                  ORDER BY nome", connection))
+                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem,
+                         t.empregado_id, e.nome AS paciente_nome, t.medico_id, m.nome AS medico_nome
+                  FROM tipos_exames t
+                  LEFT JOIN empregados e ON e.id = t.empregado_id
+                  LEFT JOIN medicos m ON m.id = t.medico_id
+                  WHERE t.ativo = 1
+                  ORDER BY t.nome", connection))
             using (MySqlDataReader reader = command.ExecuteReader())
             {
                 while (reader.Read())
@@ -412,7 +470,11 @@ namespace SistemaTstLargoTreze
                         Nome = reader.GetString("nome"),
                         Tipo = reader.GetString("tipo"),
                         Periodicidade = reader.GetString("periodicidade"),
-                        AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem")
+                        AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem"),
+                        EmpregadoId = reader.IsDBNull(reader.GetOrdinal("empregado_id")) ? (int?)null : reader.GetInt32("empregado_id"),
+                        PacienteNome = reader.IsDBNull(reader.GetOrdinal("paciente_nome")) ? string.Empty : reader.GetString("paciente_nome"),
+                        MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
+                        MedicoNome = reader.IsDBNull(reader.GetOrdinal("medico_nome")) ? string.Empty : reader.GetString("medico_nome")
                     });
                 }
             }
@@ -424,9 +486,12 @@ namespace SistemaTstLargoTreze
         {
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT id, codigo, nome, tipo, periodicidade, anexo_imagem
-                  FROM tipos_exames
-                  WHERE id = @id
+                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem,
+                         t.empregado_id, e.nome AS paciente_nome, t.medico_id, m.nome AS medico_nome
+                  FROM tipos_exames t
+                  LEFT JOIN empregados e ON e.id = t.empregado_id
+                  LEFT JOIN medicos m ON m.id = t.medico_id
+                  WHERE t.id = @id
                   LIMIT 1", connection))
             {
                 command.Parameters.AddWithValue("@id", id);
@@ -443,7 +508,11 @@ namespace SistemaTstLargoTreze
                         Nome = reader.GetString("nome"),
                         Tipo = reader.GetString("tipo"),
                         Periodicidade = reader.GetString("periodicidade"),
-                        AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem")
+                        AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem"),
+                        EmpregadoId = reader.IsDBNull(reader.GetOrdinal("empregado_id")) ? (int?)null : reader.GetInt32("empregado_id"),
+                        PacienteNome = reader.IsDBNull(reader.GetOrdinal("paciente_nome")) ? string.Empty : reader.GetString("paciente_nome"),
+                        MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
+                        MedicoNome = reader.IsDBNull(reader.GetOrdinal("medico_nome")) ? string.Empty : reader.GetString("medico_nome")
                     };
                 }
             }
@@ -455,10 +524,11 @@ namespace SistemaTstLargoTreze
             using (MySqlCommand command = new MySqlCommand(
                 exame.Id > 0
                     ? @"UPDATE tipos_exames
-                        SET codigo = @codigo, nome = @nome, tipo = @tipo, periodicidade = @periodicidade, anexo_imagem = @anexo_imagem
+                        SET codigo = @codigo, nome = @nome, tipo = @tipo, periodicidade = @periodicidade, anexo_imagem = @anexo_imagem,
+                            empregado_id = @empregado_id, medico_id = @medico_id
                         WHERE id = @id"
-                    : @"INSERT INTO tipos_exames (codigo, nome, tipo, periodicidade, anexo_imagem)
-                        VALUES (@codigo, @nome, @tipo, @periodicidade, @anexo_imagem)", connection))
+                    : @"INSERT INTO tipos_exames (codigo, nome, tipo, periodicidade, anexo_imagem, empregado_id, medico_id)
+                        VALUES (@codigo, @nome, @tipo, @periodicidade, @anexo_imagem, @empregado_id, @medico_id)", connection))
             {
                 command.Parameters.AddWithValue("@id", exame.Id);
                 command.Parameters.AddWithValue("@codigo", exame.Codigo);
@@ -466,6 +536,8 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@tipo", exame.Tipo);
                 command.Parameters.AddWithValue("@periodicidade", exame.Periodicidade);
                 command.Parameters.AddWithValue("@anexo_imagem", EmptyToDbNull(exame.AnexoImagem));
+                command.Parameters.AddWithValue("@empregado_id", exame.EmpregadoId.HasValue && exame.EmpregadoId.Value > 0 ? (object)exame.EmpregadoId.Value : DBNull.Value);
+                command.Parameters.AddWithValue("@medico_id", exame.MedicoId.HasValue && exame.MedicoId.Value > 0 ? (object)exame.MedicoId.Value : DBNull.Value);
                 command.ExecuteNonQuery();
             }
         }
@@ -821,8 +893,10 @@ namespace SistemaTstLargoTreze
             SoftDeleteByIds("cats", ids);
         }
 
-        public static void SaveAso(AsoRecord aso)
+        public static int SaveAso(AsoRecord aso)
         {
+            int asoId;
+
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
                 @"INSERT INTO asos (empregado_id, medico_id, cat_id, data_aso, tipo_exame, resultado, observacoes)
@@ -836,6 +910,7 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@resultado", NormalizarResultadoAso(aso.Resultado));
                 command.Parameters.AddWithValue("@observacoes", EmptyToDbNull(aso.Observacoes));
                 command.ExecuteNonQuery();
+                asoId = (int)command.LastInsertedId;
             }
 
             if (aso.CatId.HasValue && aso.CatId.Value > 0)
@@ -850,6 +925,29 @@ namespace SistemaTstLargoTreze
                     command.Parameters.AddWithValue("@cat_id", aso.CatId.Value);
                     command.Parameters.AddWithValue("@resultado_aso", NormalizarResultadoAso(aso.Resultado));
                     command.ExecuteNonQuery();
+                }
+            }
+
+            return asoId;
+        }
+
+        public static void SaveAsoExames(int asoId, IEnumerable<AsoExameRecord> exames)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                foreach (AsoExameRecord exame in exames)
+                {
+                    using (MySqlCommand command = new MySqlCommand(
+                        @"INSERT INTO aso_exames (aso_id, tipo_exame_id, data_exame, resultado, observacoes)
+                          VALUES (@aso_id, @tipo_exame_id, @data_exame, @resultado, @observacoes)", connection))
+                    {
+                        command.Parameters.AddWithValue("@aso_id", asoId);
+                        command.Parameters.AddWithValue("@tipo_exame_id", exame.TipoExameId);
+                        command.Parameters.AddWithValue("@data_exame", DateToDbNull(exame.DataExame));
+                        command.Parameters.AddWithValue("@resultado", EmptyToDbNull(exame.Resultado));
+                        command.Parameters.AddWithValue("@observacoes", EmptyToDbNull(exame.Observacoes));
+                        command.ExecuteNonQuery();
+                    }
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "Painel de Gestão",
+                "Integração eSocial",
                 "Indicadores de CAT e ASO",
                 DashboardMenu.Esocial
             );
@@ -194,7 +194,7 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(
                 UiBuilder.Label(
-                    "📊 Painel de Gestão — Indicadores de CAT",
+                    "📊 Integração eSocial — Indicadores de CAT",
                     16,
                     14,
                     largura - 260,

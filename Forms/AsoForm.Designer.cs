@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -18,6 +19,7 @@ namespace SistemaTstLargoTreze
         private RoundPanel cardApto;
         private RoundPanel cardInapto;
         private string resultadoSelecionado = "Apto";
+        private readonly List<AsoExameRecord> _examesSelecionados = new List<AsoExameRecord>();
 
         private bool _montandoConteudo = false;
 
@@ -510,9 +512,9 @@ namespace SistemaTstLargoTreze
 
             form.Controls.Add(
                 UiBuilder.CenterLabel(
-                    "Nenhum exame complementar vinculado",
+                    _examesSelecionados.Count == 0 ? "Nenhum exame complementar vinculado" : "Exames que serao vinculados ao ASO",
                     0,
-                    424,
+                    392,
                     largura,
                     34,
                     8.5F,
@@ -520,6 +522,22 @@ namespace SistemaTstLargoTreze
                     UiColors.MutedText
                 )
             );
+
+            int y = 424;
+            foreach (AsoExameRecord exame in _examesSelecionados)
+            {
+                AddExamResult(
+                    form,
+                    largura,
+                    y,
+                    "*",
+                    exame.TipoExameNome,
+                    string.IsNullOrWhiteSpace(exame.DataExame) ? "-" : exame.DataExame,
+                    string.IsNullOrWhiteSpace(exame.Resultado) ? "Vinculado" : exame.Resultado,
+                    UiColors.AccentBlue
+                );
+                y += 38;
+            }
 
             btnAdicionarExame = UiBuilder.SmallButton(
                 "+ Adicionar Exame",

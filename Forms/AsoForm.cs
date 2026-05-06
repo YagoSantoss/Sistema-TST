@@ -32,7 +32,39 @@ namespace SistemaTstLargoTreze
 
         private void BtnAdicionarExame_Click(object sender, EventArgs e)
         {
-            AppNavigator.Show(new ExamTypesForm());
+            ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
+            ComboItem medico = cmbMedico.SelectedItem as ComboItem;
+
+            if (empregado == null || empregado.Id <= 0)
+            {
+                MessageBox.Show("Selecione o empregado antes de adicionar o exame.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (medico == null || medico.Id <= 0)
+            {
+                MessageBox.Show("Selecione o medico responsavel antes de adicionar o exame.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (AsoExamLinkForm form = new AsoExamLinkForm(empregado.Text, medico.Text))
+            {
+                if (form.ShowDialog(this) == DialogResult.OK && form.Exame != null)
+                {
+                    ComboItem cat = cmbCat.SelectedItem as ComboItem;
+                    int empregadoId = empregado.Id;
+                    int medicoId = medico.Id;
+                    int catId = cat == null ? 0 : cat.Id;
+                    string dataAso = txtDataAso.Text;
+                    string tipoExame = cmbTipoExame.Text;
+                    string observacoes = txtObservacoes.Text;
+                    string resultado = resultadoSelecionado;
+
+                    _examesSelecionados.Add(form.Exame);
+                    MontarConteudoAso();
+                    RestaurarSelecoes(empregadoId, medicoId, catId, dataAso, tipoExame, observacoes, resultado);
+                }
+            }
         }
 
         private void BtnAdicionarMedico_Click(object sender, EventArgs e)
@@ -125,6 +157,34 @@ namespace SistemaTstLargoTreze
             cmbCat.SelectedIndex = 0;
         }
 
+        private void RestaurarSelecoes(int empregadoId, int medicoId, int catId, string dataAso, string tipoExame, string observacoes, string resultado)
+        {
+            SelecionarComboPorId(cmbEmpregado, empregadoId);
+            PopularCats(empregadoId);
+            SelecionarComboPorId(cmbCat, catId);
+            SelecionarComboPorId(cmbMedico, medicoId);
+            txtDataAso.Text = dataAso;
+            cmbTipoExame.Text = tipoExame;
+            txtObservacoes.Text = observacoes;
+            SelecionarResultado(resultado);
+        }
+
+        private void SelecionarComboPorId(ComboBox combo, int id)
+        {
+            if (combo == null)
+                return;
+
+            for (int i = 0; i < combo.Items.Count; i++)
+            {
+                ComboItem item = combo.Items[i] as ComboItem;
+                if (item != null && item.Id == id)
+                {
+                    combo.SelectedIndex = i;
+                    return;
+                }
+            }
+        }
+
         private void RegistrarAso()
         {
             ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
@@ -140,7 +200,7 @@ namespace SistemaTstLargoTreze
             if (string.IsNullOrWhiteSpace(txtDataAso.Text))
                 throw new InvalidOperationException("Informe a data do ASO no formato dd/mm/yyyy.");
 
-            CadastrosRepository.SaveAso(new AsoRecord
+            int asoId = CadastrosRepository.SaveAso(new AsoRecord
             {
                 EmpregadoId = empregado.Id,
                 MedicoId = medico.Id,
@@ -150,6 +210,12 @@ namespace SistemaTstLargoTreze
                 Resultado = resultadoSelecionado,
                 Observacoes = txtObservacoes.Text.Trim()
             });
+
+            if (_examesSelecionados.Count > 0)
+            {
+                CadastrosRepository.SaveAsoExames(asoId, _examesSelecionados);
+                _examesSelecionados.Clear();
+            }
         }
     }
 }

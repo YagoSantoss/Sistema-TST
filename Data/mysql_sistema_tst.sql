@@ -53,10 +53,18 @@ CREATE TABLE IF NOT EXISTS tipos_exames (
     tipo VARCHAR(80) NOT NULL,
     periodicidade VARCHAR(80) NOT NULL,
     anexo_imagem VARCHAR(500),
+    empregado_id INT NULL,
+    medico_id INT NULL,
     ativo TINYINT(1) NOT NULL DEFAULT 1,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_tipos_exames_nome (nome)
+    INDEX idx_tipos_exames_nome (nome),
+    CONSTRAINT fk_tipos_exames_empregado
+        FOREIGN KEY (empregado_id) REFERENCES empregados (id)
+        ON DELETE SET NULL,
+    CONSTRAINT fk_tipos_exames_medico
+        FOREIGN KEY (medico_id) REFERENCES medicos (id)
+        ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 ALTER TABLE empregados

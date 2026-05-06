@@ -40,7 +40,7 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             Text = TituloJanela();
-            ClientSize = new Size(620, 410);
+            ClientSize = new Size(620, 520);
             Font = new Font("Segoe UI", 9F);
             BackColor = UiColors.PageBg;
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -51,7 +51,7 @@ namespace SistemaTstLargoTreze
             RoundPanel card = new RoundPanel
             {
                 Location = new Point(18, 18),
-                Size = new Size(584, 374),
+                Size = new Size(584, 484),
                 Radius = 10,
                 FillColor = Color.White,
                 BorderColor = UiColors.Border
@@ -93,7 +93,9 @@ namespace SistemaTstLargoTreze
                     AddTextField(card, "Nome do exame", "Nome do exame", 182, 100, 370, true);
                     AddComboField(card, "Tipo", new[] { "Laboratorial", "Clinico", "Especializado", "Imagem" }, 22, 172, 255, true);
                     AddComboField(card, "Periodicidade", new[] { "Anual", "Bienal", "Semestral", "Admissional", "Conforme risco" }, 307, 172, 245, true);
-                    AddAttachmentField(card, "Anexo imagem", 22, 244, 410);
+                    AddLookupField(card, "Paciente", CriarComboEmpregados(255), 22, 244, 255, true);
+                    AddLookupField(card, "Medico responsavel", CriarComboMedicos(245), 307, 244, 245, true);
+                    AddAttachmentField(card, "Anexo imagem", 22, 316, 410);
                     break;
 
                 case CadastroBaseTipo.AmbienteTrabalho:
@@ -125,6 +127,66 @@ namespace SistemaTstLargoTreze
             _campos[label] = combo;
         }
 
+        private void AddLookupField(Panel parent, string label, ComboBox combo, int x, int y, int width, bool required)
+        {
+            UiBuilder.AddField(parent, label, combo, x, y, width, required);
+            _campos[label] = combo;
+        }
+
+        private ComboBox CriarComboEmpregados(int width)
+        {
+            ComboBox combo = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 9F),
+                Width = width
+            };
+
+            combo.Items.Add(new ComboItem(0, "Selecione o paciente"));
+
+            try
+            {
+                foreach (EmpregadoRecord empregado in CadastrosRepository.GetEmpregados())
+                {
+                    combo.Items.Add(new ComboItem(empregado.Id, empregado.Nome + " - " + empregado.Matricula));
+                }
+            }
+            catch
+            {
+                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+            }
+
+            combo.SelectedIndex = 0;
+            return combo;
+        }
+
+        private ComboBox CriarComboMedicos(int width)
+        {
+            ComboBox combo = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Font = new Font("Segoe UI", 9F),
+                Width = width
+            };
+
+            combo.Items.Add(new ComboItem(0, "Selecione o medico"));
+
+            try
+            {
+                foreach (MedicoRecord medico in CadastrosRepository.GetMedicos())
+                {
+                    combo.Items.Add(new ComboItem(medico.Id, medico.Nome + " - " + medico.Crm));
+                }
+            }
+            catch
+            {
+                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+            }
+
+            combo.SelectedIndex = 0;
+            return combo;
+        }
+
         private void AddAttachmentField(Panel parent, string label, int x, int y, int width)
         {
             CueTextBox textBox = UiBuilder.TextBox("Selecione uma imagem ou foto", x, y + 24, width);
@@ -142,18 +204,18 @@ namespace SistemaTstLargoTreze
         {
             Panel line = new Panel
             {
-                Location = new Point(0, 304),
+                Location = new Point(0, 414),
                 Size = new Size(584, 1),
                 BackColor = UiColors.Border
             };
             card.Controls.Add(line);
 
-            btnCancelar = UiBuilder.SmallButton("Cancelar", 390, 328, 78, Color.White, UiColors.BodyText);
+            btnCancelar = UiBuilder.SmallButton("Cancelar", 390, 438, 78, Color.White, UiColors.BodyText);
             btnCancelar.BorderColor = UiColors.Border;
             btnCancelar.Click += BtnCancelar_Click;
             card.Controls.Add(btnCancelar);
 
-            btnSalvar = UiBuilder.SmallButton(_edicao ? "Salvar" : "Cadastrar", 480, 328, 82, UiColors.AccentBlue, Color.White);
+            btnSalvar = UiBuilder.SmallButton(_edicao ? "Salvar" : "Cadastrar", 480, 438, 82, UiColors.AccentBlue, Color.White);
             btnSalvar.Click += BtnSalvar_Click;
             card.Controls.Add(btnSalvar);
         }
@@ -266,6 +328,8 @@ namespace SistemaTstLargoTreze
                             SetValue("Nome do exame", exame.Nome);
                             SetValue("Tipo", exame.Tipo);
                             SetValue("Periodicidade", exame.Periodicidade);
+                            SetComboById("Paciente", exame.EmpregadoId);
+                            SetComboById("Medico responsavel", exame.MedicoId);
                             SetValue("Anexo imagem", exame.AnexoImagem);
                         }
                         break;
@@ -316,6 +380,8 @@ namespace SistemaTstLargoTreze
                         Nome = Required("Nome do exame"),
                         Tipo = Required("Tipo"),
                         Periodicidade = Required("Periodicidade"),
+                        EmpregadoId = RequiredId("Paciente"),
+                        MedicoId = RequiredId("Medico responsavel"),
                         AnexoImagem = Value("Anexo imagem")
                     });
                     break;
@@ -340,6 +406,17 @@ namespace SistemaTstLargoTreze
                 throw new InvalidOperationException("Preencha o campo: " + key);
 
             return value;
+        }
+
+        private int RequiredId(string key)
+        {
+            Control control = _campos[key];
+            ComboBox combo = control as ComboBox;
+            ComboItem item = combo == null ? null : combo.SelectedItem as ComboItem;
+            if (item == null || item.Id <= 0)
+                throw new InvalidOperationException("Preencha o campo: " + key);
+
+            return item.Id;
         }
 
         private string Value(string key)
@@ -370,6 +447,26 @@ namespace SistemaTstLargoTreze
             }
 
             control.Text = value ?? string.Empty;
+        }
+
+        private void SetComboById(string key, int? id)
+        {
+            if (!id.HasValue || !_campos.ContainsKey(key))
+                return;
+
+            ComboBox combo = _campos[key] as ComboBox;
+            if (combo == null)
+                return;
+
+            for (int i = 0; i < combo.Items.Count; i++)
+            {
+                ComboItem item = combo.Items[i] as ComboItem;
+                if (item != null && item.Id == id.Value)
+                {
+                    combo.SelectedIndex = i;
+                    return;
+                }
+            }
         }
     }
 }

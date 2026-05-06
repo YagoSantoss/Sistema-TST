@@ -49,8 +49,8 @@ namespace SistemaTstLargoTreze
             int margem = 18;
             int larguraDisponivel = ContentPanel.ClientSize.Width - (margem * 2);
 
-            if (larguraDisponivel < 790)
-                larguraDisponivel = 790;
+            if (larguraDisponivel < 980)
+                larguraDisponivel = 980;
 
             RoundPanel table = UiBuilder.Card(margem, 18, larguraDisponivel, 275);
             table.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
@@ -121,16 +121,18 @@ namespace SistemaTstLargoTreze
 
             table.Controls.Add(header);
 
-            int codigoW = 120;
+            int codigoW = 80;
             int checkW = 34;
-            int tipoW = 150;
-            int periodicidadeW = 140;
-            int anexoW = 95;
+            int tipoW = 110;
+            int periodicidadeW = 105;
+            int pacienteW = 150;
+            int medicoW = 150;
+            int anexoW = 70;
             int acoesW = 90;
-            int nomeW = largura - checkW - codigoW - tipoW - periodicidadeW - anexoW - acoesW - 24;
+            int nomeW = largura - checkW - codigoW - tipoW - periodicidadeW - pacienteW - medicoW - anexoW - acoesW - 24;
 
-            if (nomeW < 230)
-                nomeW = 230;
+            if (nomeW < 190)
+                nomeW = 190;
 
             int x = 5;
 
@@ -147,6 +149,12 @@ namespace SistemaTstLargoTreze
 
             header.Controls.Add(UiBuilder.HeaderCell("PERIODICIDADE", x, 0, periodicidadeW));
             x += periodicidadeW;
+
+            header.Controls.Add(UiBuilder.HeaderCell("PACIENTE", x, 0, pacienteW));
+            x += pacienteW;
+
+            header.Controls.Add(UiBuilder.HeaderCell("MÉDICO", x, 0, medicoW));
+            x += medicoW;
 
             header.Controls.Add(UiBuilder.HeaderCell("ANEXO", x, 0, anexoW));
             x += anexoW;
@@ -169,7 +177,7 @@ namespace SistemaTstLargoTreze
                 int y = 83;
                 foreach (TipoExameRecord exame in exames)
                 {
-                    AddExamRow(table, largura, y, exame.Id, exame.Codigo, exame.Nome, exame.Tipo, exame.Periodicidade, exame.AnexoImagem);
+                    AddExamRow(table, largura, y, exame.Id, exame.Codigo, exame.Nome, exame.Tipo, exame.Periodicidade, exame.PacienteNome, exame.MedicoNome, exame.AnexoImagem);
                     y += 38;
                 }
             }
@@ -210,6 +218,8 @@ namespace SistemaTstLargoTreze
             string nome,
             string tipo,
             string periodicidade,
+            string paciente,
+            string medico,
             string anexoImagem)
         {
             Panel row = new Panel
@@ -222,16 +232,18 @@ namespace SistemaTstLargoTreze
 
             table.Controls.Add(row);
 
-            int codigoW = 120;
+            int codigoW = 80;
             int checkW = 34;
-            int tipoW = 150;
-            int periodicidadeW = 140;
-            int anexoW = 95;
+            int tipoW = 110;
+            int periodicidadeW = 105;
+            int pacienteW = 150;
+            int medicoW = 150;
+            int anexoW = 70;
             int acoesW = 90;
-            int nomeW = largura - checkW - codigoW - tipoW - periodicidadeW - anexoW - acoesW - 24;
+            int nomeW = largura - checkW - codigoW - tipoW - periodicidadeW - pacienteW - medicoW - anexoW - acoesW - 24;
 
-            if (nomeW < 230)
-                nomeW = 230;
+            if (nomeW < 190)
+                nomeW = 190;
 
             int x = 5;
 
@@ -299,6 +311,36 @@ namespace SistemaTstLargoTreze
             );
 
             x += periodicidadeW;
+
+            row.Controls.Add(
+                UiBuilder.Label(
+                    string.IsNullOrWhiteSpace(paciente) ? "-" : paciente,
+                    x,
+                    2,
+                    pacienteW,
+                    34,
+                    7.5F,
+                    FontStyle.Regular,
+                    UiColors.BodyText
+                )
+            );
+
+            x += pacienteW;
+
+            row.Controls.Add(
+                UiBuilder.Label(
+                    string.IsNullOrWhiteSpace(medico) ? "-" : medico,
+                    x,
+                    2,
+                    medicoW,
+                    34,
+                    7.5F,
+                    FontStyle.Regular,
+                    UiColors.BodyText
+                )
+            );
+
+            x += medicoW;
 
             if (!string.IsNullOrWhiteSpace(anexoImagem))
             {
