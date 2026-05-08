@@ -51,14 +51,15 @@ namespace SistemaTstLargoTreze
             if (larguraDisponivel < 790)
                 larguraDisponivel = 790;
 
-            RoundPanel table = UiBuilder.Card(margem, 18, larguraDisponivel, 230);
+            int alturaTabela = CalcularAlturaTabela();
+            RoundPanel table = UiBuilder.Card(margem, 18, larguraDisponivel, alturaTabela);
             table.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(table);
 
             MontarCabecalho(table, larguraDisponivel);
             MontarCabecalhoTabela(table, larguraDisponivel);
             MontarLinhas(table, larguraDisponivel);
-            MontarRodape(table, larguraDisponivel);
+            MontarRodape(table, larguraDisponivel, alturaTabela);
 
             ContentPanel.ResumeLayout(false);
 
@@ -174,9 +175,23 @@ namespace SistemaTstLargoTreze
             }
         }
 
-        private void MontarRodape(RoundPanel table, int largura)
+        private int CalcularAlturaTabela()
         {
-            btnExcluir = UiBuilder.SmallButton("Excluir", 16, 195, 78, Color.White, UiColors.Red);
+            try
+            {
+                int registros = CadastrosRepository.GetAmbientes().Count;
+                int altura = 83 + (registros * 38) + 70;
+                return altura < 230 ? 230 : altura;
+            }
+            catch
+            {
+                return 230;
+            }
+        }
+
+        private void MontarRodape(RoundPanel table, int largura, int alturaTabela)
+        {
+            btnExcluir = UiBuilder.SmallButton("Excluir", 16, alturaTabela - 40, 78, Color.White, UiColors.Red);
             btnExcluir.BorderColor = UiColors.Border;
             btnExcluir.Click += BtnExcluir_Click;
             table.Controls.Add(btnExcluir);
@@ -184,7 +199,7 @@ namespace SistemaTstLargoTreze
             Label total = UiBuilder.Label(
                 TotalAmbientesTexto(),
                 largura - 180,
-                195,
+                alturaTabela - 40,
                 160,
                 20,
                 7.5F,

@@ -200,6 +200,9 @@ namespace SistemaTstLargoTreze
             if (string.IsNullOrWhiteSpace(txtDataAso.Text))
                 throw new InvalidOperationException("Informe a data do ASO no formato dd/mm/yyyy.");
 
+            if (!ValidationHelper.IsValidDate(txtDataAso.Text))
+                throw new InvalidOperationException("Informe a data do ASO no formato dd/mm/aaaa.");
+
             int asoId = CadastrosRepository.SaveAso(new AsoRecord
             {
                 EmpregadoId = empregado.Id,

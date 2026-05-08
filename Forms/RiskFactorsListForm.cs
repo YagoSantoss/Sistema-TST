@@ -34,7 +34,8 @@ namespace SistemaTstLargoTreze
             if (largura < 790)
                 largura = 790;
 
-            RoundPanel table = UiBuilder.Card(margem, 18, largura, 460);
+            int alturaTabela = CalcularAlturaTabela();
+            RoundPanel table = UiBuilder.Card(margem, 18, largura, alturaTabela);
             table.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(table);
 
@@ -62,7 +63,7 @@ namespace SistemaTstLargoTreze
 
             MontarCabecalho(table, largura);
             MontarLinhas(table, largura);
-            MontarRodape(table);
+            MontarRodape(table, alturaTabela);
 
             ContentPanel.ResumeLayout(false);
             _montandoConteudo = false;
@@ -154,13 +155,28 @@ namespace SistemaTstLargoTreze
 
             RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 12, 7, 58, Color.White, UiColors.BodyText);
             abrir.BorderColor = UiColors.Border;
-            abrir.Click += (sender, e) => AppNavigator.Show(new RiskFactorsForm());
+            abrir.Tag = risco.Id;
+            abrir.Click += (sender, e) => AppNavigator.Show(new RiskFactorsForm((int)((Control)sender).Tag));
             row.Controls.Add(abrir);
         }
 
-        private void MontarRodape(RoundPanel table)
+        private int CalcularAlturaTabela()
         {
-            RoundButton excluir = UiBuilder.SmallButton("Excluir", 16, 420, 78, Color.White, UiColors.Red);
+            try
+            {
+                int registros = CadastrosRepository.GetFatoresRisco(_termoBusca).Count;
+                int altura = 138 + (registros * 38) + 70;
+                return altura < 460 ? 460 : altura;
+            }
+            catch
+            {
+                return 460;
+            }
+        }
+
+        private void MontarRodape(RoundPanel table, int alturaTabela)
+        {
+            RoundButton excluir = UiBuilder.SmallButton("Excluir", 16, alturaTabela - 40, 78, Color.White, UiColors.Red);
             excluir.BorderColor = UiColors.Border;
             excluir.Click += ExcluirSelecionados_Click;
             table.Controls.Add(excluir);

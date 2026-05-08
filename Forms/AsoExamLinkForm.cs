@@ -65,6 +65,7 @@ namespace SistemaTstLargoTreze
 
             UiBuilder.AddField(card, "EXAME", cmbTipoExame = CriarComboExames(350), 22, 172, 350, true);
             UiBuilder.AddField(card, "DATA", txtDataExame = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, 160), 392, 172, 160, false);
+            InputFormatHelper.ApplyDateMask(txtDataExame);
             UiBuilder.AddField(card, "RESULTADO", txtResultado = UiBuilder.TextBox("Ex.: Normal, Alterado, Apto", 0, 0, 255), 22, 244, 255, false);
             UiBuilder.AddField(card, "OBSERVACOES", txtObservacoes = UiBuilder.TextBox("Observacoes do exame", 0, 0, 245), 307, 244, 245, false);
 
@@ -129,6 +130,12 @@ namespace SistemaTstLargoTreze
             if (tipo == null || tipo.Id <= 0)
             {
                 MessageBox.Show("Selecione o exame.", "Exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtDataExame.Text) && !ValidationHelper.IsValidDate(txtDataExame.Text))
+            {
+                MessageBox.Show("Informe a data do exame no formato dd/mm/aaaa.", "Exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

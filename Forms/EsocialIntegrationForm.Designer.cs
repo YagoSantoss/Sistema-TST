@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -7,6 +8,10 @@ namespace SistemaTstLargoTreze
     {
         private RoundButton btnSincronizar;
         private RoundButton btnEnviarTodos;
+        private RoundButton btnBuscarLog;
+        private CueTextBox txtBuscaLog;
+        private string _termoBuscaLog = string.Empty;
+        private int _logTop = 390;
 
         private bool _montandoConteudo = false;
 
@@ -72,7 +77,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "APTOS",
                 resumo.Aptos.ToString(),
-                resumo.Aptos == 1 ? "1 CAT apta" : resumo.Aptos + " CATs aptas",
+                resumo.Aptos == 1 ? "1 funcionario apto" : resumo.Aptos + " funcionarios aptos",
                 UiColors.Green,
                 Color.FromArgb(217, 248, 234)
             );
@@ -84,7 +89,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "AGUARDANDO",
                 resumo.Aguardando.ToString(),
-                resumo.Aguardando == 1 ? "1 pendente" : resumo.Aguardando + " pendentes",
+                resumo.Aguardando == 1 ? "1 funcionario pendente" : resumo.Aguardando + " funcionarios pendentes",
                 UiColors.Orange,
                 Color.FromArgb(255, 246, 206)
             );
@@ -96,7 +101,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "INAPTOS",
                 resumo.Inaptos.ToString(),
-                resumo.Inaptos == 1 ? "1 CAT inapta" : resumo.Inaptos + " CATs inaptas",
+                resumo.Inaptos == 1 ? "1 funcionario inapto" : resumo.Inaptos + " funcionarios inaptos",
                 UiColors.Red,
                 Color.FromArgb(255, 230, 232)
             );
@@ -188,7 +193,13 @@ namespace SistemaTstLargoTreze
 
         private void MontarPainelEventos(int largura)
         {
-            RoundPanel eventsCard = UiBuilder.Card(18, 120, largura, 250);
+            List<CatRecord> cats = CarregarCatsEsocial();
+            int alturaEventos = 70 + (cats.Count * 42) + 20;
+            if (alturaEventos < 250)
+                alturaEventos = 250;
+            _logTop = 120 + alturaEventos + 20;
+
+            RoundPanel eventsCard = UiBuilder.Card(18, 120, largura, alturaEventos);
             eventsCard.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(eventsCard);
 
@@ -243,23 +254,48 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(divider);
 
-            eventsCard.Controls.Add(
-                UiBuilder.CenterLabel(
-                    "Nenhuma CAT gerada",
-                    0,
-                    130,
-                    largura,
-                    34,
-                    8.5F,
-                    FontStyle.Regular,
-                    UiColors.MutedText
-                )
-            );
+            try
+            {
+                if (cats.Count == 0)
+                {
+                    eventsCard.Controls.Add(UiBuilder.CenterLabel("Nenhuma CAT gerada", 0, 130, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    return;
+                }
+
+                int y = 70;
+                for (int i = 0; i < cats.Count; i++)
+                {
+                    CatRecord cat = cats[i];
+                    AddCatEventRow(eventsCard, largura, y, cat);
+                    y += 42;
+                }
+            }
+            catch
+            {
+                eventsCard.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar as CATs do MySQL", 0, 130, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+            }
+        }
+
+        private List<CatRecord> CarregarCatsEsocial()
+        {
+            try
+            {
+                return CadastrosRepository.GetCats(string.Empty);
+            }
+            catch
+            {
+                return new List<CatRecord>();
+            }
         }
 
         private void MontarPainelLogs(int largura)
         {
-            RoundPanel logCard = UiBuilder.Card(18, 390, largura, 155);
+            List<EsocialTransmissaoRecord> logs = CarregarLogsEsocial();
+            int alturaLog = 96 + (logs.Count * 32) + 28;
+            if (alturaLog < 340)
+                alturaLog = 340;
+
+            RoundPanel logCard = UiBuilder.Card(18, _logTop, largura, alturaLog);
             logCard.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(logCard);
 
@@ -268,7 +304,7 @@ namespace SistemaTstLargoTreze
                     "📋 Log de Transmissões",
                     16,
                     12,
-                    largura - 32,
+                    largura - 420,
                     20,
                     9F,
                     FontStyle.Bold,
@@ -276,9 +312,20 @@ namespace SistemaTstLargoTreze
                 )
             );
 
+            txtBuscaLog = UiBuilder.TextBox("Buscar por data, protocolo ou recibo", largura - 388, 10, 270);
+            txtBuscaLog.Text = _termoBuscaLog;
+            txtBuscaLog.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            txtBuscaLog.KeyDown += TxtBuscaLog_KeyDown;
+            logCard.Controls.Add(txtBuscaLog);
+
+            btnBuscarLog = UiBuilder.SmallButton("Buscar", largura - 108, 10, 90, UiColors.Orange, Color.White);
+            btnBuscarLog.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnBuscarLog.Click += BtnBuscarLog_Click;
+            logCard.Controls.Add(btnBuscarLog);
+
             Panel header = new Panel
             {
-                Location = new Point(0, 44),
+                Location = new Point(0, 50),
                 Size = new Size(largura, 28),
                 BackColor = UiColors.HeaderBlue,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
@@ -315,18 +362,88 @@ namespace SistemaTstLargoTreze
 
             header.Controls.Add(UiBuilder.HeaderCell("Nº DO RECIBO", x, 0, reciboW));
 
-            logCard.Controls.Add(
-                UiBuilder.CenterLabel(
-                    "Nenhuma transmissao registrada",
-                    0,
-                    88,
-                    largura,
-                    34,
-                    8.5F,
-                    FontStyle.Regular,
-                    UiColors.MutedText
-                )
+            try
+            {
+                if (logs.Count == 0)
+                {
+                    logCard.Controls.Add(UiBuilder.CenterLabel("Nenhuma transmissao registrada", 0, 96, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    return;
+                }
+
+                int y = 78;
+                foreach (EsocialTransmissaoRecord log in logs)
+                {
+                    AddLogRow(logCard, largura, y, log.DataHora, log.Evento, log.Trabalhador, log.Protocolo, log.Status, log.Recibo, StatusColor(log.Status));
+                    y += 32;
+                }
+            }
+            catch
+            {
+                logCard.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar o log do MySQL", 0, 96, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+            }
+        }
+
+        private List<EsocialTransmissaoRecord> CarregarLogsEsocial()
+        {
+            try
+            {
+                return CadastrosRepository.GetEsocialTransmissoes(_termoBuscaLog);
+            }
+            catch
+            {
+                return new List<EsocialTransmissaoRecord>();
+            }
+        }
+
+        private void BtnBuscarLog_Click(object sender, System.EventArgs e)
+        {
+            _termoBuscaLog = txtBuscaLog == null ? string.Empty : txtBuscaLog.Text.Trim();
+            MontarConteudoEsocial();
+        }
+
+        private void TxtBuscaLog_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                _termoBuscaLog = txtBuscaLog == null ? string.Empty : txtBuscaLog.Text.Trim();
+                MontarConteudoEsocial();
+            }
+        }
+
+        private void AddCatEventRow(Panel parent, int largura, int y, CatRecord cat)
+        {
+            string status = string.IsNullOrWhiteSpace(cat.ResultadoAso) ? "Aguardando" : cat.ResultadoAso;
+            Color color = StatusColor(status);
+            string subtitle = cat.DataAcidente + " - " + status;
+
+            AddEventRow(
+                parent,
+                largura,
+                y,
+                "S-2210",
+                "CAT " + cat.Id + " - " + cat.EmpregadoNome,
+                subtitle,
+                status,
+                color,
+                "Abrir CAT",
+                delegate { AppNavigator.Show(new CatBasicForm(cat.Id)); }
             );
+        }
+
+        private Color StatusColor(string status)
+        {
+            string value = (status ?? string.Empty).Trim().ToLowerInvariant();
+            if (value.StartsWith("apto"))
+                return UiColors.Green;
+
+            if (value.StartsWith("inapto"))
+                return UiColors.Red;
+
+            if (value.StartsWith("transmitido") || value.StartsWith("aceito"))
+                return UiColors.Green;
+
+            return UiColors.Orange;
         }
 
         private void AddEventRow(

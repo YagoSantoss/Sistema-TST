@@ -8,6 +8,7 @@ namespace SistemaTstLargoTreze
         private CueTextBox[] codeBoxes;
         private RoundButton btnVerificar;
         private LinkLabel linkReenviar;
+        private LinkLabel linkEmailErrado;
         private Label lblErro;
 
         private void InitializeComponent()
@@ -52,6 +53,10 @@ namespace SistemaTstLargoTreze
             linkReenviar = UiBuilder.Link("Reenviar codigo", 40, 292, 280, 22);
             linkReenviar.LinkClicked += LinkReenviar_LinkClicked;
             CardPanel.Controls.Add(linkReenviar);
+
+            linkEmailErrado = UiBuilder.Link("Seu e-mail esta errado? Clique aqui para voltar.", 40, 318, 280, 22);
+            linkEmailErrado.LinkClicked += LinkEmailErrado_LinkClicked;
+            CardPanel.Controls.Add(linkEmailErrado);
 
             ResumeLayout(false);
         }

@@ -163,7 +163,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(
                 witness,
                 "CPF",
-                UiBuilder.TextBox("000.000.000-00", 0, 0, cpfW),
+                CriarCpfTextBox(cpfW),
                 x,
                 32,
                 cpfW,
@@ -175,7 +175,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(
                 witness,
                 "TELEFONE",
-                UiBuilder.TextBox("(11) 99000-0000", 0, 0, telefoneW),
+                CriarTelefoneTextBox(telefoneW),
                 x,
                 32,
                 telefoneW,
@@ -191,6 +191,20 @@ namespace SistemaTstLargoTreze
                 larguraInterna,
                 false
             );
+        }
+
+        private CueTextBox CriarCpfTextBox(int width)
+        {
+            CueTextBox textBox = UiBuilder.TextBox("000.000.000-00", 0, 0, width);
+            InputFormatHelper.ApplyCpfMask(textBox);
+            return textBox;
+        }
+
+        private CueTextBox CriarTelefoneTextBox(int width)
+        {
+            CueTextBox textBox = UiBuilder.TextBox("(00) 00000-0000", 0, 0, width);
+            InputFormatHelper.ApplyPhoneMask(textBox);
+            return textBox;
         }
 
         private void BuildCatHeader(Panel form, int activeTab, int largura)

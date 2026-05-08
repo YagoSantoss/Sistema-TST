@@ -40,7 +40,7 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             Text = TituloJanela();
-            ClientSize = new Size(620, 520);
+            ClientSize = _tipo == CadastroBaseTipo.Medico ? new Size(620, 840) : new Size(620, 520);
             Font = new Font("Segoe UI", 9F);
             BackColor = UiColors.PageBg;
             FormBorderStyle = FormBorderStyle.FixedDialog;
@@ -51,7 +51,7 @@ namespace SistemaTstLargoTreze
             RoundPanel card = new RoundPanel
             {
                 Location = new Point(18, 18),
-                Size = new Size(584, 484),
+                Size = _tipo == CadastroBaseTipo.Medico ? new Size(584, 804) : new Size(584, 484),
                 Radius = 10,
                 FillColor = Color.White,
                 BorderColor = UiColors.Border
@@ -81,11 +81,22 @@ namespace SistemaTstLargoTreze
             switch (_tipo)
             {
                 case CadastroBaseTipo.Medico:
-                    AddTextField(card, "Nome", "Nome completo do medico", 22, 100, 255, true);
-                    AddTextField(card, "CRM", "Ex.: 12345-SP", 307, 100, 120, true);
-                    AddTextField(card, "Orgao / UF", "Ex.: CRM-SP", 457, 100, 95, true);
-                    AddTextField(card, "Especialidade", "Medicina do Trabalho", 22, 172, 255, true);
-                    AddTextField(card, "E-mail", "medico@empresa.com", 307, 172, 245, false);
+                    AddTextField(card, "N Registro", "Numero do registro", 22, 100, 130, true);
+                    AddComboField(card, "UF Exped.", new[] { "SP", "GO", "MG", "RJ", "PR", "SC", "RS", "BA", "PE", "CE", "DF" }, 182, 100, 95, true);
+                    AddTextField(card, "Descricao", "Nome do medico/responsavel", 307, 100, 245, true);
+                    AddComboField(card, "Orgao de Classe", new[] { "Conselho Regional de Medicina (CRM)", "Conselho Regional de Engenharia e Agronomia (CREA)", "Outros" }, 22, 172, 530, true);
+                    AddTextField(card, "Sigla", "Ex.: CRM, CREA", 22, 244, 530, false);
+                    AddTextField(card, "Logradouro", "Rua, avenida ou endereco", 22, 316, 530, false);
+                    AddTextField(card, "Bairro", "Bairro", 22, 388, 255, false);
+                    AddTextField(card, "Numero", "Numero", 307, 388, 95, false);
+                    AddTextField(card, "Cidade", "Cidade - UF", 22, 460, 255, false);
+                    AddTextField(card, "CEP", "CEP", 307, 460, 120, false);
+                    AddTextField(card, "E-mail", "medico@empresa.com", 22, 532, 255, false);
+                    AddTextField(card, "DDD", "DDD", 307, 532, 70, false);
+                    AddTextField(card, "Telefone", "Numero do telefone", 397, 532, 155, false);
+                    AddTextField(card, "NIT", "NIT/PIS/PASEP", 22, 604, 255, false);
+                    AddTextField(card, "CPF", "CPF", 307, 604, 245, false);
+                    AddComboField(card, "Tipo telefone", new[] { "Celular", "Comercial", "Residencial" }, 22, 676, 255, false);
                     break;
 
                 case CadastroBaseTipo.TipoExame:
@@ -110,8 +121,21 @@ namespace SistemaTstLargoTreze
         private void AddTextField(Panel parent, string label, string cue, int x, int y, int width, bool required)
         {
             CueTextBox textBox = UiBuilder.TextBox(cue, x, y + 24, width);
+            ApplyFieldMask(label, textBox);
             UiBuilder.AddField(parent, label, textBox, x, y, width, required);
             _campos[label] = textBox;
+        }
+
+        private void ApplyFieldMask(string label, CueTextBox textBox)
+        {
+            string key = label.ToLowerInvariant();
+
+            if (key.Contains("cpf"))
+                InputFormatHelper.ApplyCpfMask(textBox);
+            else if (key.Contains("telefone"))
+                InputFormatHelper.ApplyPhoneMask(textBox);
+            else if (key.Contains("cep"))
+                InputFormatHelper.ApplyCepMask(textBox);
         }
 
         private void AddComboField(Panel parent, string label, string[] items, int x, int y, int width, bool required)
@@ -202,20 +226,23 @@ namespace SistemaTstLargoTreze
 
         private void MontarRodape(RoundPanel card)
         {
+            int lineY = _tipo == CadastroBaseTipo.Medico ? 734 : 414;
+            int buttonY = _tipo == CadastroBaseTipo.Medico ? 758 : 438;
+
             Panel line = new Panel
             {
-                Location = new Point(0, 414),
+                Location = new Point(0, lineY),
                 Size = new Size(584, 1),
                 BackColor = UiColors.Border
             };
             card.Controls.Add(line);
 
-            btnCancelar = UiBuilder.SmallButton("Cancelar", 390, 438, 78, Color.White, UiColors.BodyText);
+            btnCancelar = UiBuilder.SmallButton("Cancelar", 390, buttonY, 78, Color.White, UiColors.BodyText);
             btnCancelar.BorderColor = UiColors.Border;
             btnCancelar.Click += BtnCancelar_Click;
             card.Controls.Add(btnCancelar);
 
-            btnSalvar = UiBuilder.SmallButton(_edicao ? "Salvar" : "Cadastrar", 480, 438, 82, UiColors.AccentBlue, Color.White);
+            btnSalvar = UiBuilder.SmallButton(_edicao ? "Salvar" : "Cadastrar", 480, buttonY, 82, UiColors.AccentBlue, Color.White);
             btnSalvar.Click += BtnSalvar_Click;
             card.Controls.Add(btnSalvar);
         }
@@ -312,11 +339,22 @@ namespace SistemaTstLargoTreze
                         MedicoRecord medico = CadastrosRepository.GetMedico(_id);
                         if (medico != null)
                         {
-                            SetValue("Nome", medico.Nome);
-                            SetValue("CRM", medico.Crm);
-                            SetValue("Orgao / UF", medico.OrgaoUf);
-                            SetValue("Especialidade", medico.Especialidade);
+                            SetValue("N Registro", medico.Crm);
+                            SetValue("UF Exped.", string.IsNullOrWhiteSpace(medico.UfExpedidor) ? ExtrairUf(medico.OrgaoUf) : medico.UfExpedidor);
+                            SetValue("Descricao", medico.Nome);
+                            SetValue("Orgao de Classe", string.IsNullOrWhiteSpace(medico.OrgaoClasse) ? "Conselho Regional de Medicina (CRM)" : medico.OrgaoClasse);
+                            SetValue("Sigla", medico.Sigla);
+                            SetValue("Logradouro", medico.Logradouro);
+                            SetValue("Bairro", medico.Bairro);
+                            SetValue("Numero", medico.Numero);
+                            SetValue("Cidade", medico.Cidade);
+                            SetValue("CEP", medico.Cep);
                             SetValue("E-mail", medico.Email);
+                            SetValue("DDD", medico.Ddd);
+                            SetValue("Telefone", medico.Telefone);
+                            SetValue("NIT", medico.Nit);
+                            SetValue("CPF", medico.Cpf);
+                            SetValue("Tipo telefone", string.IsNullOrWhiteSpace(medico.TipoTelefone) ? "Celular" : medico.TipoTelefone);
                         }
                         break;
 
@@ -361,14 +399,39 @@ namespace SistemaTstLargoTreze
                     if (!string.IsNullOrWhiteSpace(email) && !ValidationHelper.IsValidEmail(email))
                         throw new InvalidOperationException("Informe um e-mail valido para o medico.");
 
+                    if (!string.IsNullOrWhiteSpace(Value("CPF")) && !ValidationHelper.IsCompleteCpf(Value("CPF")))
+                        throw new InvalidOperationException("Informe o CPF no formato 000.000.000-00.");
+
+                    if (!string.IsNullOrWhiteSpace(Value("Telefone")) && !ValidationHelper.IsCompletePhone(Value("Telefone")))
+                        throw new InvalidOperationException("Informe o telefone no formato (00) 00000-0000.");
+
+                    if (!string.IsNullOrWhiteSpace(Value("CEP")) && !ValidationHelper.IsCompleteCep(Value("CEP")))
+                        throw new InvalidOperationException("Informe o CEP no formato 00000-000.");
+
+                    string orgaoClasse = Required("Orgao de Classe");
+                    string ufExpedidor = Required("UF Exped.");
+
                     CadastrosRepository.SaveMedico(new MedicoRecord
                     {
                         Id = _id,
-                        Nome = Required("Nome"),
-                        Crm = Required("CRM"),
-                        OrgaoUf = Required("Orgao / UF"),
-                        Especialidade = Required("Especialidade"),
-                        Email = email
+                        Nome = Required("Descricao"),
+                        Crm = Required("N Registro"),
+                        OrgaoUf = SiglaOrgao(orgaoClasse) + "-" + ufExpedidor,
+                        Especialidade = "Medico/Responsavel Tecnico",
+                        Email = email,
+                        UfExpedidor = ufExpedidor,
+                        OrgaoClasse = orgaoClasse,
+                        Sigla = Value("Sigla"),
+                        Logradouro = Value("Logradouro"),
+                        Bairro = Value("Bairro"),
+                        Numero = Value("Numero"),
+                        Cidade = Value("Cidade"),
+                        Cep = Value("CEP"),
+                        Ddd = Value("DDD"),
+                        Nit = Value("NIT"),
+                        Cpf = Value("CPF"),
+                        Telefone = Value("Telefone"),
+                        TipoTelefone = Value("Tipo telefone")
                     });
                     break;
 
@@ -467,6 +530,29 @@ namespace SistemaTstLargoTreze
                     return;
                 }
             }
+        }
+
+        private string SiglaOrgao(string orgaoClasse)
+        {
+            if (orgaoClasse.IndexOf("CREA", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CREA";
+
+            if (orgaoClasse.IndexOf("CRM", StringComparison.OrdinalIgnoreCase) >= 0)
+                return "CRM";
+
+            return "OUT";
+        }
+
+        private string ExtrairUf(string orgaoUf)
+        {
+            if (string.IsNullOrWhiteSpace(orgaoUf))
+                return "SP";
+
+            int index = orgaoUf.LastIndexOf("-");
+            if (index >= 0 && index < orgaoUf.Length - 1)
+                return orgaoUf.Substring(index + 1).Trim();
+
+            return "SP";
         }
     }
 }

@@ -46,7 +46,9 @@ namespace SistemaTstLargoTreze
             {
                 Dock = DockStyle.Fill,
                 BackColor = UiColors.PageBg,
-                Padding = new Padding(20)
+                Padding = new Padding(20),
+                AutoScroll = true,
+                AutoScrollMargin = new Size(0, 30)
             };
 
             AppFrame.Controls.Add(ContentPanel);

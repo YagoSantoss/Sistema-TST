@@ -225,6 +225,7 @@ namespace SistemaTstLargoTreze
                 dataW,
                 true
             );
+            InputFormatHelper.ApplyDateMask(txtDataAso);
 
             x += dataW + gap;
 
@@ -236,6 +237,19 @@ namespace SistemaTstLargoTreze
                 106,
                 tipoW,
                 true
+            );
+
+            form.Controls.Add(
+                UiBuilder.Label(
+                    "Use Retorno ao trabalho para reavaliar empregado afastado por CAT.",
+                    margem,
+                    154,
+                    largura - (margem * 2),
+                    16,
+                    7.3F,
+                    FontStyle.Regular,
+                    UiColors.MutedText
+                )
             );
         }
 

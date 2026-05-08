@@ -56,6 +56,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(card, "Nome", txtNome, 172, 100, 420, true);
 
             txtCpf = UiBuilder.TextBox("000.000.000-00", 0, 0, 170);
+            InputFormatHelper.ApplyCpfMask(txtCpf);
             UiBuilder.AddField(card, "CPF", txtCpf, 22, 172, 170, true);
 
             txtSetor = UiBuilder.TextBox("Setor", 0, 0, 185);
@@ -65,9 +66,11 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(card, "Cargo", txtCargo, 417, 172, 175, false);
 
             txtAdmissao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, 170);
+            InputFormatHelper.ApplyDateMask(txtAdmissao);
             UiBuilder.AddField(card, "Data de admissao", txtAdmissao, 22, 244, 170, false);
 
             txtVencimentoAso = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, 170);
+            InputFormatHelper.ApplyDateMask(txtVencimentoAso);
             UiBuilder.AddField(card, "Vencimento ASO", txtVencimentoAso, 212, 244, 170, false);
 
             cmbStatusAso = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Segoe UI", 9F) };
@@ -97,6 +100,24 @@ namespace SistemaTstLargoTreze
             if (string.IsNullOrWhiteSpace(txtMatricula.Text) || string.IsNullOrWhiteSpace(txtNome.Text) || string.IsNullOrWhiteSpace(txtCpf.Text))
             {
                 MessageBox.Show("Preencha matricula, nome e CPF.", "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!ValidationHelper.IsCompleteCpf(txtCpf.Text))
+            {
+                MessageBox.Show("Informe o CPF no formato 000.000.000-00.", "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtAdmissao.Text) && !ValidationHelper.IsValidDate(txtAdmissao.Text))
+            {
+                MessageBox.Show("Informe a data de admissao no formato dd/mm/aaaa.", "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(txtVencimentoAso.Text) && !ValidationHelper.IsValidDate(txtVencimentoAso.Text))
+            {
+                MessageBox.Show("Informe o vencimento do ASO no formato dd/mm/aaaa.", "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

@@ -105,8 +105,10 @@
     <Compile Include="Core\AppNavigator.cs" />
     <Compile Include="Core\AppState.cs" />
     <Compile Include="Core\CatDraftState.cs" />
+    <Compile Include="Core\CatPdfExporter.cs" />
     <Compile Include="Core\Database.cs" />
     <Compile Include="Core\EmailService.cs" />
+    <Compile Include="Core\InputFormatHelper.cs" />
     <Compile Include="Core\ValidationHelper.cs" />
     <Compile Include="UI\CueTextBox.cs">
       <SubType>Component</SubType>

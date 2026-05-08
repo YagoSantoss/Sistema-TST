@@ -87,6 +87,22 @@ namespace SistemaTstLargoTreze
             MessageBox.Show("Filtros avancados: setor, cargo, vencimento de ASO e status.", "Filtros", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        private void BtnBuscarEmpregados_Click(object sender, EventArgs e)
+        {
+            _termoBuscaEmpregados = txtBuscaEmpregados == null ? string.Empty : txtBuscaEmpregados.Text.Trim();
+            _empregadosSelecionados.Clear();
+            MontarConteudoEmpregados();
+        }
+
+        private void TxtBuscaEmpregados_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter)
+                return;
+
+            e.SuppressKeyPress = true;
+            BtnBuscarEmpregados_Click(sender, EventArgs.Empty);
+        }
+
         private void BtnRegistrarAso_Click(object sender, EventArgs e)
         {
             Control control = sender as Control;

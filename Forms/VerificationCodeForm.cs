@@ -57,5 +57,10 @@ namespace SistemaTstLargoTreze
                 MessageBox.Show(ex.Message, "Codigo de verificacao", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void LinkEmailErrado_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            AppNavigator.Show(new ForgotPasswordForm());
+        }
     }
 }

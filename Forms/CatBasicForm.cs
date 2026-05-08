@@ -76,7 +76,7 @@ namespace SistemaTstLargoTreze
             }
 
             SalvarRascunho();
-            AppNavigator.Show(new CatMedicalForm());
+            AppNavigator.Show(new CatMedicalForm(_catId));
         }
     }
 }

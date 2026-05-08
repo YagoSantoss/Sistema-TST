@@ -34,7 +34,8 @@ namespace SistemaTstLargoTreze
             if (largura < 790)
                 largura = 790;
 
-            RoundPanel table = UiBuilder.Card(margem, 18, largura, 460);
+            int alturaTabela = CalcularAlturaTabela();
+            RoundPanel table = UiBuilder.Card(margem, 18, largura, alturaTabela);
             table.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(table);
 
@@ -62,7 +63,7 @@ namespace SistemaTstLargoTreze
 
             MontarCabecalho(table, largura);
             MontarLinhas(table, largura);
-            MontarRodape(table, largura);
+            MontarRodape(table, largura, alturaTabela);
 
             ContentPanel.ResumeLayout(false);
             _montandoConteudo = false;
@@ -84,7 +85,7 @@ namespace SistemaTstLargoTreze
             int tipoW = 120;
             int situacaoW = 110;
             int resultadoW = 130;
-            int acoesW = 90;
+            int acoesW = 160;
             int empregadoW = (int)(largura * 0.28);
             int localW = largura - checkW - empregadoW - dataW - tipoW - situacaoW - resultadoW - acoesW - 20;
             int x = 5;
@@ -147,7 +148,7 @@ namespace SistemaTstLargoTreze
             int tipoW = 120;
             int situacaoW = 110;
             int resultadoW = 130;
-            int acoesW = 90;
+            int acoesW = 160;
             int empregadoW = (int)(largura * 0.28);
             int localW = largura - checkW - empregadoW - dataW - tipoW - situacaoW - resultadoW - acoesW - 20;
             int x = 5;
@@ -177,16 +178,35 @@ namespace SistemaTstLargoTreze
             row.Controls.Add(UiBuilder.Pill(cat.ResultadoAso, x + 6, 9, 110, ResultadoAsoBack(cat.ResultadoAso), ResultadoAsoColor(cat.ResultadoAso)));
             x += resultadoW;
 
-            RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 12, 7, 58, Color.White, UiColors.BodyText);
+            RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 8, 7, 50, Color.White, UiColors.BodyText);
             abrir.BorderColor = UiColors.Border;
             abrir.Tag = cat.Id;
             abrir.Click += (sender, e) => AppNavigator.Show(new CatBasicForm((int)((Control)sender).Tag));
             row.Controls.Add(abrir);
+
+            RoundButton imprimir = UiBuilder.SmallButton("Imprimir", x + 64, 7, 76, UiColors.Orange, Color.White);
+            imprimir.Tag = cat.Id;
+            imprimir.Click += ImprimirCat_Click;
+            row.Controls.Add(imprimir);
         }
 
-        private void MontarRodape(RoundPanel table, int largura)
+        private int CalcularAlturaTabela()
         {
-            RoundButton excluir = UiBuilder.SmallButton("Excluir", 16, 420, 78, Color.White, UiColors.Red);
+            try
+            {
+                int registros = CadastrosRepository.GetCats(_termoBusca).Count;
+                int altura = 138 + (registros * 38) + 70;
+                return altura < 460 ? 460 : altura;
+            }
+            catch
+            {
+                return 460;
+            }
+        }
+
+        private void MontarRodape(RoundPanel table, int largura, int alturaTabela)
+        {
+            RoundButton excluir = UiBuilder.SmallButton("Excluir", 16, alturaTabela - 40, 78, Color.White, UiColors.Red);
             excluir.BorderColor = UiColors.Border;
             excluir.Click += ExcluirSelecionados_Click;
             table.Controls.Add(excluir);
@@ -228,6 +248,27 @@ namespace SistemaTstLargoTreze
             catch (Exception ex)
             {
                 MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ImprimirCat_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)((Control)sender).Tag;
+                CatRecord cat = CadastrosRepository.GetCat(id);
+                if (cat == null)
+                {
+                    MessageBox.Show("CAT nao encontrada.", "CAT", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string arquivo = CatPdfExporter.Exportar(cat);
+                System.Diagnostics.Process.Start(arquivo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel gerar o PDF da CAT.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
