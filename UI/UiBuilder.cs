@@ -32,7 +32,7 @@ namespace SistemaTstLargoTreze
             {
                 Cue = cue,
                 Location = new Point(x, y),
-                Size = new Size(width, 32),
+                Size = new Size(width, 34),
                 Font = new Font("Segoe UI", 9F),
                 ForeColor = UiColors.BodyText
             };
@@ -87,7 +87,7 @@ namespace SistemaTstLargoTreze
             Color labelColor = required ? UiColors.Red : UiColors.BodyText;
             parent.Controls.Add(Label(labelText + (required ? " *" : ""), x, y, width, 20, 8.5F, FontStyle.Bold, labelColor));
             field.Location = new Point(x, y + 24);
-            field.Size = new Size(width, 32);
+            field.Size = new Size(width, 34);
             parent.Controls.Add(field);
         }
 

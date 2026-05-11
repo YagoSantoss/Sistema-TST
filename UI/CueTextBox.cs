@@ -9,6 +9,9 @@ namespace SistemaTstLargoTreze
     public class CueTextBox : TextBox
     {
         private const int EmSetcuebanner = 0x1501;
+        private const int EmSetmargins = 0x00D3;
+        private const int EcLeftmargin = 0x0001;
+        private const int EcRightmargin = 0x0002;
         private const int WmPaint = 0x000F;
         private const int WmSetfocus = 0x0007;
         private const int WmKillfocus = 0x0008;
@@ -25,8 +28,7 @@ namespace SistemaTstLargoTreze
             BackColor = Color.White;
             ForeColor = UiColors.BodyText;
             Font = new Font("Segoe UI", 9F);
-            Height = 32;
-            Padding = new Padding(10, 6, 10, 6);
+            Height = 34;
         }
 
         public string Cue
@@ -43,12 +45,14 @@ namespace SistemaTstLargoTreze
         {
             base.OnHandleCreated(e);
             SetCue();
+            SetInnerMargins();
             UpdateRegion();
         }
 
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+            SetInnerMargins();
             UpdateRegion();
             Invalidate();
         }
@@ -71,6 +75,17 @@ namespace SistemaTstLargoTreze
             }
         }
 
+        private void SetInnerMargins()
+        {
+            if (!IsHandleCreated)
+                return;
+
+            int left = 10;
+            int right = 10;
+            int value = (right << 16) | left;
+            SendMessage(Handle, EmSetmargins, (IntPtr)(EcLeftmargin | EcRightmargin), (IntPtr)value);
+        }
+
         private void UpdateRegion()
         {
             if (Width <= 0 || Height <= 0)
@@ -87,9 +102,13 @@ namespace SistemaTstLargoTreze
             if (Width <= 0 || Height <= 0)
                 return;
 
+            int borderWidth = Focused ? 2 : 1;
+            int inset = borderWidth;
+            Rectangle rect = new Rectangle(inset, inset, Width - (inset * 2) - 1, Height - (inset * 2) - 1);
+
             using (Graphics graphics = Graphics.FromHwnd(Handle))
-            using (GraphicsPath path = RoundPanel.RoundedPath(new Rectangle(0, 0, Width - 1, Height - 1), Radius))
-            using (Pen pen = new Pen(Focused ? FocusBorderColor : BorderColor, Focused ? 2 : 1))
+            using (GraphicsPath path = RoundPanel.RoundedPath(rect, Radius))
+            using (Pen pen = new Pen(Focused ? FocusBorderColor : BorderColor, borderWidth))
             {
                 graphics.SmoothingMode = SmoothingMode.AntiAlias;
                 graphics.DrawPath(pen, path);
@@ -98,5 +117,8 @@ namespace SistemaTstLargoTreze
 
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, string lParam);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
     }
 }

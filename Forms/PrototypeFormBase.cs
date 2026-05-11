@@ -12,6 +12,7 @@ namespace SistemaTstLargoTreze
             DoubleBuffered = true;
             Text = "Sistema TST - Largo Treze";
             BackColor = Color.White;
+            MinimumSize = new Size(1024, 650);
             ApplyAppIcon(this);
 
             // Permite maximizar a janela

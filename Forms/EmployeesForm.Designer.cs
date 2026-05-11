@@ -15,6 +15,7 @@ namespace SistemaTstLargoTreze
         private RoundButton btnEditar;
         private RoundButton btnExcluir;
         private CueTextBox txtBuscaEmpregados;
+        private CheckBox chkSelecionarTodos;
         private Panel pnlListaEmpregados;
         private string _termoBuscaEmpregados = string.Empty;
         private readonly HashSet<int> _empregadosSelecionados = new HashSet<int>();
@@ -205,7 +206,16 @@ namespace SistemaTstLargoTreze
 
             int x = 5;
 
-            header.Controls.Add(UiBuilder.HeaderCell("â˜‘", x, 2, checkW));
+            chkSelecionarTodos = new CheckBox
+            {
+                Location = new Point(x + 9, 8),
+                Size = new Size(16, 16),
+                BackColor = UiColors.HeaderBlue,
+                Cursor = Cursors.Hand,
+                Checked = TodosEmpregadosFiltradosSelecionados()
+            };
+            chkSelecionarTodos.CheckedChanged += SelecionarTodos_CheckedChanged;
+            header.Controls.Add(chkSelecionarTodos);
             x += checkW;
 
             header.Controls.Add(UiBuilder.HeaderCell("MATRICULA", x, 2, matriculaW));

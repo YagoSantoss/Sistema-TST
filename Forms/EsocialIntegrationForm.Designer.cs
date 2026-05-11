@@ -65,7 +65,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "CATs GERADAS",
                 resumo.Total.ToString(),
-                resumo.Total == 1 ? "1 registro" : resumo.Total + " registros",
+                resumo.Total == 1 ? "registro" : "registros",
                 UiColors.AccentBlue,
                 Color.FromArgb(231, 241, 254)
             );
@@ -77,7 +77,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "APTOS",
                 resumo.Aptos.ToString(),
-                resumo.Aptos == 1 ? "1 empregado apto" : resumo.Aptos + " empregados aptos",
+                resumo.Aptos == 1 ? "empregado apto" : "empregados aptos",
                 UiColors.Green,
                 Color.FromArgb(217, 248, 234)
             );
@@ -89,7 +89,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "AGUARDANDO",
                 resumo.Aguardando.ToString(),
-                resumo.Aguardando == 1 ? "1 empregado pendente" : resumo.Aguardando + " empregados pendentes",
+                resumo.Aguardando == 1 ? "empregado pendente" : "empregados pendentes",
                 UiColors.Orange,
                 Color.FromArgb(255, 246, 206)
             );
@@ -101,7 +101,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "INAPTOS",
                 resumo.Inaptos.ToString(),
-                resumo.Inaptos == 1 ? "1 empregado inapto" : resumo.Inaptos + " empregados inaptos",
+                resumo.Inaptos == 1 ? "empregado inapto" : "empregados inaptos",
                 UiColors.Red,
                 Color.FromArgb(255, 230, 232)
             );
@@ -125,7 +125,7 @@ namespace SistemaTstLargoTreze
             Color corPrincipal,
             Color corFundoDetalhe)
         {
-            RoundPanel card = UiBuilder.Card(x, y, width, 84);
+            RoundPanel card = UiBuilder.Card(x, y, width, 88);
             card.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             parent.Controls.Add(card);
 
@@ -158,7 +158,7 @@ namespace SistemaTstLargoTreze
                     18,
                     37,
                     width - 36,
-                    30,
+                    28,
                     18F,
                     FontStyle.Bold,
                     corPrincipal
@@ -169,11 +169,11 @@ namespace SistemaTstLargoTreze
             {
                 Text = detalhe,
                 Location = new Point(18, 62),
-                Size = new Size(120, 18),
+                Size = new Size(width - 36, 20),
                 FillColor = corFundoDetalhe,
                 ForeColor = corPrincipal,
                 Font = new Font("Segoe UI", 7F, FontStyle.Bold),
-                Radius = 9
+                Radius = 10
             };
 
             card.Controls.Add(pill);

@@ -201,6 +201,57 @@ namespace SistemaTstLargoTreze
                 check.Parent.BackColor = check.Checked ? System.Drawing.Color.FromArgb(255, 244, 229) : System.Drawing.Color.White;
         }
 
+        private void SelecionarTodos_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_montandoConteudo)
+                return;
+
+            CheckBox check = sender as CheckBox;
+            if (check == null)
+                return;
+
+            try
+            {
+                List<EmpregadoRecord> empregados = ObterEmpregadosFiltrados();
+
+                foreach (EmpregadoRecord empregado in empregados)
+                {
+                    if (check.Checked)
+                        _empregadosSelecionados.Add(empregado.Id);
+                    else
+                        _empregadosSelecionados.Remove(empregado.Id);
+                }
+
+                MontarConteudoEmpregados();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel selecionar os empregados.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private bool TodosEmpregadosFiltradosSelecionados()
+        {
+            try
+            {
+                List<EmpregadoRecord> empregados = ObterEmpregadosFiltrados();
+                if (empregados.Count == 0)
+                    return false;
+
+                foreach (EmpregadoRecord empregado in empregados)
+                {
+                    if (!_empregadosSelecionados.Contains(empregado.Id))
+                        return false;
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         private int ObterPrimeiroSelecionado()
         {
             foreach (int id in _empregadosSelecionados)
