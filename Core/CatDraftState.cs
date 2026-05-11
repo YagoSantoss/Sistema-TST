@@ -1,5 +1,7 @@
 namespace SistemaTstLargoTreze
 {
+    using System.Collections.Generic;
+
     public sealed class CatDraft
     {
         public string DataAcidente { get; set; }
@@ -38,6 +40,7 @@ namespace SistemaTstLargoTreze
         public string SaidaTrabalho { get; set; }
         public string Descricao { get; set; }
         public string ObservacaoCat { get; set; }
+        public List<CatTestemunhaRecord> Testemunhas { get; set; } = new List<CatTestemunhaRecord>();
     }
 
     public static class CatDraftState

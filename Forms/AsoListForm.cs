@@ -85,7 +85,7 @@ namespace SistemaTstLargoTreze
             int tipoW = 160;
             int medicoW = 210;
             int resultadoW = 120;
-            int acoesW = 90;
+            int acoesW = 160;
             int empregadoW = largura - checkW - dataW - tipoW - medicoW - resultadoW - acoesW - 20;
             int x = 5;
 
@@ -139,7 +139,7 @@ namespace SistemaTstLargoTreze
             int tipoW = 160;
             int medicoW = 210;
             int resultadoW = 120;
-            int acoesW = 90;
+            int acoesW = 160;
             int empregadoW = largura - checkW - dataW - tipoW - medicoW - resultadoW - acoesW - 20;
             int x = 5;
 
@@ -159,11 +159,16 @@ namespace SistemaTstLargoTreze
             row.Controls.Add(UiBuilder.Pill(aso.Resultado, x + 8, 9, 90, ResultadoBack(aso.Resultado), ResultadoColor(aso.Resultado)));
             x += resultadoW;
 
-            RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 12, 7, 58, Color.White, UiColors.BodyText);
+            RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 8, 7, 50, Color.White, UiColors.BodyText);
             abrir.BorderColor = UiColors.Border;
             abrir.Tag = aso.EmpregadoId;
             abrir.Click += (sender, e) => AppNavigator.Show(new AsoHistoryForm((int)((Control)sender).Tag));
             row.Controls.Add(abrir);
+
+            RoundButton imprimir = UiBuilder.SmallButton("Imprimir", x + 64, 7, 76, UiColors.Orange, Color.White);
+            imprimir.Tag = aso.Id;
+            imprimir.Click += ImprimirAso_Click;
+            row.Controls.Add(imprimir);
         }
 
         private int CalcularAlturaTabela()
@@ -224,6 +229,27 @@ namespace SistemaTstLargoTreze
             catch (Exception ex)
             {
                 MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ImprimirAso_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)((Control)sender).Tag;
+                AsoRecord aso = CadastrosRepository.GetAso(id);
+                if (aso == null)
+                {
+                    MessageBox.Show("ASO nao encontrado.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string arquivo = OccupationalPdfExporter.ExportarAso(aso);
+                System.Diagnostics.Process.Start(arquivo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel gerar o PDF do ASO.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

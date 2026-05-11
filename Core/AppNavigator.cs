@@ -48,6 +48,7 @@ namespace SistemaTstLargoTreze
                 previous.FormClosed -= OnMainFormClosed;
             }
 
+            PrototypeFormBase.ApplyAppIcon(nextForm);
             MainForm = nextForm;
             nextForm.StartPosition = FormStartPosition.CenterScreen;
             nextForm.FormClosed += OnMainFormClosed;

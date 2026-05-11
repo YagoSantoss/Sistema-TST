@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -79,12 +81,72 @@ namespace SistemaTstLargoTreze
 
         private void BtnExportar_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Relatorio exportado para planilha.", "Exportar", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            try
+            {
+                string pasta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SistemaTST", "Relatorios");
+                Directory.CreateDirectory(pasta);
+                string arquivo = Path.Combine(pasta, "empregados_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
+
+                StringBuilder csv = new StringBuilder();
+                csv.AppendLine("Matricula;Nome;CPF;Setor;Cargo;Admissao;Vencimento ASO;Status ASO;Medico");
+
+                foreach (EmpregadoRecord empregado in CadastrosRepository.GetEmpregados())
+                {
+                    csv.AppendLine(string.Join(";",
+                        Csv(empregado.Matricula),
+                        Csv(empregado.Nome),
+                        Csv(empregado.Cpf),
+                        Csv(empregado.Setor),
+                        Csv(empregado.Cargo),
+                        Csv(empregado.DataAdmissao),
+                        Csv(empregado.DataVencimentoAso),
+                        Csv(empregado.StatusAso),
+                        Csv(empregado.MedicoNome)));
+                }
+
+                File.WriteAllText(arquivo, csv.ToString(), Encoding.UTF8);
+                System.Diagnostics.Process.Start(arquivo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel exportar os empregados.\n\n" + ex.Message, "Exportar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void BtnFiltros_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Filtros avancados: setor, cargo, vencimento de ASO e status.", "Filtros", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            BtnBuscarEmpregados_Click(sender, EventArgs.Empty);
+        }
+
+        private void BtnAtualizar_Click(object sender, EventArgs e)
+        {
+            _empregadosSelecionados.Clear();
+            MontarConteudoEmpregados();
+        }
+
+        private void BtnImportar_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog dialog = new OpenFileDialog())
+            {
+                dialog.Title = "Importar empregados do Excel/CSV";
+                dialog.Filter = "CSV editado no Excel|*.csv|Todos os arquivos|*.*";
+
+                if (dialog.ShowDialog(this) != DialogResult.OK)
+                    return;
+
+                try
+                {
+                    List<EmpregadoRecord> empregados = LerEmpregadosCsv(dialog.FileName);
+                    int total = CadastrosRepository.ImportEmpregados(empregados);
+                    _empregadosSelecionados.Clear();
+                    MontarConteudoEmpregados();
+                    MessageBox.Show(total + " empregado(s) importado(s) ou atualizado(s).", "Importar CSV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Nao foi possivel importar a planilha.\n\n" + ex.Message, "Importar CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         private void BtnBuscarEmpregados_Click(object sender, EventArgs e)
@@ -145,6 +207,113 @@ namespace SistemaTstLargoTreze
                 return id;
 
             return 0;
+        }
+
+        private string Csv(string value)
+        {
+            string text = value ?? string.Empty;
+            if (text.Contains(";") || text.Contains("\"") || text.Contains("\n"))
+                return "\"" + text.Replace("\"", "\"\"") + "\"";
+
+            return text;
+        }
+
+        private List<EmpregadoRecord> LerEmpregadosCsv(string arquivo)
+        {
+            string[] linhas = File.ReadAllLines(arquivo, Encoding.UTF8);
+            if (linhas.Length < 2)
+                throw new InvalidOperationException("A planilha precisa ter cabecalho e pelo menos um empregado.");
+
+            char separador = linhas[0].Contains(";") ? ';' : ',';
+            List<string> cabecalho = ParseCsvLine(linhas[0], separador);
+            Dictionary<string, int> colunas = new Dictionary<string, int>();
+
+            for (int i = 0; i < cabecalho.Count; i++)
+                colunas[NormalizarColuna(cabecalho[i])] = i;
+
+            List<EmpregadoRecord> empregados = new List<EmpregadoRecord>();
+            for (int i = 1; i < linhas.Length; i++)
+            {
+                if (string.IsNullOrWhiteSpace(linhas[i]))
+                    continue;
+
+                List<string> valores = ParseCsvLine(linhas[i], separador);
+                EmpregadoRecord empregado = new EmpregadoRecord
+                {
+                    Matricula = ValorCsv(valores, colunas, "MATRICULA"),
+                    Nome = ValorCsv(valores, colunas, "NOME"),
+                    Cpf = ValorCsv(valores, colunas, "CPF"),
+                    Setor = ValorCsv(valores, colunas, "SETOR"),
+                    Cargo = ValorCsv(valores, colunas, "CARGO"),
+                    DataAdmissao = ValorCsv(valores, colunas, "ADMISSAO"),
+                    DataVencimentoAso = ValorCsv(valores, colunas, "VENCIMENTOASO"),
+                    StatusAso = ValorCsv(valores, colunas, "STATUSASO")
+                };
+
+                if (!string.IsNullOrWhiteSpace(empregado.Matricula) ||
+                    !string.IsNullOrWhiteSpace(empregado.Nome) ||
+                    !string.IsNullOrWhiteSpace(empregado.Cpf))
+                {
+                    empregados.Add(empregado);
+                }
+            }
+
+            return empregados;
+        }
+
+        private string ValorCsv(List<string> valores, Dictionary<string, int> colunas, string coluna)
+        {
+            int indice;
+            if (!colunas.TryGetValue(coluna, out indice) || indice < 0 || indice >= valores.Count)
+                return string.Empty;
+
+            return valores[indice].Trim();
+        }
+
+        private string NormalizarColuna(string coluna)
+        {
+            return (coluna ?? string.Empty)
+                .Replace(" ", string.Empty)
+                .Replace(".", string.Empty)
+                .Replace("_", string.Empty)
+                .Replace("-", string.Empty)
+                .ToUpperInvariant();
+        }
+
+        private List<string> ParseCsvLine(string linha, char separador)
+        {
+            List<string> valores = new List<string>();
+            StringBuilder atual = new StringBuilder();
+            bool aspas = false;
+
+            for (int i = 0; i < linha.Length; i++)
+            {
+                char c = linha[i];
+                if (c == '"')
+                {
+                    if (aspas && i + 1 < linha.Length && linha[i + 1] == '"')
+                    {
+                        atual.Append('"');
+                        i++;
+                    }
+                    else
+                    {
+                        aspas = !aspas;
+                    }
+                }
+                else if (c == separador && !aspas)
+                {
+                    valores.Add(atual.ToString());
+                    atual.Clear();
+                }
+                else
+                {
+                    atual.Append(c);
+                }
+            }
+
+            valores.Add(atual.ToString());
+            return valores;
         }
     }
 }

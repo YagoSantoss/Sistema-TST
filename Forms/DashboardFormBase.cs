@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -87,7 +87,7 @@ namespace SistemaTstLargoTreze
 
             SidebarPanel.Controls.Add(UiBuilder.Label("CADASTROS BASE", 16, 242, 170, 20, 7F, FontStyle.Bold, Color.FromArgb(199, 154, 96)));
             AddMenuButton("👨‍⚕  Médicos", DashboardMenu.Doctors, active, 266, string.Empty);
-            AddMenuButton("🔬  Tipos de Exame", DashboardMenu.ExamTypes, active, 296, string.Empty);
+            AddMenuButton("🔬  Exames do Paciente", DashboardMenu.ExamTypes, active, 296, string.Empty);
             AddMenuButton("🏢  Ambientes de Trabalho", DashboardMenu.WorkEnvironments, active, 326, string.Empty);
             AddMenuButton("📊  Integração eSocial", DashboardMenu.Esocial, active, 356, string.Empty);
 

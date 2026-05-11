@@ -63,7 +63,7 @@ namespace SistemaTstLargoTreze
             }
 
             SalvarRascunho();
-            AppNavigator.Show(new CatWitnessesForm());
+            AppNavigator.Show(new CatWitnessesForm(_catId));
         }
 
         private void TabComplementares_Click(object sender, EventArgs e)

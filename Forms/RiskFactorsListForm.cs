@@ -78,7 +78,7 @@ namespace SistemaTstLargoTreze
             int checkW = 34;
             int tipoW = 140;
             int ambienteW = 190;
-            int acoesW = 90;
+            int acoesW = 160;
             int empregadoW = (int)(largura * 0.24);
             int agenteW = largura - checkW - empregadoW - ambienteW - tipoW - dataW - acoesW - 20;
             int x = 5;
@@ -132,7 +132,7 @@ namespace SistemaTstLargoTreze
             int checkW = 34;
             int tipoW = 140;
             int ambienteW = 190;
-            int acoesW = 90;
+            int acoesW = 160;
             int empregadoW = (int)(largura * 0.24);
             int agenteW = largura - checkW - empregadoW - ambienteW - tipoW - dataW - acoesW - 20;
             int x = 5;
@@ -153,11 +153,16 @@ namespace SistemaTstLargoTreze
             row.Controls.Add(UiBuilder.Cell(risco.DataAvaliacao, x, 2, dataW, UiColors.AccentBlue, FontStyle.Bold));
             x += dataW;
 
-            RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 12, 7, 58, Color.White, UiColors.BodyText);
+            RoundButton abrir = UiBuilder.SmallButton("Abrir", x + 8, 7, 50, Color.White, UiColors.BodyText);
             abrir.BorderColor = UiColors.Border;
             abrir.Tag = risco.Id;
             abrir.Click += (sender, e) => AppNavigator.Show(new RiskFactorsForm((int)((Control)sender).Tag));
             row.Controls.Add(abrir);
+
+            RoundButton imprimir = UiBuilder.SmallButton("Imprimir", x + 64, 7, 76, UiColors.Orange, Color.White);
+            imprimir.Tag = risco.Id;
+            imprimir.Click += ImprimirFatorRisco_Click;
+            row.Controls.Add(imprimir);
         }
 
         private int CalcularAlturaTabela()
@@ -218,6 +223,27 @@ namespace SistemaTstLargoTreze
             catch (Exception ex)
             {
                 MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void ImprimirFatorRisco_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = (int)((Control)sender).Tag;
+                RiskFactorRecord risco = CadastrosRepository.GetFatorRisco(id);
+                if (risco == null)
+                {
+                    MessageBox.Show("Fator de risco nao encontrado.", "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                string arquivo = OccupationalPdfExporter.ExportarFatorRisco(risco);
+                System.Diagnostics.Process.Start(arquivo);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel gerar o PDF do fator de risco.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

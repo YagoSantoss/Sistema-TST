@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -9,6 +10,8 @@ namespace SistemaTstLargoTreze
         private RoundButton btnCancelar;
         private RoundButton btnAdicionarTestemunha;
         private RoundButton btnVoltar;
+        private List<CatTestemunhaRecord> _testemunhas = new List<CatTestemunhaRecord>();
+        private readonly List<WitnessInputs> _witnessInputs = new List<WitnessInputs>();
 
         private bool _montandoConteudo = false;
 
@@ -23,11 +26,15 @@ namespace SistemaTstLargoTreze
             );
 
             ContentPanel.AutoScroll = true;
+            CarregarTestemunhasIniciais();
 
             MontarConteudoTestemunhas();
 
             ContentPanel.Resize += (sender, e) =>
             {
+                if (!_montandoConteudo)
+                    _testemunhas = ColetarTestemunhas();
+
                 MontarConteudoTestemunhas();
             };
 
@@ -43,6 +50,7 @@ namespace SistemaTstLargoTreze
 
             ContentPanel.SuspendLayout();
             ContentPanel.Controls.Clear();
+            _witnessInputs.Clear();
 
             int margem = 18;
             int larguraDisponivel = ContentPanel.ClientSize.Width - (margem * 2);
@@ -50,7 +58,9 @@ namespace SistemaTstLargoTreze
             if (larguraDisponivel < 790)
                 larguraDisponivel = 790;
 
-            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, 350);
+            int quantidade = _testemunhas.Count == 0 ? 1 : _testemunhas.Count;
+            int alturaForm = 205 + (quantidade * 154) + 55;
+            RoundPanel form = UiBuilder.Card(margem, 18, larguraDisponivel, alturaForm);
             form.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             ContentPanel.Controls.Add(form);
 
@@ -69,12 +79,18 @@ namespace SistemaTstLargoTreze
                 )
             );
 
-            MontarBlocoTestemunha(form, larguraDisponivel);
+            int y = 160;
+            for (int i = 0; i < quantidade; i++)
+            {
+                CatTestemunhaRecord testemunha = i < _testemunhas.Count ? _testemunhas[i] : new CatTestemunhaRecord();
+                MontarBlocoTestemunha(form, larguraDisponivel, i, y, testemunha);
+                y += 154;
+            }
 
             btnAdicionarTestemunha = UiBuilder.SmallButton(
                 "+ Adicionar Testemunha",
                 18,
-                312,
+                y + 4,
                 160,
                 Color.White,
                 UiColors.BodyText
@@ -87,7 +103,7 @@ namespace SistemaTstLargoTreze
             btnVoltar = UiBuilder.SmallButton(
                 "Voltar",
                 190,
-                312,
+                y + 4,
                 75,
                 Color.White,
                 UiColors.BodyText
@@ -102,14 +118,14 @@ namespace SistemaTstLargoTreze
             _montandoConteudo = false;
         }
 
-        private void MontarBlocoTestemunha(RoundPanel form, int largura)
+        private void MontarBlocoTestemunha(RoundPanel form, int largura, int indice, int y, CatTestemunhaRecord testemunhaAtual)
         {
             int margem = 18;
             int gap = 16;
 
             RoundPanel witness = new RoundPanel
             {
-                Location = new Point(margem, 160),
+                Location = new Point(margem, y),
                 Size = new Size(largura - (margem * 2), 142),
                 Radius = 8,
                 FillColor = Color.FromArgb(248, 251, 254),
@@ -121,7 +137,7 @@ namespace SistemaTstLargoTreze
 
             witness.Controls.Add(
                 UiBuilder.Label(
-                    "TESTEMUNHA 1",
+                    "TESTEMUNHA " + (indice + 1),
                     12,
                     10,
                     180,
@@ -148,10 +164,12 @@ namespace SistemaTstLargoTreze
 
             int x = 12;
 
+            CueTextBox txtNome = UiBuilder.TextBox("Nome da testemunha", 0, 0, nomeW);
+            txtNome.Text = testemunhaAtual == null ? string.Empty : testemunhaAtual.Nome;
             UiBuilder.AddField(
                 witness,
                 "NOME COMPLETO",
-                UiBuilder.TextBox("Nome da testemunha", 0, 0, nomeW),
+                txtNome,
                 x,
                 32,
                 nomeW,
@@ -160,10 +178,12 @@ namespace SistemaTstLargoTreze
 
             x += nomeW + gap;
 
+            CueTextBox txtCpf = CriarCpfTextBox(cpfW);
+            txtCpf.Text = testemunhaAtual == null ? string.Empty : testemunhaAtual.Cpf;
             UiBuilder.AddField(
                 witness,
                 "CPF",
-                CriarCpfTextBox(cpfW),
+                txtCpf,
                 x,
                 32,
                 cpfW,
@@ -172,25 +192,37 @@ namespace SistemaTstLargoTreze
 
             x += cpfW + gap;
 
+            CueTextBox txtTelefone = CriarTelefoneTextBox(telefoneW);
+            txtTelefone.Text = testemunhaAtual == null ? string.Empty : testemunhaAtual.Telefone;
             UiBuilder.AddField(
                 witness,
                 "TELEFONE",
-                CriarTelefoneTextBox(telefoneW),
+                txtTelefone,
                 x,
                 32,
                 telefoneW,
                 false
             );
 
+            CueTextBox txtEndereco = UiBuilder.TextBox("Endereco da testemunha", 0, 0, larguraInterna);
+            txtEndereco.Text = testemunhaAtual == null ? string.Empty : testemunhaAtual.Endereco;
             UiBuilder.AddField(
                 witness,
                 "ENDERECO",
-                UiBuilder.TextBox("Endereco da testemunha", 0, 0, larguraInterna),
+                txtEndereco,
                 12,
                 90,
                 larguraInterna,
                 false
             );
+
+            _witnessInputs.Add(new WitnessInputs
+            {
+                Nome = txtNome,
+                Cpf = txtCpf,
+                Telefone = txtTelefone,
+                Endereco = txtEndereco
+            });
         }
 
         private CueTextBox CriarCpfTextBox(int width)

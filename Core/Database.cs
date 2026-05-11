@@ -177,8 +177,30 @@ namespace SistemaTstLargoTreze
             EnsureColumn(connection, "cats", "cep", "VARCHAR(20) NULL");
             EnsureColumn(connection, "cats", "codigo_postal", "VARCHAR(30) NULL");
             EnsureColumn(connection, "cats", "observacao_cat", "TEXT NULL");
+            EnsureCatTestemunhasTable(connection);
+            EnsureColumn(connection, "cat_testemunhas", "endereco", "VARCHAR(255) NULL");
 
             schemaChecked = true;
+        }
+
+        private static void EnsureCatTestemunhasTable(MySqlConnection connection)
+        {
+            using (MySqlCommand command = new MySqlCommand(
+                @"CREATE TABLE IF NOT EXISTS cat_testemunhas (
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    cat_id INT NOT NULL,
+                    nome VARCHAR(180) NOT NULL,
+                    cpf VARCHAR(20),
+                    telefone VARCHAR(30),
+                    endereco VARCHAR(255),
+                    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                    CONSTRAINT fk_cat_testemunhas_cat
+                        FOREIGN KEY (cat_id) REFERENCES cats (id)
+                        ON DELETE CASCADE
+                ) ENGINE=InnoDB", connection))
+            {
+                command.ExecuteNonQuery();
+            }
         }
 
         private static void EnsureColumn(MySqlConnection connection, string tableName, string columnName, string definition)
@@ -341,6 +363,16 @@ namespace SistemaTstLargoTreze
         public string Cep { get; set; }
         public string CodigoPostal { get; set; }
         public string ObservacaoCat { get; set; }
+    }
+
+    public sealed class CatTestemunhaRecord
+    {
+        public int Id { get; set; }
+        public int CatId { get; set; }
+        public string Nome { get; set; }
+        public string Cpf { get; set; }
+        public string Telefone { get; set; }
+        public string Endereco { get; set; }
     }
 
     public sealed class AsoRecord
@@ -658,6 +690,47 @@ namespace SistemaTstLargoTreze
             return exames;
         }
 
+        public static List<TipoExameRecord> GetTiposExamesPorEmpregado(int empregadoId)
+        {
+            List<TipoExameRecord> exames = new List<TipoExameRecord>();
+
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem,
+                         t.empregado_id, e.nome AS paciente_nome, t.medico_id, m.nome AS medico_nome
+                  FROM tipos_exames t
+                  LEFT JOIN empregados e ON e.id = t.empregado_id
+                  LEFT JOIN medicos m ON m.id = t.medico_id
+                  WHERE t.ativo = 1
+                    AND t.empregado_id = @empregado_id
+                  ORDER BY t.nome", connection))
+            {
+                command.Parameters.AddWithValue("@empregado_id", empregadoId);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        exames.Add(new TipoExameRecord
+                        {
+                            Id = reader.GetInt32("id"),
+                            Codigo = reader.GetString("codigo"),
+                            Nome = reader.GetString("nome"),
+                            Tipo = reader.GetString("tipo"),
+                            Periodicidade = reader.GetString("periodicidade"),
+                            AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem"),
+                            EmpregadoId = reader.IsDBNull(reader.GetOrdinal("empregado_id")) ? (int?)null : reader.GetInt32("empregado_id"),
+                            PacienteNome = reader.IsDBNull(reader.GetOrdinal("paciente_nome")) ? string.Empty : reader.GetString("paciente_nome"),
+                            MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
+                            MedicoNome = reader.IsDBNull(reader.GetOrdinal("medico_nome")) ? string.Empty : reader.GetString("medico_nome")
+                        });
+                    }
+                }
+            }
+
+            return exames;
+        }
+
         public static TipoExameRecord GetTipoExame(int id)
         {
             using (MySqlConnection connection = Database.OpenConnection())
@@ -908,6 +981,57 @@ namespace SistemaTstLargoTreze
             }
         }
 
+        public static int ImportEmpregados(IEnumerable<EmpregadoRecord> empregados)
+        {
+            int total = 0;
+
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                foreach (EmpregadoRecord empregado in empregados)
+                {
+                    if (empregado == null ||
+                        string.IsNullOrWhiteSpace(empregado.Matricula) ||
+                        string.IsNullOrWhiteSpace(empregado.Nome) ||
+                        string.IsNullOrWhiteSpace(empregado.Cpf))
+                    {
+                        continue;
+                    }
+
+                    using (MySqlCommand command = new MySqlCommand(
+                        @"INSERT INTO empregados
+                            (matricula, nome, cpf, setor, cargo, data_admissao, data_vencimento_aso, status_aso, medico_id, ativo)
+                          VALUES
+                            (@matricula, @nome, @cpf, @setor, @cargo, @data_admissao, @data_vencimento_aso, @status_aso, @medico_id, 1)
+                          ON DUPLICATE KEY UPDATE
+                            matricula = VALUES(matricula),
+                            nome = VALUES(nome),
+                            cpf = VALUES(cpf),
+                            setor = VALUES(setor),
+                            cargo = VALUES(cargo),
+                            data_admissao = VALUES(data_admissao),
+                            data_vencimento_aso = VALUES(data_vencimento_aso),
+                            status_aso = VALUES(status_aso),
+                            medico_id = VALUES(medico_id),
+                            ativo = 1", connection))
+                    {
+                        command.Parameters.AddWithValue("@matricula", empregado.Matricula.Trim());
+                        command.Parameters.AddWithValue("@nome", empregado.Nome.Trim());
+                        command.Parameters.AddWithValue("@cpf", empregado.Cpf.Trim());
+                        command.Parameters.AddWithValue("@setor", EmptyToDbNull(empregado.Setor));
+                        command.Parameters.AddWithValue("@cargo", EmptyToDbNull(empregado.Cargo));
+                        command.Parameters.AddWithValue("@data_admissao", DateToDbNull(empregado.DataAdmissao));
+                        command.Parameters.AddWithValue("@data_vencimento_aso", DateToDbNull(empregado.DataVencimentoAso));
+                        command.Parameters.AddWithValue("@status_aso", string.IsNullOrWhiteSpace(empregado.StatusAso) ? "Pendente" : empregado.StatusAso);
+                        command.Parameters.AddWithValue("@medico_id", empregado.MedicoId.HasValue && empregado.MedicoId.Value > 0 ? (object)empregado.MedicoId.Value : DBNull.Value);
+                        command.ExecuteNonQuery();
+                        total++;
+                    }
+                }
+            }
+
+            return total;
+        }
+
         public static void DeleteEmpregados(IEnumerable<int> ids)
         {
             using (MySqlConnection connection = Database.OpenConnection())
@@ -1061,7 +1185,7 @@ namespace SistemaTstLargoTreze
             }
         }
 
-        public static void SaveCat(CatRecord cat)
+        public static int SaveCat(CatRecord cat)
         {
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
@@ -1146,12 +1270,77 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@codigo_postal", EmptyToDbNull(cat.CodigoPostal));
                 command.Parameters.AddWithValue("@observacao_cat", EmptyToDbNull(cat.ObservacaoCat));
                 command.ExecuteNonQuery();
+                return cat.Id > 0 ? cat.Id : (int)command.LastInsertedId;
+            }
+        }
+
+        public static void SaveCatTestemunhas(int catId, IEnumerable<CatTestemunhaRecord> testemunhas)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                using (MySqlCommand command = new MySqlCommand("DELETE FROM cat_testemunhas WHERE cat_id = @cat_id", connection))
+                {
+                    command.Parameters.AddWithValue("@cat_id", catId);
+                    command.ExecuteNonQuery();
+                }
+
+                foreach (CatTestemunhaRecord testemunha in testemunhas)
+                {
+                    if (testemunha == null || string.IsNullOrWhiteSpace(testemunha.Nome))
+                        continue;
+
+                    using (MySqlCommand command = new MySqlCommand(
+                        @"INSERT INTO cat_testemunhas (cat_id, nome, cpf, telefone, endereco)
+                          VALUES (@cat_id, @nome, @cpf, @telefone, @endereco)", connection))
+                    {
+                        command.Parameters.AddWithValue("@cat_id", catId);
+                        command.Parameters.AddWithValue("@nome", testemunha.Nome.Trim());
+                        command.Parameters.AddWithValue("@cpf", EmptyToDbNull(testemunha.Cpf));
+                        command.Parameters.AddWithValue("@telefone", EmptyToDbNull(testemunha.Telefone));
+                        command.Parameters.AddWithValue("@endereco", EmptyToDbNull(testemunha.Endereco));
+                        command.ExecuteNonQuery();
+                    }
+                }
             }
         }
 
         public static void DeleteCats(IEnumerable<int> ids)
         {
             SoftDeleteByIds("cats", ids);
+        }
+
+        public static List<CatTestemunhaRecord> GetCatTestemunhas(int catId)
+        {
+            List<CatTestemunhaRecord> testemunhas = new List<CatTestemunhaRecord>();
+
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT id, cat_id, nome, cpf, telefone, endereco
+                  FROM cat_testemunhas
+                  WHERE cat_id = @cat_id
+                  ORDER BY id
+                  LIMIT 2", connection))
+            {
+                command.Parameters.AddWithValue("@cat_id", catId);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        testemunhas.Add(new CatTestemunhaRecord
+                        {
+                            Id = reader.GetInt32("id"),
+                            CatId = reader.GetInt32("cat_id"),
+                            Nome = ReaderString(reader, "nome"),
+                            Cpf = ReaderString(reader, "cpf"),
+                            Telefone = ReaderString(reader, "telefone"),
+                            Endereco = ReaderString(reader, "endereco")
+                        });
+                    }
+                }
+            }
+
+            return testemunhas;
         }
 
         public static int RegistrarTransmissoesCats()
@@ -1390,6 +1579,63 @@ namespace SistemaTstLargoTreze
             }
 
             return asos;
+        }
+
+        public static AsoRecord GetAso(int id)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT a.id, a.empregado_id, e.nome AS empregado_nome, a.medico_id, m.nome AS medico_nome,
+                         a.cat_id, a.data_aso, a.tipo_exame, a.resultado, a.observacoes
+                  FROM asos a
+                  INNER JOIN empregados e ON e.id = a.empregado_id
+                  INNER JOIN medicos m ON m.id = a.medico_id
+                  WHERE a.ativo = 1 AND a.id = @id
+                  LIMIT 1", connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    return reader.Read() ? ReadAso(reader) : null;
+                }
+            }
+        }
+
+        public static List<AsoExameRecord> GetAsoExames(int asoId)
+        {
+            List<AsoExameRecord> exames = new List<AsoExameRecord>();
+
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT ae.id, ae.aso_id, ae.tipo_exame_id, te.nome AS tipo_exame_nome,
+                         ae.data_exame, ae.resultado, ae.observacoes
+                  FROM aso_exames ae
+                  INNER JOIN tipos_exames te ON te.id = ae.tipo_exame_id
+                  WHERE ae.aso_id = @aso_id
+                  ORDER BY ae.data_exame DESC, ae.id DESC", connection))
+            {
+                command.Parameters.AddWithValue("@aso_id", asoId);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        exames.Add(new AsoExameRecord
+                        {
+                            Id = reader.GetInt32("id"),
+                            AsoId = reader.GetInt32("aso_id"),
+                            TipoExameId = reader.GetInt32("tipo_exame_id"),
+                            TipoExameNome = ReaderString(reader, "tipo_exame_nome"),
+                            DataExame = ReaderDate(reader, "data_exame"),
+                            Resultado = ReaderString(reader, "resultado"),
+                            Observacoes = ReaderString(reader, "observacoes")
+                        });
+                    }
+                }
+            }
+
+            return exames;
         }
 
         public static List<AsoRecord> GetAsosPorEmpregado(int empregadoId)

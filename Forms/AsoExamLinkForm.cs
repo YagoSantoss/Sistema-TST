@@ -6,6 +6,7 @@ namespace SistemaTstLargoTreze
 {
     public class AsoExamLinkForm : Form
     {
+        private readonly int _empregadoId;
         private readonly string _pacienteNome;
         private readonly string _medicoNome;
         private CueTextBox txtPaciente;
@@ -17,8 +18,9 @@ namespace SistemaTstLargoTreze
 
         public AsoExameRecord Exame { get; private set; }
 
-        public AsoExamLinkForm(string pacienteNome, string medicoNome)
+        public AsoExamLinkForm(int empregadoId, string pacienteNome, string medicoNome)
         {
+            _empregadoId = empregadoId;
             _pacienteNome = pacienteNome;
             _medicoNome = medicoNome;
             InitializeComponent();
@@ -98,10 +100,13 @@ namespace SistemaTstLargoTreze
 
             try
             {
-                foreach (TipoExameRecord exame in CadastrosRepository.GetTiposExames())
+                foreach (TipoExameRecord exame in CadastrosRepository.GetTiposExamesPorEmpregado(_empregadoId))
                 {
                     combo.Items.Add(new ComboItem(exame.Id, exame.Nome + " - " + exame.Tipo));
                 }
+
+                if (combo.Items.Count == 1)
+                    combo.Items.Add(new ComboItem(0, "Nenhum exame cadastrado para este paciente"));
             }
             catch
             {

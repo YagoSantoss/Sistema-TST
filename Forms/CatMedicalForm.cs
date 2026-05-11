@@ -35,7 +35,10 @@ namespace SistemaTstLargoTreze
                 cat.MedicoAssistente = txtMedicoAssistente.Text.Trim();
                 cat.ObservacaoMedica = txtObservacaoMedica.Text.Trim();
 
-                CadastrosRepository.SaveCat(cat);
+                int catId = CadastrosRepository.SaveCat(cat);
+                if (CatDraftState.Current != null && CatDraftState.Current.Testemunhas != null)
+                    CadastrosRepository.SaveCatTestemunhas(catId, CatDraftState.Current.Testemunhas);
+
                 CatDraftState.Clear();
                 MessageBox.Show("CAT salva com dados complementares.", "CAT", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 AppNavigator.Show(new CatListForm());
@@ -129,7 +132,7 @@ namespace SistemaTstLargoTreze
 
         private void TabTestemunhas_Click(object sender, EventArgs e)
         {
-            AppNavigator.Show(new CatWitnessesForm());
+            AppNavigator.Show(new CatWitnessesForm(_catId));
         }
 
         private void TabComplementares_Click(object sender, EventArgs e)

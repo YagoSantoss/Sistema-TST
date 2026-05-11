@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,7 +19,7 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "Tipos de Exame",
+                "Exames do Paciente",
                 "Cadastros Base · Exames complementares",
                 DashboardMenu.ExamTypes
             );
@@ -71,7 +71,7 @@ namespace SistemaTstLargoTreze
         {
             table.Controls.Add(
                 UiBuilder.Label(
-                    "Tipos de Exame",
+                    "Exames do Paciente",
                     16,
                     12,
                     largura - 220,

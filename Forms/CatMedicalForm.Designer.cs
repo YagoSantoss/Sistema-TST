@@ -66,7 +66,7 @@ namespace SistemaTstLargoTreze
             int xEsq = margem;
             int xDir = margem + metadeW + gap;
 
-            UiBuilder.AddField(form, "PARTE DO CORPO ATINGIDA", cmbParteCorpo = UiBuilder.Combo("Boca (inclusive labios, dentes, lingua, garganta e paladar)", 0, 0, metadeW), xEsq, 154, metadeW, true);
+            UiBuilder.AddField(form, "PARTE DO CORPO ATINGIDA", cmbParteCorpo = CriarComboPartesCorpo(metadeW), xEsq, 154, metadeW, true);
             UiBuilder.AddField(form, "LATERALIDADE", cmbLateralidade = UiBuilder.Combo("Nao aplicavel", 0, 0, metadeW), xDir, 154, metadeW, false);
             cmbLateralidade.Items.Add("Direita");
             cmbLateralidade.Items.Add("Esquerda");
@@ -88,6 +88,38 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(form, "OBSERVACAO", txtObservacaoMedica = UiBuilder.TextBox("Observacao complementar da lesao", 0, 0, metadeW), xDir, 388, metadeW, false);
 
             CarregarDadosComplementares();
+        }
+
+        private ComboBox CriarComboPartesCorpo(int width)
+        {
+            ComboBox combo = UiBuilder.Combo("Boca (inclusive labios, dentes, lingua, garganta e paladar)", 0, 0, width);
+            combo.Items.Add("Cabeca");
+            combo.Items.Add("Olho");
+            combo.Items.Add("Ouvido");
+            combo.Items.Add("Nariz");
+            combo.Items.Add("Pescoco");
+            combo.Items.Add("Ombro");
+            combo.Items.Add("Braco");
+            combo.Items.Add("Cotovelo");
+            combo.Items.Add("Antebraco");
+            combo.Items.Add("Punho");
+            combo.Items.Add("Mao");
+            combo.Items.Add("Dedo da mao");
+            combo.Items.Add("Torax");
+            combo.Items.Add("Costas");
+            combo.Items.Add("Abdome");
+            combo.Items.Add("Quadril");
+            combo.Items.Add("Perna");
+            combo.Items.Add("Joelho");
+            combo.Items.Add("Tornozelo");
+            combo.Items.Add("Pe");
+            combo.Items.Add("Dedo do pe");
+            combo.Items.Add("Pele");
+            combo.Items.Add("Sistema respiratorio");
+            combo.Items.Add("Sistema circulatorio");
+            combo.Items.Add("Multiplas partes");
+            combo.Items.Add("Nao aplicavel");
+            return combo;
         }
 
         private void BuildCatHeader(Panel form, int activeTab, int largura)

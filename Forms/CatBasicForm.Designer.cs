@@ -549,6 +549,9 @@ namespace SistemaTstLargoTreze
         private void SalvarRascunho()
         {
             ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
+            System.Collections.Generic.List<CatTestemunhaRecord> testemunhas = CatDraftState.Current == null
+                ? new System.Collections.Generic.List<CatTestemunhaRecord>()
+                : CatDraftState.Current.Testemunhas;
 
             CatDraftState.Current = new CatDraft
             {
@@ -585,7 +588,8 @@ namespace SistemaTstLargoTreze
                 Cep = txtCep.Text.Trim(),
                 CodigoPostal = txtCodigoPostal.Text.Trim(),
                 Descricao = txtDescricao.Text.Trim(),
-                ObservacaoCat = txtDescricao.Text.Trim()
+                ObservacaoCat = txtDescricao.Text.Trim(),
+                Testemunhas = testemunhas
             };
         }
 
@@ -669,7 +673,7 @@ namespace SistemaTstLargoTreze
 
             CatRecord catExistente = _catId > 0 ? CadastrosRepository.GetCat(_catId) : null;
 
-            CadastrosRepository.SaveCat(new CatRecord
+            int catId = CadastrosRepository.SaveCat(new CatRecord
             {
                 Id = _catId,
                 EmpregadoId = empregado.Id,
@@ -717,6 +721,9 @@ namespace SistemaTstLargoTreze
                 MedicoAssistente = catExistente == null ? string.Empty : catExistente.MedicoAssistente,
                 ObservacaoMedica = catExistente == null ? string.Empty : catExistente.ObservacaoMedica
             });
+
+            if (CatDraftState.Current != null && CatDraftState.Current.Testemunhas != null)
+                CadastrosRepository.SaveCatTestemunhas(catId, CatDraftState.Current.Testemunhas);
 
             CatDraftState.Clear();
         }

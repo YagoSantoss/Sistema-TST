@@ -191,6 +191,7 @@ CREATE TABLE IF NOT EXISTS cat_testemunhas (
     nome VARCHAR(180) NOT NULL,
     cpf VARCHAR(20),
     telefone VARCHAR(30),
+    endereco VARCHAR(255),
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_cat_testemunhas_cat
         FOREIGN KEY (cat_id) REFERENCES cats (id)

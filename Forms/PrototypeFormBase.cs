@@ -12,6 +12,7 @@ namespace SistemaTstLargoTreze
             DoubleBuffered = true;
             Text = "Sistema TST - Largo Treze";
             BackColor = Color.White;
+            ApplyAppIcon(this);
 
             // Permite maximizar a janela
             FormBorderStyle = FormBorderStyle.Sizable;
@@ -31,6 +32,20 @@ namespace SistemaTstLargoTreze
         protected override void OnPaintBackground(PaintEventArgs e)
         {
             e.Graphics.Clear(BackColor);
+        }
+
+        internal static void ApplyAppIcon(Form form)
+        {
+            try
+            {
+                Icon icon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+                if (icon != null)
+                    form.Icon = icon;
+            }
+            catch
+            {
+                // Se o ícone não puder ser carregado, o Windows usa o padrão do executável.
+            }
         }
     }
 }

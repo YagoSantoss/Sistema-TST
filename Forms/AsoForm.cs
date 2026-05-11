@@ -27,7 +27,14 @@ namespace SistemaTstLargoTreze
 
         private void BtnHistorico_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Histórico de ASOs do empregado exibido.", "Histórico", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
+            if (empregado == null || empregado.Id <= 0)
+            {
+                MessageBox.Show("Selecione o empregado para consultar o historico de ASO.", "Historico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            AppNavigator.Show(new AsoHistoryForm(empregado.Id));
         }
 
         private void BtnAdicionarExame_Click(object sender, EventArgs e)
@@ -47,7 +54,7 @@ namespace SistemaTstLargoTreze
                 return;
             }
 
-            using (AsoExamLinkForm form = new AsoExamLinkForm(empregado.Text, medico.Text))
+            using (AsoExamLinkForm form = new AsoExamLinkForm(empregado.Id, empregado.Text, medico.Text))
             {
                 if (form.ShowDialog(this) == DialogResult.OK && form.Exame != null)
                 {

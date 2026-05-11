@@ -7,12 +7,15 @@ namespace SistemaTstLargoTreze
     public partial class EmployeesForm
     {
         private RoundButton btnExportar;
+        private RoundButton btnImportar;
+        private RoundButton btnAtualizar;
         private RoundButton btnBuscarEmpregados;
         private RoundButton btnNovoFuncionario;
         private RoundButton btnInserir;
         private RoundButton btnEditar;
         private RoundButton btnExcluir;
         private CueTextBox txtBuscaEmpregados;
+        private Panel pnlListaEmpregados;
         private string _termoBuscaEmpregados = string.Empty;
         private readonly HashSet<int> _empregadosSelecionados = new HashSet<int>();
 
@@ -22,7 +25,7 @@ namespace SistemaTstLargoTreze
         {
             SuspendLayout();
 
-            BuildDashboardShell("Empregados", "Listagem geral de funcionÃ¡rios", DashboardMenu.Employees);
+            BuildDashboardShell("Empregados", "Listagem geral de empregados", DashboardMenu.Employees);
             ContentPanel.AutoScroll = true;
 
             MontarConteudoEmpregados();
@@ -49,8 +52,8 @@ namespace SistemaTstLargoTreze
 
             int larguraDisponivel = ContentPanel.ClientSize.Width - (margem * 2);
 
-            if (larguraDisponivel < 790)
-                larguraDisponivel = 790;
+            if (larguraDisponivel < 880)
+                larguraDisponivel = 880;
 
             int alturaTabela = CalcularAlturaTabela();
 
@@ -60,7 +63,7 @@ namespace SistemaTstLargoTreze
 
             MontarFiltros(table, larguraDisponivel);
             MontarCabecalhoTabela(table, larguraDisponivel);
-            MontarLinhasTabela(table, larguraDisponivel);
+            MontarLinhasTabela(table, larguraDisponivel, alturaTabela);
             MontarRodapeTabela(table, larguraDisponivel, alturaTabela);
 
             ContentPanel.ResumeLayout(false);
@@ -120,10 +123,12 @@ namespace SistemaTstLargoTreze
             int gap = 10;
 
             int exportarW = 86;
+            int importarW = 92;
+            int atualizarW = 82;
             int novoW = 126;
             int buscarW = 82;
 
-            int searchW = larguraTabela - margem - buscarW - exportarW - novoW - (gap * 4) - margem;
+            int searchW = larguraTabela - margem - buscarW - atualizarW - importarW - exportarW - novoW - (gap * 6) - margem;
 
             if (searchW < 260)
                 searchW = 260;
@@ -147,8 +152,22 @@ namespace SistemaTstLargoTreze
 
             x += buscarW + gap;
 
-            btnExportar = UiBuilder.SmallButton("ðŸ“¥ Exportar", x, 14, exportarW, UiColors.Orange, Color.White);
-            btnNovoFuncionario = UiBuilder.SmallButton("+ Novo Funcionario", x, 14, novoW, UiColors.AccentBlue, Color.White);
+            btnAtualizar = UiBuilder.SmallButton("Atualizar", x, 14, atualizarW, Color.White, UiColors.BodyText);
+            btnAtualizar.BorderColor = UiColors.Border;
+            btnAtualizar.Click += BtnAtualizar_Click;
+            table.Controls.Add(btnAtualizar);
+
+            x += atualizarW + gap;
+
+            btnImportar = UiBuilder.SmallButton("Importar CSV", x, 14, importarW, Color.White, UiColors.BodyText);
+            btnImportar.BorderColor = UiColors.Border;
+            btnImportar.Click += BtnImportar_Click;
+            table.Controls.Add(btnImportar);
+
+            x += importarW + gap;
+
+            btnExportar = UiBuilder.SmallButton("Exportar", x, 14, exportarW, UiColors.Orange, Color.White);
+            btnNovoFuncionario = UiBuilder.SmallButton("+ Novo Empregado", x, 14, novoW, UiColors.AccentBlue, Color.White);
             btnNovoFuncionario.Click += BtnInserir_Click;
             table.Controls.Add(btnNovoFuncionario);
 
@@ -189,7 +208,7 @@ namespace SistemaTstLargoTreze
             header.Controls.Add(UiBuilder.HeaderCell("â˜‘", x, 2, checkW));
             x += checkW;
 
-            header.Controls.Add(UiBuilder.HeaderCell("MATRÃCULA", x, 2, matriculaW));
+            header.Controls.Add(UiBuilder.HeaderCell("MATRICULA", x, 2, matriculaW));
             x += matriculaW;
 
             header.Controls.Add(UiBuilder.HeaderCell("NOME COMPLETO", x, 2, nomeW));
@@ -201,7 +220,7 @@ namespace SistemaTstLargoTreze
             header.Controls.Add(UiBuilder.HeaderCell("SETOR / CARGO", x, 2, setorW));
             x += setorW;
 
-            header.Controls.Add(UiBuilder.HeaderCell("ADMISSÃƒO", x, 2, admissaoW));
+            header.Controls.Add(UiBuilder.HeaderCell("ADMISSAO", x, 2, admissaoW));
             x += admissaoW;
 
             header.Controls.Add(UiBuilder.HeaderCell("VENC. ASO", x, 2, vencimentoW));
@@ -213,25 +232,40 @@ namespace SistemaTstLargoTreze
             header.Controls.Add(UiBuilder.HeaderCell("ASO", x, 2, asoW));
         }
 
-        private void MontarLinhasTabela(RoundPanel table, int larguraTabela)
+        private void MontarLinhasTabela(RoundPanel table, int larguraTabela, int alturaTabela)
         {
+            int alturaLista = alturaTabela - 142;
+            if (alturaLista < 120)
+                alturaLista = 120;
+
+            pnlListaEmpregados = new Panel
+            {
+                Location = new Point(0, 90),
+                Size = new Size(larguraTabela, alturaLista),
+                AutoScroll = true,
+                BackColor = Color.White,
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
+            };
+            table.Controls.Add(pnlListaEmpregados);
+
             try
             {
                 List<EmpregadoRecord> empregados = ObterEmpregadosFiltrados();
 
                 if (empregados.Count == 0)
                 {
-                    table.Controls.Add(UiBuilder.CenterLabel("Nenhum empregado cadastrado", 0, 130, larguraTabela, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    pnlListaEmpregados.Controls.Add(UiBuilder.CenterLabel("Nenhum empregado cadastrado", 0, 36, larguraTabela, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
                     return;
                 }
 
-                int y = 90;
+                int larguraLinha = larguraTabela - SystemInformation.VerticalScrollBarWidth;
+                int y = 0;
                 foreach (EmpregadoRecord empregado in empregados)
                 {
                     Color statusColor = StatusColor(empregado.StatusAso);
                     AddEmployeeRow(
-                        table,
-                        larguraTabela,
+                        pnlListaEmpregados,
+                        larguraLinha,
                         y,
                         empregado.Id,
                         _empregadosSelecionados.Contains(empregado.Id),
@@ -250,25 +284,37 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar empregados do MySQL", 0, 130, larguraTabela, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                pnlListaEmpregados.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar empregados do MySQL", 0, 36, larguraTabela, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
         private void MontarRodapeTabela(RoundPanel table, int larguraTabela, int alturaTabela)
         {
-            int y = alturaTabela - 32;
+            int y = alturaTabela - 40;
+
+            Panel divisor = new Panel
+            {
+                Location = new Point(0, y - 8),
+                Size = new Size(larguraTabela, 1),
+                BackColor = UiColors.Border,
+                Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom
+            };
+            table.Controls.Add(divisor);
 
             btnInserir = UiBuilder.SmallButton("+ Inserir", 15, y, 70, UiColors.AccentBlue, Color.White);
+            btnInserir.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             btnInserir.Click += BtnInserir_Click;
             table.Controls.Add(btnInserir);
 
-            btnEditar = UiBuilder.SmallButton("âœŽ Editar", 92, y, 70, Color.White, UiColors.BodyText);
+            btnEditar = UiBuilder.SmallButton("Editar", 92, y, 70, Color.White, UiColors.BodyText);
             btnEditar.BorderColor = UiColors.Border;
+            btnEditar.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             btnEditar.Click += BtnEditar_Click;
             table.Controls.Add(btnEditar);
 
-            btnExcluir = UiBuilder.SmallButton("ðŸ—‘ Excluir", 169, y, 78, Color.White, UiColors.BodyText);
+            btnExcluir = UiBuilder.SmallButton("Excluir", 169, y, 78, Color.White, UiColors.BodyText);
             btnExcluir.BorderColor = UiColors.Border;
+            btnExcluir.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             btnExcluir.Click += BtnExcluir_Click;
             table.Controls.Add(btnExcluir);
 
@@ -296,20 +342,11 @@ namespace SistemaTstLargoTreze
 
         private int CalcularAlturaTabela()
         {
-            try
-            {
-                int registros = ObterEmpregadosFiltrados().Count;
-                int altura = 90 + (registros * 32) + 70;
-                int alturaMinima = ContentPanel.ClientSize.Height - 36;
-                if (alturaMinima < 270)
-                    alturaMinima = 270;
+            int altura = ContentPanel.ClientSize.Height - 36;
+            if (altura < 460)
+                altura = 460;
 
-                return altura < alturaMinima ? alturaMinima : altura;
-            }
-            catch
-            {
-                return 460;
-            }
+            return altura;
         }
 
         private void AddEmployeeRow(

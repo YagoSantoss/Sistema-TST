@@ -8,80 +8,87 @@ using System.Text;
 
 namespace SistemaTstLargoTreze
 {
-    public static class CatPdfExporter
+    public static class OccupationalPdfExporter
     {
         private const double PageWidth = 595;
-        private const double PageHeight = 1180;
+        private const double PageHeight = 900;
         private const double Margin = 38;
         private const double ContentWidth = PageWidth - (Margin * 2);
 
-        public static string Exportar(CatRecord cat)
+        public static string ExportarAso(AsoRecord aso)
         {
-            string pasta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SistemaTST", "CATs");
+            string pasta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SistemaTST", "ASOs");
             Directory.CreateDirectory(pasta);
 
-            string arquivo = Path.Combine(pasta, "CAT_" + cat.Id + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".pdf");
+            string arquivo = Path.Combine(pasta, "ASO_" + aso.Id + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".pdf");
+            List<AsoExameRecord> exames = CadastrosRepository.GetAsoExames(aso.Id);
             byte[] logoBytes = GetLogoJpegBytes(out int logoWidth, out int logoHeight);
-            List<CatTestemunhaRecord> testemunhas = CadastrosRepository.GetCatTestemunhas(cat.Id);
 
             StringBuilder content = new StringBuilder();
             double y = PageHeight - 42;
 
-            AddBrandHeader(content, logoBytes != null, ref y);
+            AddBrandHeader(content, logoBytes != null, "ATESTADO DE SAUDE OCUPACIONAL - ASO", ref y);
 
-            AddSection(content, "DADOS CADASTRAIS", ref y);
-            AddRow(content, "Codigo CAT", cat.Id.ToString(), "Empregado", cat.EmpregadoNome, ref y);
-            AddRow(content, "Data do comunicado", cat.DataComunicacao, "Emitente", cat.Emitente, ref y);
-            AddRow(content, "Aposentado", cat.Aposentado ? "Sim" : "Nao", "Filiacao Prev. Social", cat.FiliacaoPrevSocial, ref y);
-            AddRow(content, "Area", cat.Area, "Tipo da CAT", cat.TipoCat, ref y);
-            AddRow(content, "Data do acidente", cat.DataAcidente, "Tipo do acidente", cat.TipoAcidente, ref y);
-            AddRow(content, "Hora do acidente", cat.HoraAcidente, "Horas trabalhadas antes", cat.HorasTrabalhadasAntes, ref y);
-            AddRow(content, "Houve obito", cat.HouveObito ? "Sim" : "Nao", "Data do obito", cat.DataObito, ref y);
-            AddRow(content, "Houve afastamento", cat.HouveAfastamento ? "Sim" : "Nao", "Registro policia", cat.RegistroPolicia ? "Sim" : "Nao", ref y);
-            AddRow(content, "Ultimo dia trabalho", cat.UltimoDiaTrabalho, "Codificacao acidente", cat.CodificacaoAcidente, ref y);
-            AddFullRow(content, "Situacao geradora", cat.SituacaoGeradora, ref y);
-            AddFullRow(content, "CAT emitida por", cat.CatEmitidaPor, ref y);
-            AddSection(content, "LOCAL DO ACIDENTE", ref y);
-            AddRow(content, "Tipo do local", cat.LocalAcidente, "Especificacao", cat.EspecificacaoLocal, ref y);
-            AddRow(content, "Tipo logradouro", cat.TipoLogradouro, "Numero", cat.Numero, ref y);
-            AddRow(content, "Tipo inscricao", cat.TipoInscricao, "Inscricao estabelecimento", cat.InscricaoEstabelecimento, ref y);
-            AddRow(content, "Logradouro", cat.Logradouro, "Municipio", cat.Municipio, ref y);
-            AddRow(content, "UF", cat.Uf, "Bairro", cat.Bairro, ref y);
-            AddRow(content, "Complemento", cat.Complemento, "CEP", cat.Cep, ref y);
-            AddFullRow(content, "Codigo postal", cat.CodigoPostal, ref y);
-            AddRow(content, "Situacao", cat.Situacao, "Resultado ASO", cat.ResultadoAso, ref y);
-            AddTextBox(content, "Observacao da CAT", string.IsNullOrWhiteSpace(cat.ObservacaoCat) ? cat.Descricao : cat.ObservacaoCat, ref y, 46);
+            AddSection(content, "DADOS DO ASO", ref y);
+            AddRow(content, "Codigo ASO", aso.Id.ToString(), "Data do ASO", aso.DataAso, ref y);
+            AddRow(content, "Empregado", aso.EmpregadoNome, "Medico responsavel", aso.MedicoNome, ref y);
+            AddRow(content, "Tipo de exame", aso.TipoExame, "Resultado", aso.Resultado, ref y);
+            AddFullRow(content, "CAT vinculada", aso.CatId.HasValue ? "CAT " + aso.CatId.Value : "Nao vinculada", ref y);
 
-            AddSection(content, "TESTEMUNHAS", ref y);
-            if (testemunhas.Count == 0)
+            AddSection(content, "EXAMES COMPLEMENTARES", ref y);
+            if (exames.Count == 0)
             {
-                AddFullRow(content, "Testemunhas", "Nenhuma testemunha cadastrada para esta CAT.", ref y);
+                AddFullRow(content, "Exames", "Nenhum exame complementar vinculado a este ASO.", ref y);
             }
             else
             {
-                for (int i = 0; i < testemunhas.Count; i++)
+                foreach (AsoExameRecord exame in exames)
                 {
-                    CatTestemunhaRecord testemunha = testemunhas[i];
-                    AddFullRow(content, "Testemunha " + (i + 1) + " - Nome", testemunha.Nome, ref y);
-                    AddRow(content, "CPF", testemunha.Cpf, "Telefone", testemunha.Telefone, ref y);
-                    AddFullRow(content, "Endereco", testemunha.Endereco, ref y);
+                    AddRow(content, "Exame", exame.TipoExameNome, "Data", exame.DataExame, ref y);
+                    AddRow(content, "Resultado", exame.Resultado, "Observacoes", exame.Observacoes, ref y);
                 }
             }
 
-            AddSection(content, "DADOS COMPLEMENTARES", ref y);
-            AddRow(content, "Parte do corpo atingida", cat.ParteCorpoAtingida, "Lateralidade", cat.Lateralidade, ref y);
-            AddRow(content, "Agente causador", cat.AgenteCausador, "CID-10", cat.Cid10, ref y);
-            AddRow(content, "Natureza da lesao", cat.NaturezaLesao, "Duracao do tratamento", cat.DuracaoTratamento, ref y);
-            AddFullRow(content, "Medico / Dentista", cat.MedicoAssistente, ref y);
-            AddTextBox(content, "Observacao medica", cat.ObservacaoMedica, ref y, 58);
-
-            AddFooter(content, cat.Id);
+            AddTextBox(content, "Observacoes do ASO", aso.Observacoes, ref y, 70);
+            AddSignature(content, "Assinatura do medico responsavel", ref y);
+            AddFooter(content, "ASO " + aso.Id);
 
             EscreverPdf(arquivo, content.ToString(), logoBytes, logoWidth, logoHeight);
             return arquivo;
         }
 
-        private static void AddBrandHeader(StringBuilder content, bool hasLogo, ref double y)
+        public static string ExportarFatorRisco(RiskFactorRecord risco)
+        {
+            string pasta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "SistemaTST", "FatoresRisco");
+            Directory.CreateDirectory(pasta);
+
+            string arquivo = Path.Combine(pasta, "FATOR_RISCO_" + risco.Id + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".pdf");
+            byte[] logoBytes = GetLogoJpegBytes(out int logoWidth, out int logoHeight);
+
+            StringBuilder content = new StringBuilder();
+            double y = PageHeight - 42;
+
+            AddBrandHeader(content, logoBytes != null, "RELATORIO DE FATORES DE RISCO - S-2240", ref y);
+
+            AddSection(content, "VINCULOS", ref y);
+            AddRow(content, "Codigo", risco.Id.ToString(), "Empregado", risco.EmpregadoNome, ref y);
+            AddRow(content, "Ambiente", risco.AmbienteNome, "Tipo de fator", risco.TipoFator, ref y);
+
+            AddSection(content, "AVALIACAO DO RISCO", ref y);
+            AddFullRow(content, "Agente", risco.Agente, ref y);
+            AddRow(content, "Intensidade", risco.Intensidade, "Tecnica de medicao", risco.TecnicaMedicao, ref y);
+            AddRow(content, "Data de avaliacao", risco.DataAvaliacao, "Inicio da exposicao", risco.InicioExposicao, ref y);
+            AddRow(content, "Fim da exposicao", risco.FimExposicao, "Usa EPI", risco.UsaEpi ? "Sim" : "Nao", ref y);
+            AddFullRow(content, "EPI eficaz", risco.EpiEficaz ? "Sim" : "Nao", ref y);
+            AddTextBox(content, "Descricao das atividades", risco.DescricaoAtividades, ref y, 92);
+            AddSignature(content, "Responsavel tecnico", ref y);
+            AddFooter(content, "Fator de risco " + risco.Id);
+
+            EscreverPdf(arquivo, content.ToString(), logoBytes, logoWidth, logoHeight);
+            return arquivo;
+        }
+
+        private static void AddBrandHeader(StringBuilder content, bool hasLogo, string title, ref double y)
         {
             AddRect(content, Margin, y - 58, ContentWidth, 58);
 
@@ -89,7 +96,7 @@ namespace SistemaTstLargoTreze
                 AddImage(content, "Im1", Margin + 10, y - 49, 72, 42);
 
             AddText(content, "SISTEMA TST LARGO TREZE", Margin + 96, y - 24, 14, true, "0.06 0.22 0.38");
-            AddText(content, "COMUNICACAO DE ACIDENTE DE TRABALHO - CAT", Margin + 96, y - 41, 10, true, "0.06 0.22 0.38");
+            AddText(content, title, Margin + 96, y - 41, 10, true, "0.06 0.22 0.38");
             y -= 72;
         }
 
@@ -121,13 +128,22 @@ namespace SistemaTstLargoTreze
             AddText(content, label, Margin + 8, y - 13, 7, true, "0.33 0.33 0.33");
 
             double lineY = y - 28;
-            foreach (string line in Wrap(value, 95, 3))
+            foreach (string line in Wrap(value, 95, 4))
             {
                 AddText(content, line, Margin + 8, lineY, 8, false, "0 0 0");
                 lineY -= 12;
             }
 
             y -= height;
+        }
+
+        private static void AddSignature(StringBuilder content, string label, ref double y)
+        {
+            y -= 28;
+            content.AppendLine("0.35 0.35 0.35 RG");
+            content.AppendLine(F(Margin + 110) + " " + F(y) + " 300 0 m S");
+            AddText(content, label, Margin + 188, y - 14, 8, false, "0.35 0.35 0.35");
+            y -= 34;
         }
 
         private static void AddCell(StringBuilder content, double x, double y, double width, double height, string label, string value)
@@ -137,9 +153,9 @@ namespace SistemaTstLargoTreze
             AddText(content, Fit(value, width > 260 ? 58 : 28), x + 6, y + 7, 8, false, "0 0 0");
         }
 
-        private static void AddFooter(StringBuilder content, int catId)
+        private static void AddFooter(StringBuilder content, string referencia)
         {
-            AddText(content, "Gerado pelo Sistema TST - CAT " + catId + " - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm"), Margin, 24, 7, false, "0.35 0.35 0.35");
+            AddText(content, "Gerado pelo Sistema TST - " + referencia + " - " + DateTime.Now.ToString("dd/MM/yyyy HH:mm"), Margin, 24, 7, false, "0.35 0.35 0.35");
         }
 
         private static void AddRect(StringBuilder content, double x, double y, double width, double height)
@@ -227,7 +243,7 @@ namespace SistemaTstLargoTreze
             {
                 Encoding.ASCII.GetBytes("<< /Type /Catalog /Pages 2 0 R >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"),
-                Encoding.ASCII.GetBytes("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 1180] /Resources << /Font << /F1 4 0 R /F2 5 0 R >>" + xObjects + " >> /Contents 6 0 R >>"),
+                Encoding.ASCII.GetBytes("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 900] /Resources << /Font << /F1 4 0 R /F2 5 0 R >>" + xObjects + " >> /Contents 6 0 R >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>"),
                 Encoding.ASCII.GetBytes("<< /Length " + contentBytes.Length + " >>\nstream\n" + pageContent + "endstream")

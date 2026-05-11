@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -20,8 +20,8 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "Integração eSocial",
-                "Indicadores de CAT e ASO",
+                "Integracao eSocial",
+                "Controle interno e simulacao de eventos SST",
                 DashboardMenu.Esocial
             );
 
@@ -77,7 +77,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "APTOS",
                 resumo.Aptos.ToString(),
-                resumo.Aptos == 1 ? "1 funcionario apto" : resumo.Aptos + " funcionarios aptos",
+                resumo.Aptos == 1 ? "1 empregado apto" : resumo.Aptos + " empregados aptos",
                 UiColors.Green,
                 Color.FromArgb(217, 248, 234)
             );
@@ -89,7 +89,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "AGUARDANDO",
                 resumo.Aguardando.ToString(),
-                resumo.Aguardando == 1 ? "1 funcionario pendente" : resumo.Aguardando + " funcionarios pendentes",
+                resumo.Aguardando == 1 ? "1 empregado pendente" : resumo.Aguardando + " empregados pendentes",
                 UiColors.Orange,
                 Color.FromArgb(255, 246, 206)
             );
@@ -101,7 +101,7 @@ namespace SistemaTstLargoTreze
                 larguraCardMetrica,
                 "INAPTOS",
                 resumo.Inaptos.ToString(),
-                resumo.Inaptos == 1 ? "1 funcionario inapto" : resumo.Inaptos + " funcionarios inaptos",
+                resumo.Inaptos == 1 ? "1 empregado inapto" : resumo.Inaptos + " empregados inaptos",
                 UiColors.Red,
                 Color.FromArgb(255, 230, 232)
             );
@@ -205,7 +205,7 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(
                 UiBuilder.Label(
-                    "📊 Integração eSocial — Indicadores de CAT",
+                    "Controle interno eSocial - Indicadores de CAT",
                     16,
                     14,
                     largura - 260,
@@ -217,7 +217,7 @@ namespace SistemaTstLargoTreze
             );
 
             btnEnviarTodos = UiBuilder.SmallButton(
-                "📤 Enviar Todos",
+                "Registrar no Log",
                 largura - 116,
                 13,
                 100,
@@ -231,7 +231,7 @@ namespace SistemaTstLargoTreze
             eventsCard.Controls.Add(btnEnviarTodos);
 
             btnSincronizar = UiBuilder.SmallButton(
-                "🔄 Sincronizar",
+                "Atualizar",
                 largura - 226,
                 13,
                 102,
@@ -301,7 +301,7 @@ namespace SistemaTstLargoTreze
 
             logCard.Controls.Add(
                 UiBuilder.Label(
-                    "📋 Log de Transmissões",
+                    "Log interno de transmissoes",
                     16,
                     12,
                     largura - 420,

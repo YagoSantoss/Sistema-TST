@@ -44,7 +44,11 @@ namespace SistemaTstLargoTreze
 
             RoundButton novo = UiBuilder.SmallButton("+ Nova CAT", largura - 105, 16, 88, UiColors.AccentBlue, Color.White);
             novo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            novo.Click += (sender, e) => AppNavigator.Show(new CatBasicForm());
+            novo.Click += (sender, e) =>
+            {
+                CatDraftState.Clear();
+                AppNavigator.Show(new CatBasicForm());
+            };
             table.Controls.Add(novo);
 
             txtBusca = UiBuilder.TextBox("Buscar por empregado, matricula, tipo ou situacao", 16, 62, largura - 130);

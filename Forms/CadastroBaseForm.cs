@@ -257,7 +257,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     return "Novo medico";
                 case CadastroBaseTipo.TipoExame:
-                    return "Novo exame";
+                    return "Novo exame do paciente";
                 default:
                     return "Novo ambiente";
             }
@@ -272,7 +272,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     return acao + " medico";
                 case CadastroBaseTipo.TipoExame:
-                    return acao + " exame";
+                    return acao + " exame do paciente";
                 default:
                     return acao + " ambiente de trabalho";
             }
@@ -285,7 +285,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     return "Preencha os dados do medico habilitado para ASO e laudos.";
                 case CadastroBaseTipo.TipoExame:
-                    return "Cadastre o exame complementar com tipo e periodicidade.";
+                    return "Cadastre o exame realizado, vinculando paciente e medico responsavel.";
                 default:
                     return "Cadastre o local, setor e status do ambiente de trabalho.";
             }
