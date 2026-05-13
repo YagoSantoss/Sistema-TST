@@ -97,13 +97,12 @@ namespace SistemaTstLargoTreze
                 if (cat == null)
                     return;
 
-                cmbTipoExame.Text = "Relacionado a CAT";
-                txtObservacoes.Text = "CAT " + cat.Id + " - Acidente em " + cat.DataAcidente + ". " + cat.Descricao;
-                SelecionarResultado("Inapto");
+                cmbTipoExame.Text = "Retorno ao trabalho - Tabela 27";
+                txtObservacoes.Text = "ASO de retorno vinculado a CAT " + cat.Id + " - acidente em " + cat.DataAcidente + ". " + cat.Descricao;
             }
             catch
             {
-                SelecionarResultado("Inapto");
+                cmbTipoExame.Text = "Retorno ao trabalho - Tabela 27";
             }
         }
 
@@ -113,6 +112,16 @@ namespace SistemaTstLargoTreze
         }
 
         private void ResultadoInapto_Click(object sender, EventArgs e)
+        {
+            SelecionarResultado("Inapto");
+        }
+
+        private void ResultadoApto_MouseDown(object sender, MouseEventArgs e)
+        {
+            SelecionarResultado("Apto");
+        }
+
+        private void ResultadoInapto_MouseDown(object sender, MouseEventArgs e)
         {
             SelecionarResultado("Inapto");
         }
@@ -210,11 +219,18 @@ namespace SistemaTstLargoTreze
             if (!ValidationHelper.IsValidDate(txtDataAso.Text))
                 throw new InvalidOperationException("Informe a data do ASO no formato dd/mm/aaaa.");
 
+            bool temCatVinculada = cat != null && cat.Id > 0;
+            bool retornoTrabalho = !string.IsNullOrWhiteSpace(cmbTipoExame.Text) &&
+                                   cmbTipoExame.Text.IndexOf("retorno", StringComparison.OrdinalIgnoreCase) >= 0;
+
+            if (temCatVinculada && !retornoTrabalho)
+                throw new InvalidOperationException("Para avaliar uma CAT, selecione o tipo de exame Retorno ao trabalho.");
+
             int asoId = CadastrosRepository.SaveAso(new AsoRecord
             {
                 EmpregadoId = empregado.Id,
                 MedicoId = medico.Id,
-                CatId = cat != null && cat.Id > 0 ? (int?)cat.Id : null,
+                CatId = temCatVinculada ? (int?)cat.Id : null,
                 DataAso = txtDataAso.Text.Trim(),
                 TipoExame = cmbTipoExame.Text.Trim(),
                 Resultado = resultadoSelecionado,

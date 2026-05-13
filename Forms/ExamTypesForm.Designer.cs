@@ -19,8 +19,8 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "Exames do Paciente",
-                "Cadastros Base · Exames complementares",
+                "Exames Realizados",
+                "Lancamento de exames complementares por empregado e medico",
                 DashboardMenu.ExamTypes
             );
 
@@ -71,7 +71,7 @@ namespace SistemaTstLargoTreze
         {
             table.Controls.Add(
                 UiBuilder.Label(
-                    "Exames do Paciente",
+                    "Exames realizados",
                     16,
                     12,
                     largura - 220,
@@ -84,7 +84,7 @@ namespace SistemaTstLargoTreze
 
             table.Controls.Add(
                 UiBuilder.Label(
-                    "Exames laboratoriais e clínicos cadastrados",
+                    "Registre exames feitos por empregado, medico responsavel e anexo quando houver",
                     16,
                     30,
                     largura - 220,
@@ -96,7 +96,7 @@ namespace SistemaTstLargoTreze
             );
 
             btnNovo = UiBuilder.SmallButton(
-                "+ Novo Exame",
+                "+ Lancar Exame",
                 largura - 110,
                 16,
                 94,
@@ -171,14 +171,14 @@ namespace SistemaTstLargoTreze
 
                 if (exames.Count == 0)
                 {
-                    table.Controls.Add(UiBuilder.CenterLabel("Nenhum exame cadastrado", 0, 126, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    table.Controls.Add(UiBuilder.CenterLabel("Nenhum exame realizado cadastrado", 0, 126, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
                     return;
                 }
 
                 int y = 83;
                 foreach (TipoExameRecord exame in exames)
                 {
-                    AddExamRow(table, largura, y, exame.Id, exame.Codigo, exame.Nome, exame.Tipo, exame.Periodicidade, exame.PacienteNome, exame.MedicoNome, exame.AnexoImagem);
+                    AddExamRow(table, largura, y, exame.Id, exame.Codigo, exame.Nome, exame.Tipo, exame.Periodicidade, exame.PacienteNome, exame.MedicoNome, exame.AnexoNome);
                     y += 38;
                 }
             }
@@ -235,7 +235,7 @@ namespace SistemaTstLargoTreze
             string periodicidade,
             string paciente,
             string medico,
-            string anexoImagem)
+            string anexoNome)
         {
             Panel row = new Panel
             {
@@ -357,10 +357,10 @@ namespace SistemaTstLargoTreze
 
             x += medicoW;
 
-            if (!string.IsNullOrWhiteSpace(anexoImagem))
+            if (!string.IsNullOrWhiteSpace(anexoNome))
             {
                 RoundButton verAnexo = UiBuilder.SmallButton(
-                    "Ver",
+                    "PDF",
                     x + 8,
                     8,
                     48,
@@ -370,7 +370,7 @@ namespace SistemaTstLargoTreze
 
                 verAnexo.BorderColor = UiColors.Border;
                 verAnexo.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
-                verAnexo.Tag = anexoImagem;
+                verAnexo.Tag = id;
                 verAnexo.Click += AbrirAnexo_Click;
                 row.Controls.Add(verAnexo);
             }
@@ -401,14 +401,20 @@ namespace SistemaTstLargoTreze
         private void AbrirAnexo_Click(object sender, System.EventArgs e)
         {
             Control control = sender as Control;
-            string caminho = control == null ? string.Empty : control.Tag as string;
+            int id = control != null && control.Tag is int ? (int)control.Tag : 0;
 
-            if (string.IsNullOrWhiteSpace(caminho) || !File.Exists(caminho))
+            TipoExameRecord exame = CadastrosRepository.GetTipoExameAnexo(id);
+            if (exame == null || exame.AnexoArquivo == null || exame.AnexoArquivo.Length == 0)
             {
-                MessageBox.Show("O arquivo anexado nao foi encontrado.", "Anexo do exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("O PDF anexado nao foi encontrado no banco de dados.", "Anexo do exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
+            string nome = string.IsNullOrWhiteSpace(exame.AnexoNome) ? "exame_" + id + ".pdf" : exame.AnexoNome;
+            string pasta = Path.Combine(Path.GetTempPath(), "SistemaTST", "AnexosExames");
+            Directory.CreateDirectory(pasta);
+            string caminho = Path.Combine(pasta, nome);
+            File.WriteAllBytes(caminho, exame.AnexoArquivo);
             Process.Start(caminho);
         }
 

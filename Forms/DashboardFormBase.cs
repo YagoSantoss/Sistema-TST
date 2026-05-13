@@ -79,17 +79,17 @@ namespace SistemaTstLargoTreze
             };
             SidebarPanel.Controls.Add(divider);
 
-            SidebarPanel.Controls.Add(UiBuilder.Label("ESOCIAL — EVENTOS", 16, 82, 170, 20, 7F, FontStyle.Bold, Color.FromArgb(199, 154, 96)));
+            SidebarPanel.Controls.Add(UiBuilder.Label("FLUXOS SST", 16, 82, 170, 20, 7F, FontStyle.Bold, Color.FromArgb(199, 154, 96)));
             AddMenuButton("☢  Fatores de Risco (S-2240)", DashboardMenu.Risk, active, 106, string.Empty);
             AddMenuButton("🚨  CAT — Acidente (S-2210)", DashboardMenu.Cat, active, 136, string.Empty);
             AddMenuButton("🩺  Monit. Saúde / ASO (S-2220)", DashboardMenu.Aso, active, 166, string.Empty);
             AddMenuButton("👥  Empregados", DashboardMenu.Employees, active, 196, string.Empty);
 
-            SidebarPanel.Controls.Add(UiBuilder.Label("CADASTROS BASE", 16, 242, 170, 20, 7F, FontStyle.Bold, Color.FromArgb(199, 154, 96)));
+            SidebarPanel.Controls.Add(UiBuilder.Label("CADASTROS E APOIO", 16, 242, 170, 20, 7F, FontStyle.Bold, Color.FromArgb(199, 154, 96)));
             AddMenuButton("👨‍⚕  Médicos", DashboardMenu.Doctors, active, 266, string.Empty);
-            AddMenuButton("🔬  Exames do Paciente", DashboardMenu.ExamTypes, active, 296, string.Empty);
+            AddMenuButton("🔬  Exames Realizados", DashboardMenu.ExamTypes, active, 296, string.Empty);
             AddMenuButton("🏢  Ambientes de Trabalho", DashboardMenu.WorkEnvironments, active, 326, string.Empty);
-            AddMenuButton("📊  Integração eSocial", DashboardMenu.Esocial, active, 356, string.Empty);
+            AddMenuButton("📊  eSocial Simulado", DashboardMenu.Esocial, active, 356, string.Empty);
 
             Panel footer = new Panel
             {

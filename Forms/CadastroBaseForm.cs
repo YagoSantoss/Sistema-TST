@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -20,6 +21,10 @@ namespace SistemaTstLargoTreze
         private readonly Dictionary<string, Control> _campos = new Dictionary<string, Control>();
         private RoundButton btnSalvar;
         private RoundButton btnCancelar;
+        private RoundButton btnBuscarCep;
+        private byte[] _anexoArquivo;
+        private string _anexoNome;
+        private string _anexoTipo;
 
         public CadastroBaseForm(CadastroBaseTipo tipo, bool edicao)
             : this(tipo, edicao, 0)
@@ -91,6 +96,10 @@ namespace SistemaTstLargoTreze
                     AddTextField(card, "Numero", "Numero", 307, 388, 95, false);
                     AddTextField(card, "Cidade", "Cidade - UF", 22, 460, 255, false);
                     AddTextField(card, "CEP", "CEP", 307, 460, 120, false);
+                    btnBuscarCep = UiBuilder.SmallButton("Buscar CEP", 437, 484, 90, UiColors.Orange, Color.White);
+                    btnBuscarCep.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+                    btnBuscarCep.Click += BuscarCep_Click;
+                    card.Controls.Add(btnBuscarCep);
                     AddTextField(card, "E-mail", "medico@empresa.com", 22, 532, 255, false);
                     AddTextField(card, "DDD", "DDD", 307, 532, 70, false);
                     AddTextField(card, "Telefone", "Numero do telefone", 397, 532, 155, false);
@@ -106,7 +115,7 @@ namespace SistemaTstLargoTreze
                     AddComboField(card, "Periodicidade", new[] { "Anual", "Bienal", "Semestral", "Admissional", "Conforme risco" }, 307, 172, 245, true);
                     AddLookupField(card, "Paciente", CriarComboEmpregados(255), 22, 244, 255, true);
                     AddLookupField(card, "Medico responsavel", CriarComboMedicos(245), 307, 244, 245, true);
-                    AddAttachmentField(card, "Anexo imagem", 22, 316, 410);
+                    AddAttachmentField(card, "Anexo PDF", 22, 316, 410);
                     break;
 
                 case CadastroBaseTipo.AmbienteTrabalho:
@@ -213,7 +222,7 @@ namespace SistemaTstLargoTreze
 
         private void AddAttachmentField(Panel parent, string label, int x, int y, int width)
         {
-            CueTextBox textBox = UiBuilder.TextBox("Selecione uma imagem ou foto", x, y + 24, width);
+            CueTextBox textBox = UiBuilder.TextBox("Selecione o PDF do exame", x, y + 24, width);
             textBox.ReadOnly = true;
             UiBuilder.AddField(parent, label, textBox, x, y, width, false);
             _campos[label] = textBox;
@@ -257,7 +266,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     return "Novo medico";
                 case CadastroBaseTipo.TipoExame:
-                    return "Novo exame do paciente";
+                    return "Novo exame realizado";
                 default:
                     return "Novo ambiente";
             }
@@ -272,7 +281,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     return acao + " medico";
                 case CadastroBaseTipo.TipoExame:
-                    return acao + " exame do paciente";
+                    return acao + " exame realizado";
                 default:
                     return acao + " ambiente de trabalho";
             }
@@ -285,7 +294,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     return "Preencha os dados do medico habilitado para ASO e laudos.";
                 case CadastroBaseTipo.TipoExame:
-                    return "Cadastre o exame realizado, vinculando paciente e medico responsavel.";
+                    return "Cadastre o exame realizado, vinculando paciente, medico e PDF do exame.";
                 default:
                     return "Cadastre o local, setor e status do ambiente de trabalho.";
             }
@@ -316,13 +325,40 @@ namespace SistemaTstLargoTreze
         {
             using (OpenFileDialog dialog = new OpenFileDialog())
             {
-                dialog.Title = "Selecionar imagem do exame";
-                dialog.Filter = "Imagens|*.jpg;*.jpeg;*.png;*.bmp;*.gif|Todos os arquivos|*.*";
+                dialog.Title = "Selecionar PDF do exame";
+                dialog.Filter = "Arquivo PDF|*.pdf";
 
                 if (dialog.ShowDialog(this) == DialogResult.OK)
                 {
-                    SetValue("Anexo imagem", dialog.FileName);
+                    FileInfo info = new FileInfo(dialog.FileName);
+                    if (info.Length > 10 * 1024 * 1024)
+                    {
+                        MessageBox.Show("Selecione um PDF de ate 10 MB.", "Anexo PDF", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return;
+                    }
+
+                    _anexoArquivo = File.ReadAllBytes(dialog.FileName);
+                    _anexoNome = Path.GetFileName(dialog.FileName);
+                    _anexoTipo = "application/pdf";
+                    SetValue("Anexo PDF", _anexoNome);
                 }
+            }
+        }
+
+        private void BuscarCep_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                CepLookupResult endereco = BrazilLookupApi.ConsultarCep(Value("CEP"));
+                SetValue("CEP", endereco.Cep);
+                SetValue("Logradouro", endereco.Logradouro);
+                SetValue("Bairro", endereco.Bairro);
+                SetValue("Cidade", endereco.Localidade + " - " + endereco.Uf);
+                MessageBox.Show("Endereco preenchido pelo ViaCEP.", TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Nao foi possivel consultar o CEP.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -368,7 +404,10 @@ namespace SistemaTstLargoTreze
                             SetValue("Periodicidade", exame.Periodicidade);
                             SetComboById("Paciente", exame.EmpregadoId);
                             SetComboById("Medico responsavel", exame.MedicoId);
-                            SetValue("Anexo imagem", exame.AnexoImagem);
+                            _anexoArquivo = exame.AnexoArquivo;
+                            _anexoNome = exame.AnexoNome;
+                            _anexoTipo = exame.AnexoTipo;
+                            SetValue("Anexo PDF", string.IsNullOrWhiteSpace(exame.AnexoNome) ? exame.AnexoImagem : exame.AnexoNome);
                         }
                         break;
 
@@ -445,7 +484,10 @@ namespace SistemaTstLargoTreze
                         Periodicidade = Required("Periodicidade"),
                         EmpregadoId = RequiredId("Paciente"),
                         MedicoId = RequiredId("Medico responsavel"),
-                        AnexoImagem = Value("Anexo imagem")
+                        AnexoImagem = Value("Anexo PDF"),
+                        AnexoNome = _anexoNome,
+                        AnexoTipo = _anexoTipo,
+                        AnexoArquivo = _anexoArquivo
                     });
                     break;
 

@@ -21,7 +21,7 @@ namespace SistemaTstLargoTreze
             try
             {
                 int total = CadastrosRepository.RegistrarTransmissoesEsocial();
-                MessageBox.Show(total == 0 ? "Nao ha eventos SST cadastrados para registrar." : total + " evento(s) registrados no log interno.", "Controle eSocial", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(total == 0 ? "Nao ha novos eventos SST para registrar. Os eventos ja transmitidos continuam no log." : total + " novo(s) evento(s) registrados no log interno.", "Controle eSocial", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 MontarConteudoEsocial();
             }
             catch (Exception ex)

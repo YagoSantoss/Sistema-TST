@@ -7,6 +7,8 @@ namespace SistemaTstLargoTreze
     {
         private RoundButton btnSalvar;
         private RoundButton btnCancelar;
+        private RoundButton btnBuscarCep;
+        private RoundButton btnBuscarCnpj;
         private ComboBox cmbEmpregado;
         private ComboBox cmbTipoCat;
         private ComboBox cmbLocalAcidente;
@@ -288,7 +290,17 @@ namespace SistemaTstLargoTreze
             cmbTipoInscricao.Items.Add("CAEPF");
             cmbTipoInscricao.Items.Add("CNO");
             x += col + gap;
-            UiBuilder.AddField(form, "INSCRICAO DO ESTABELECIMENTO", txtInscricaoEstabelecimento = UiBuilder.TextBox("CNPJ/CPF/CAEPF", 0, 0, col), x, y, col, false);
+            int inscricaoW = col - 92;
+            if (inscricaoW < 110)
+                inscricaoW = col;
+            UiBuilder.AddField(form, "INSCRICAO DO ESTABELECIMENTO", txtInscricaoEstabelecimento = UiBuilder.TextBox("CNPJ/CPF/CAEPF", 0, 0, inscricaoW), x, y, inscricaoW, false);
+            if (inscricaoW < col)
+            {
+                btnBuscarCnpj = UiBuilder.SmallButton("Buscar CNPJ", x + inscricaoW + 8, y + 26, 82, UiColors.Orange, Color.White);
+                btnBuscarCnpj.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+                btnBuscarCnpj.Click += BuscarCnpj_Click;
+                form.Controls.Add(btnBuscarCnpj);
+            }
             x += col + gap;
             UiBuilder.AddField(form, "LOGRADOURO", txtLogradouro = UiBuilder.TextBox("Logradouro", 0, 0, col), x, y, col, false);
             x += col + gap;
@@ -302,8 +314,18 @@ namespace SistemaTstLargoTreze
             x += col + gap;
             UiBuilder.AddField(form, "COMPLEMENTO", txtComplemento = UiBuilder.TextBox("Complemento", 0, 0, col), x, y, col, false);
             x += col + gap;
-            UiBuilder.AddField(form, "CEP", txtCep = UiBuilder.TextBox("CEP", 0, 0, col), x, y, col, false);
+            int cepW = col - 86;
+            if (cepW < 100)
+                cepW = col;
+            UiBuilder.AddField(form, "CEP", txtCep = UiBuilder.TextBox("CEP", 0, 0, cepW), x, y, cepW, false);
             InputFormatHelper.ApplyCepMask(txtCep);
+            if (cepW < col)
+            {
+                btnBuscarCep = UiBuilder.SmallButton("Buscar CEP", x + cepW + 8, y + 26, 76, UiColors.Orange, Color.White);
+                btnBuscarCep.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
+                btnBuscarCep.Click += BuscarCep_Click;
+                form.Controls.Add(btnBuscarCep);
+            }
 
             UiBuilder.AddField(form, "CODIGO POSTAL", txtCodigoPostal = UiBuilder.TextBox("Codigo postal", 0, 0, col), margem, 668, col, false);
         }
@@ -711,13 +733,14 @@ namespace SistemaTstLargoTreze
                 Descricao = txtDescricao.Text.Trim(),
                 ObservacaoCat = txtDescricao.Text.Trim(),
                 Situacao = catExistente == null ? "Aberta" : catExistente.Situacao,
-                ResultadoAso = catExistente == null ? "Aguardando ASO" : catExistente.ResultadoAso,
+                ResultadoAso = catExistente == null ? "Aguardando ASO de Retorno" : catExistente.ResultadoAso,
                 ParteCorpoAtingida = catExistente == null ? string.Empty : catExistente.ParteCorpoAtingida,
                 Lateralidade = catExistente == null ? string.Empty : catExistente.Lateralidade,
                 AgenteCausador = catExistente == null ? string.Empty : catExistente.AgenteCausador,
                 Cid10 = catExistente == null ? string.Empty : catExistente.Cid10,
                 NaturezaLesao = catExistente == null ? string.Empty : catExistente.NaturezaLesao,
                 DuracaoTratamento = catExistente == null ? string.Empty : catExistente.DuracaoTratamento,
+                MedicoId = catExistente == null ? (int?)null : catExistente.MedicoId,
                 MedicoAssistente = catExistente == null ? string.Empty : catExistente.MedicoAssistente,
                 ObservacaoMedica = catExistente == null ? string.Empty : catExistente.ObservacaoMedica
             });

@@ -14,7 +14,7 @@ namespace SistemaTstLargoTreze
         private CueTextBox txtCid10;
         private CueTextBox txtNaturezaLesao;
         private CueTextBox txtDuracaoTratamento;
-        private CueTextBox txtMedicoAssistente;
+        private ComboBox cmbMedicoAssistente;
         private CueTextBox txtObservacaoMedica;
 
         private bool _montandoConteudo = false;
@@ -79,7 +79,7 @@ namespace SistemaTstLargoTreze
 
             int botaoW = 28;
             int medicoW = metadeW - botaoW - 8;
-            UiBuilder.AddField(form, "MEDICO / DENTISTA", txtMedicoAssistente = UiBuilder.TextBox("Nome do medico ou dentista", 0, 0, medicoW), xEsq, 388, medicoW, false);
+            UiBuilder.AddField(form, "MEDICO / DENTISTA", cmbMedicoAssistente = CriarComboMedicos(medicoW), xEsq, 388, medicoW, false);
             btnAdicionarMedico = UiBuilder.Button("+", xEsq + medicoW + 6, 412, botaoW, 30, Color.White, UiColors.AccentBlue);
             btnAdicionarMedico.BorderColor = UiColors.Border;
             btnAdicionarMedico.Click += BtnAdicionarMedico_Click;
@@ -119,6 +119,41 @@ namespace SistemaTstLargoTreze
             combo.Items.Add("Sistema circulatorio");
             combo.Items.Add("Multiplas partes");
             combo.Items.Add("Nao aplicavel");
+            return combo;
+        }
+
+        private ComboBox CriarComboMedicos(int width)
+        {
+            ComboBox combo = new ComboBox
+            {
+                Location = new Point(0, 0),
+                Size = new Size(width, 34),
+                Font = new Font("Segoe UI", 9F),
+                DropDownStyle = ComboBoxStyle.DropDown,
+                AutoCompleteMode = AutoCompleteMode.SuggestAppend,
+                AutoCompleteSource = AutoCompleteSource.ListItems
+            };
+
+            combo.Items.Add(new ComboItem(0, "Digite o nome ou CRM do medico"));
+
+            try
+            {
+                foreach (MedicoRecord medico in CadastrosRepository.GetMedicos())
+                {
+                    combo.Items.Add(new ComboItem(medico.Id, TextoMedico(medico)));
+                }
+
+                if (combo.Items.Count == 1)
+                    combo.Items.Add(new ComboItem(0, "Nenhum medico cadastrado"));
+            }
+            catch
+            {
+                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+            }
+
+            combo.SelectedIndex = 0;
+            combo.Leave += CmbMedicoAssistente_Leave;
+            combo.SelectedIndexChanged += CmbMedicoAssistente_SelectedIndexChanged;
             return combo;
         }
 

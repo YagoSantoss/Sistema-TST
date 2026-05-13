@@ -508,10 +508,12 @@ namespace SistemaTstLargoTreze
 
         private Color StatusColor(string status)
         {
-            if (status == "Vencido")
+            string value = (status ?? string.Empty).Trim();
+
+            if (value == "Vencido" || value == "Inapto")
                 return UiColors.Red;
 
-            if (status == "A vencer")
+            if (value == "A vencer" || value == "Aguardando retorno" || value == "CAT aberta")
                 return UiColors.Orange;
 
             return UiColors.Green;

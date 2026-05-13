@@ -23,74 +23,223 @@ namespace SistemaTstLargoTreze
             string arquivo = Path.Combine(pasta, "CAT_" + cat.Id + "_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".pdf");
             byte[] logoBytes = GetLogoJpegBytes(out int logoWidth, out int logoHeight);
             List<CatTestemunhaRecord> testemunhas = CadastrosRepository.GetCatTestemunhas(cat.Id);
+            EmpregadoRecord empregado = null;
+            try
+            {
+                empregado = CadastrosRepository.GetEmpregado(cat.EmpregadoId);
+            }
+            catch
+            {
+                empregado = null;
+            }
 
             StringBuilder content = new StringBuilder();
-            double y = PageHeight - 42;
+            double y = PageHeight - 58;
 
-            AddBrandHeader(content, logoBytes != null, ref y);
+            AddCatOfficialHeader(content, logoBytes != null, cat, ref y);
 
-            AddSection(content, "DADOS CADASTRAIS", ref y);
-            AddRow(content, "Codigo CAT", cat.Id.ToString(), "Empregado", cat.EmpregadoNome, ref y);
-            AddRow(content, "Data do comunicado", cat.DataComunicacao, "Emitente", cat.Emitente, ref y);
-            AddRow(content, "Aposentado", cat.Aposentado ? "Sim" : "Nao", "Filiacao Prev. Social", cat.FiliacaoPrevSocial, ref y);
-            AddRow(content, "Area", cat.Area, "Tipo da CAT", cat.TipoCat, ref y);
-            AddRow(content, "Data do acidente", cat.DataAcidente, "Tipo do acidente", cat.TipoAcidente, ref y);
-            AddRow(content, "Hora do acidente", cat.HoraAcidente, "Horas trabalhadas antes", cat.HorasTrabalhadasAntes, ref y);
-            AddRow(content, "Houve obito", cat.HouveObito ? "Sim" : "Nao", "Data do obito", cat.DataObito, ref y);
-            AddRow(content, "Houve afastamento", cat.HouveAfastamento ? "Sim" : "Nao", "Registro policia", cat.RegistroPolicia ? "Sim" : "Nao", ref y);
-            AddRow(content, "Ultimo dia trabalho", cat.UltimoDiaTrabalho, "Codificacao acidente", cat.CodificacaoAcidente, ref y);
-            AddFullRow(content, "Situacao geradora", cat.SituacaoGeradora, ref y);
-            AddFullRow(content, "CAT emitida por", cat.CatEmitidaPor, ref y);
-            AddSection(content, "LOCAL DO ACIDENTE", ref y);
-            AddRow(content, "Tipo do local", cat.LocalAcidente, "Especificacao", cat.EspecificacaoLocal, ref y);
-            AddRow(content, "Tipo logradouro", cat.TipoLogradouro, "Numero", cat.Numero, ref y);
-            AddRow(content, "Tipo inscricao", cat.TipoInscricao, "Inscricao estabelecimento", cat.InscricaoEstabelecimento, ref y);
-            AddRow(content, "Logradouro", cat.Logradouro, "Municipio", cat.Municipio, ref y);
-            AddRow(content, "UF", cat.Uf, "Bairro", cat.Bairro, ref y);
-            AddRow(content, "Complemento", cat.Complemento, "CEP", cat.Cep, ref y);
-            AddFullRow(content, "Codigo postal", cat.CodigoPostal, ref y);
-            AddRow(content, "Situacao", cat.Situacao, "Resultado ASO", cat.ResultadoAso, ref y);
-            AddTextBox(content, "Observacao da CAT", string.IsNullOrWhiteSpace(cat.ObservacaoCat) ? cat.Descricao : cat.ObservacaoCat, ref y, 46);
+            AddPlainSection(content, "Informacoes do Emitente", ref y);
+            AddFormRow(content, ref y, 16,
+                "Emitente", cat.Emitente,
+                "Data Emissao", cat.DataComunicacao);
+            AddFormRow(content, ref y, 16,
+                "Tipo de CAT", cat.TipoCat,
+                "Comunicacao Obito", cat.HouveObito ? "Sim" : "Nao");
+            AddFormRow(content, ref y, 16,
+                "Filiacao", cat.FiliacaoPrevSocial,
+                "E-mail", string.Empty);
 
-            AddSection(content, "TESTEMUNHAS", ref y);
+            AddPlainSection(content, "Informacoes do Empregador", ref y);
+            AddFormRow(content, ref y, 16,
+                "Razao Social/Nome", "SISTEMA TST LARGO TREZE",
+                "CNAE", string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Tipo/Num Doc", cat.TipoInscricao + " " + cat.InscricaoEstabelecimento,
+                "Telefone", string.Empty);
+            AddFormRow(content, ref y, 16,
+                "CEP", cat.Cep,
+                "Estado", cat.Uf);
+            AddFormRow(content, ref y, 16,
+                "Bairro", cat.Bairro,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Endereco", cat.Logradouro + " " + cat.Numero,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Municipio", cat.Municipio,
+                string.Empty, string.Empty);
+
+            AddPlainSection(content, "Informacoes do Acidentado", ref y);
+            AddFormRow(content, ref y, 16,
+                "Nome", cat.EmpregadoNome,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Nome da Mae", string.Empty,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Data de Nascimento", string.Empty,
+                "Sexo", string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Grau de Instrucao", string.Empty,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Estado Civil", string.Empty,
+                "Remuneracao", string.Empty);
+            AddFormRow(content, ref y, 16,
+                "CTPS", string.Empty,
+                "Identidade", string.Empty);
+            AddFormRow(content, ref y, 16,
+                "PIS/PASEP/NIT", string.Empty,
+                "CEP", empregado == null ? string.Empty : empregado.Cpf);
+            AddFormRow(content, ref y, 16,
+                "Endereco", string.Empty,
+                "Bairro", string.Empty);
+            AddFormRow(content, ref y, 16,
+                "Estado", cat.Uf,
+                "Municipio", cat.Municipio);
+            AddFormRow(content, ref y, 16,
+                "Telefone", string.Empty,
+                "CBO", empregado == null ? string.Empty : empregado.Cargo);
+            AddFormRow(content, ref y, 16,
+                "Aposentadoria", cat.Aposentado ? "Sim" : "Nao",
+                "Area", cat.Area);
+
+            AddPlainSection(content, "Informacoes do Acidente", ref y);
+            AddFormRow(content, ref y, 17,
+                "Data do Acidente", cat.DataAcidente,
+                "Hora do Acidente", cat.HoraAcidente);
+            AddFormRow(content, ref y, 17,
+                "Horas Trabalhadas", cat.HorasTrabalhadasAntes,
+                "Tipo", cat.TipoAcidente);
+            AddFormRow(content, ref y, 17,
+                "Houve Afastamento?", cat.HouveAfastamento ? "Sim" : "Nao",
+                "Reg. Policial", cat.RegistroPolicia ? "Sim" : "Nao");
+            AddFormRow(content, ref y, 17,
+                "Local do Acidente", cat.LocalAcidente,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Esp. Local", cat.EspecificacaoLocal,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 24,
+                "CNPJ / CGC ou CEI da Prestadora", cat.InscricaoEstabelecimento,
+                "UF do Acidente", cat.Uf);
+            AddFormRow(content, ref y, 24,
+                "Municipio do Acidente", cat.Municipio,
+                "Ultimo dia Trab. Dt Obito", string.IsNullOrWhiteSpace(cat.DataObito) ? cat.UltimoDiaTrabalho : cat.DataObito);
+            AddFormRow(content, ref y, 17,
+                "Parte do Corpo", cat.ParteCorpoAtingida,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Agente Causador", cat.AgenteCausador,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Sit. Geradora", cat.SituacaoGeradora,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Morte", cat.HouveObito ? "Sim" : "Nao",
+                "Data Obito", cat.DataObito);
+
+            y -= 34;
+            AddSignatureLine(content, Margin + 10, y, 230, "Local e Data");
+            AddSignatureLine(content, Margin + 270, y, 255, "Assinatura e carimbo do emitente");
+            y -= 34;
+
+            AddPlainSection(content, "Informacoes do Atestado Medico", ref y);
+            AddFormRow(content, ref y, 17,
+                "Unidade", string.Empty,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Data Atendimento", cat.DataComunicacao,
+                "Hora Atendimento", string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Houve Internacao", string.Empty,
+                "Sera afastado?", cat.HouveAfastamento ? "Sim" : "Nao");
+            AddFormRow(content, ref y, 17,
+                "Nat. Lesao", cat.NaturezaLesao,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "CID - 10", cat.Cid10,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "Observacoes", cat.ObservacaoMedica,
+                string.Empty, string.Empty);
+            AddFormRow(content, ref y, 17,
+                "CRM", cat.MedicoAssistente,
+                string.Empty, string.Empty);
+
+            y -= 34;
+            AddSignatureLine(content, Margin + 10, y, 230, "Local e Data");
+            AddSignatureLine(content, Margin + 270, y, 255, "Assinatura (*) e carimbo (legivel) do medico com CRM/UF");
+            y -= 36;
+
+            AddPlainSection(content, "Testemunhas", ref y);
             if (testemunhas.Count == 0)
             {
-                AddFullRow(content, "Testemunhas", "Nenhuma testemunha cadastrada para esta CAT.", ref y);
+                AddFormRow(content, ref y, 17, "Testemunha", "Nenhuma testemunha cadastrada.", string.Empty, string.Empty);
             }
             else
             {
                 for (int i = 0; i < testemunhas.Count; i++)
                 {
                     CatTestemunhaRecord testemunha = testemunhas[i];
-                    AddFullRow(content, "Testemunha " + (i + 1) + " - Nome", testemunha.Nome, ref y);
-                    AddRow(content, "CPF", testemunha.Cpf, "Telefone", testemunha.Telefone, ref y);
-                    AddFullRow(content, "Endereco", testemunha.Endereco, ref y);
+                    AddFormRow(content, ref y, 17,
+                        "Nome", testemunha.Nome,
+                        "Telefone", testemunha.Telefone);
+                    AddFormRow(content, ref y, 17,
+                        "CPF", testemunha.Cpf,
+                        "Endereco", testemunha.Endereco);
                 }
             }
 
-            AddSection(content, "DADOS COMPLEMENTARES", ref y);
-            AddRow(content, "Parte do corpo atingida", cat.ParteCorpoAtingida, "Lateralidade", cat.Lateralidade, ref y);
-            AddRow(content, "Agente causador", cat.AgenteCausador, "CID-10", cat.Cid10, ref y);
-            AddRow(content, "Natureza da lesao", cat.NaturezaLesao, "Duracao do tratamento", cat.DuracaoTratamento, ref y);
-            AddFullRow(content, "Medico / Dentista", cat.MedicoAssistente, ref y);
-            AddTextBox(content, "Observacao medica", cat.ObservacaoMedica, ref y, 58);
-
-            AddFooter(content, cat.Id);
+            AddText(content, "Cadastrada em: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm"), Margin, 55, 7, false, "0 0 0");
+            AddText(content, "* A impressao desta CAT deve ser apresentada juntamente com os documentos originais do segurado.", Margin, 42, 7, false, "0 0 0");
 
             EscreverPdf(arquivo, content.ToString(), logoBytes, logoWidth, logoHeight);
             return arquivo;
         }
 
-        private static void AddBrandHeader(StringBuilder content, bool hasLogo, ref double y)
+        private static void AddCatOfficialHeader(StringBuilder content, bool hasLogo, CatRecord cat, ref double y)
         {
-            AddRect(content, Margin, y - 58, ContentWidth, 58);
-
             if (hasLogo)
-                AddImage(content, "Im1", Margin + 10, y - 49, 72, 42);
+                AddImage(content, "Im1", Margin, y - 50, 72, 42);
 
-            AddText(content, "SISTEMA TST LARGO TREZE", Margin + 96, y - 24, 14, true, "0.06 0.22 0.38");
-            AddText(content, "COMUNICACAO DE ACIDENTE DE TRABALHO - CAT", Margin + 96, y - 41, 10, true, "0.06 0.22 0.38");
-            y -= 72;
+            AddText(content, "CAT - Comunicacao de Acidente de Trabalho", Margin + 154, y - 10, 16, false, "0 0 0");
+            AddText(content, "Numero da CAT:", Margin + 182, y - 36, 11, false, "0 0 0");
+            AddText(content, cat.Id.ToString(), Margin + 275, y - 36, 11, true, "0 0 0");
+            y -= 78;
+        }
+
+        private static void AddPlainSection(StringBuilder content, string title, ref double y)
+        {
+            y -= 12;
+            AddText(content, title, Margin, y, 10, false, "0 0 0");
+            y -= 18;
+        }
+
+        private static void AddFormRow(StringBuilder content, ref double y, double height, string label1, string value1, string label2, string value2)
+        {
+            double labelW = 105;
+            double valueW = 190;
+            double label2W = 105;
+            double value2W = ContentWidth - labelW - valueW - label2W;
+
+            AddTableCell(content, Margin, y - height, labelW, height, label1, true);
+            AddTableCell(content, Margin + labelW, y - height, valueW, height, value1, false);
+            AddTableCell(content, Margin + labelW + valueW, y - height, label2W, height, label2, true);
+            AddTableCell(content, Margin + labelW + valueW + label2W, y - height, value2W, height, value2, false);
+            y -= height;
+        }
+
+        private static void AddTableCell(StringBuilder content, double x, double y, double width, double height, string text, bool label)
+        {
+            AddRect(content, x, y, width, height);
+            AddText(content, Fit(text, label ? 26 : 45), x + 4, y + (height / 2) - 3, 7, label, "0 0 0");
+        }
+
+        private static void AddSignatureLine(StringBuilder content, double x, double y, double width, string label)
+        {
+            AddLine(content, x, y, x + width, y);
+            AddText(content, label, x + 70, y - 13, 7, false, "0 0 0");
         }
 
         private static void AddSection(StringBuilder content, string title, ref double y)
@@ -144,8 +293,16 @@ namespace SistemaTstLargoTreze
 
         private static void AddRect(StringBuilder content, double x, double y, double width, double height)
         {
-            content.AppendLine("0.75 0.78 0.82 RG");
+            content.AppendLine("0 0 0 RG");
+            content.AppendLine("0.6 w");
             content.AppendLine(F(x) + " " + F(y) + " " + F(width) + " " + F(height) + " re S");
+        }
+
+        private static void AddLine(StringBuilder content, double x1, double y1, double x2, double y2)
+        {
+            content.AppendLine("0 0 0 RG");
+            content.AppendLine("0.6 w");
+            content.AppendLine(F(x1) + " " + F(y1) + " m " + F(x2) + " " + F(y2) + " l S");
         }
 
         private static void AddFilledRect(StringBuilder content, double x, double y, double width, double height, string rgb)

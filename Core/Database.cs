@@ -51,7 +51,14 @@ namespace SistemaTstLargoTreze
 
             if (!ColumnExists(connection, "cats", "resultado_aso"))
             {
-                using (MySqlCommand command = new MySqlCommand("ALTER TABLE cats ADD COLUMN resultado_aso VARCHAR(40) NOT NULL DEFAULT 'Aguardando ASO' AFTER situacao", connection))
+                using (MySqlCommand command = new MySqlCommand("ALTER TABLE cats ADD COLUMN resultado_aso VARCHAR(40) NOT NULL DEFAULT 'Aguardando ASO de Retorno' AFTER situacao", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+            else
+            {
+                using (MySqlCommand command = new MySqlCommand("UPDATE cats SET resultado_aso = 'Aguardando ASO de Retorno' WHERE resultado_aso = 'Aguardando ASO'", connection))
                 {
                     command.ExecuteNonQuery();
                 }
@@ -64,6 +71,9 @@ namespace SistemaTstLargoTreze
                     command.ExecuteNonQuery();
                 }
             }
+            EnsureColumn(connection, "tipos_exames", "anexo_nome", "VARCHAR(255) NULL");
+            EnsureColumn(connection, "tipos_exames", "anexo_tipo", "VARCHAR(100) NULL");
+            EnsureColumn(connection, "tipos_exames", "anexo_arquivo", "LONGBLOB NULL");
 
             if (!ColumnExists(connection, "tipos_exames", "empregado_id"))
             {
@@ -148,6 +158,7 @@ namespace SistemaTstLargoTreze
             EnsureColumn(connection, "cats", "cid10", "VARCHAR(80) NULL");
             EnsureColumn(connection, "cats", "natureza_lesao", "VARCHAR(180) NULL");
             EnsureColumn(connection, "cats", "duracao_tratamento", "VARCHAR(80) NULL");
+            EnsureColumn(connection, "cats", "medico_id", "INT NULL");
             EnsureColumn(connection, "cats", "medico_assistente", "VARCHAR(180) NULL");
             EnsureColumn(connection, "cats", "observacao_medica", "TEXT NULL");
             EnsureColumn(connection, "cats", "aposentado", "TINYINT(1) NOT NULL DEFAULT 0");
@@ -177,8 +188,22 @@ namespace SistemaTstLargoTreze
             EnsureColumn(connection, "cats", "cep", "VARCHAR(20) NULL");
             EnsureColumn(connection, "cats", "codigo_postal", "VARCHAR(30) NULL");
             EnsureColumn(connection, "cats", "observacao_cat", "TEXT NULL");
+            EnsureColumn(connection, "esocial_eventos", "origem_tipo", "VARCHAR(30) NULL");
+            EnsureColumn(connection, "esocial_eventos", "origem_id", "INT NULL");
             EnsureCatTestemunhasTable(connection);
             EnsureColumn(connection, "cat_testemunhas", "endereco", "VARCHAR(255) NULL");
+
+            if (!ConstraintExists(connection, "fk_cats_medico"))
+            {
+                using (MySqlCommand command = new MySqlCommand(
+                    @"ALTER TABLE cats
+                      ADD CONSTRAINT fk_cats_medico
+                      FOREIGN KEY (medico_id) REFERENCES medicos (id)
+                      ON DELETE SET NULL", connection))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
 
             schemaChecked = true;
         }
@@ -285,6 +310,9 @@ namespace SistemaTstLargoTreze
         public string Tipo { get; set; }
         public string Periodicidade { get; set; }
         public string AnexoImagem { get; set; }
+        public string AnexoNome { get; set; }
+        public string AnexoTipo { get; set; }
+        public byte[] AnexoArquivo { get; set; }
         public int? EmpregadoId { get; set; }
         public string PacienteNome { get; set; }
         public int? MedicoId { get; set; }
@@ -335,6 +363,7 @@ namespace SistemaTstLargoTreze
         public string Cid10 { get; set; }
         public string NaturezaLesao { get; set; }
         public string DuracaoTratamento { get; set; }
+        public int? MedicoId { get; set; }
         public string MedicoAssistente { get; set; }
         public string ObservacaoMedica { get; set; }
         public bool Aposentado { get; set; }
@@ -660,7 +689,7 @@ namespace SistemaTstLargoTreze
 
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem,
+                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem, t.anexo_nome, t.anexo_tipo,
                          t.empregado_id, e.nome AS paciente_nome, t.medico_id, m.nome AS medico_nome
                   FROM tipos_exames t
                   LEFT JOIN empregados e ON e.id = t.empregado_id
@@ -679,6 +708,8 @@ namespace SistemaTstLargoTreze
                         Tipo = reader.GetString("tipo"),
                         Periodicidade = reader.GetString("periodicidade"),
                         AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem"),
+                        AnexoNome = ReaderString(reader, "anexo_nome"),
+                        AnexoTipo = ReaderString(reader, "anexo_tipo"),
                         EmpregadoId = reader.IsDBNull(reader.GetOrdinal("empregado_id")) ? (int?)null : reader.GetInt32("empregado_id"),
                         PacienteNome = reader.IsDBNull(reader.GetOrdinal("paciente_nome")) ? string.Empty : reader.GetString("paciente_nome"),
                         MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
@@ -696,7 +727,7 @@ namespace SistemaTstLargoTreze
 
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem,
+                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem, t.anexo_nome, t.anexo_tipo,
                          t.empregado_id, e.nome AS paciente_nome, t.medico_id, m.nome AS medico_nome
                   FROM tipos_exames t
                   LEFT JOIN empregados e ON e.id = t.empregado_id
@@ -719,6 +750,8 @@ namespace SistemaTstLargoTreze
                             Tipo = reader.GetString("tipo"),
                             Periodicidade = reader.GetString("periodicidade"),
                             AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem"),
+                            AnexoNome = ReaderString(reader, "anexo_nome"),
+                            AnexoTipo = ReaderString(reader, "anexo_tipo"),
                             EmpregadoId = reader.IsDBNull(reader.GetOrdinal("empregado_id")) ? (int?)null : reader.GetInt32("empregado_id"),
                             PacienteNome = reader.IsDBNull(reader.GetOrdinal("paciente_nome")) ? string.Empty : reader.GetString("paciente_nome"),
                             MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
@@ -735,7 +768,7 @@ namespace SistemaTstLargoTreze
         {
             using (MySqlConnection connection = Database.OpenConnection())
             using (MySqlCommand command = new MySqlCommand(
-                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem,
+                @"SELECT t.id, t.codigo, t.nome, t.tipo, t.periodicidade, t.anexo_imagem, t.anexo_nome, t.anexo_tipo, t.anexo_arquivo,
                          t.empregado_id, e.nome AS paciente_nome, t.medico_id, m.nome AS medico_nome
                   FROM tipos_exames t
                   LEFT JOIN empregados e ON e.id = t.empregado_id
@@ -758,10 +791,40 @@ namespace SistemaTstLargoTreze
                         Tipo = reader.GetString("tipo"),
                         Periodicidade = reader.GetString("periodicidade"),
                         AnexoImagem = reader.IsDBNull(reader.GetOrdinal("anexo_imagem")) ? string.Empty : reader.GetString("anexo_imagem"),
+                        AnexoNome = ReaderString(reader, "anexo_nome"),
+                        AnexoTipo = ReaderString(reader, "anexo_tipo"),
+                        AnexoArquivo = reader.IsDBNull(reader.GetOrdinal("anexo_arquivo")) ? null : (byte[])reader["anexo_arquivo"],
                         EmpregadoId = reader.IsDBNull(reader.GetOrdinal("empregado_id")) ? (int?)null : reader.GetInt32("empregado_id"),
                         PacienteNome = reader.IsDBNull(reader.GetOrdinal("paciente_nome")) ? string.Empty : reader.GetString("paciente_nome"),
                         MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
                         MedicoNome = reader.IsDBNull(reader.GetOrdinal("medico_nome")) ? string.Empty : reader.GetString("medico_nome")
+                    };
+                }
+            }
+        }
+
+        public static TipoExameRecord GetTipoExameAnexo(int id)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            using (MySqlCommand command = new MySqlCommand(
+                @"SELECT id, anexo_nome, anexo_tipo, anexo_arquivo
+                  FROM tipos_exames
+                  WHERE id = @id
+                  LIMIT 1", connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    if (!reader.Read())
+                        return null;
+
+                    return new TipoExameRecord
+                    {
+                        Id = reader.GetInt32("id"),
+                        AnexoNome = ReaderString(reader, "anexo_nome"),
+                        AnexoTipo = ReaderString(reader, "anexo_tipo"),
+                        AnexoArquivo = reader.IsDBNull(reader.GetOrdinal("anexo_arquivo")) ? null : (byte[])reader["anexo_arquivo"]
                     };
                 }
             }
@@ -773,11 +836,12 @@ namespace SistemaTstLargoTreze
             using (MySqlCommand command = new MySqlCommand(
                 exame.Id > 0
                     ? @"UPDATE tipos_exames
-                        SET codigo = @codigo, nome = @nome, tipo = @tipo, periodicidade = @periodicidade, anexo_imagem = @anexo_imagem,
+                        SET codigo = @codigo, nome = @nome, tipo = @tipo, periodicidade = @periodicidade,
+                            anexo_imagem = @anexo_imagem, anexo_nome = @anexo_nome, anexo_tipo = @anexo_tipo, anexo_arquivo = @anexo_arquivo,
                             empregado_id = @empregado_id, medico_id = @medico_id
                         WHERE id = @id"
-                    : @"INSERT INTO tipos_exames (codigo, nome, tipo, periodicidade, anexo_imagem, empregado_id, medico_id)
-                        VALUES (@codigo, @nome, @tipo, @periodicidade, @anexo_imagem, @empregado_id, @medico_id)", connection))
+                    : @"INSERT INTO tipos_exames (codigo, nome, tipo, periodicidade, anexo_imagem, anexo_nome, anexo_tipo, anexo_arquivo, empregado_id, medico_id)
+                        VALUES (@codigo, @nome, @tipo, @periodicidade, @anexo_imagem, @anexo_nome, @anexo_tipo, @anexo_arquivo, @empregado_id, @medico_id)", connection))
             {
                 command.Parameters.AddWithValue("@id", exame.Id);
                 command.Parameters.AddWithValue("@codigo", exame.Codigo);
@@ -785,6 +849,9 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@tipo", exame.Tipo);
                 command.Parameters.AddWithValue("@periodicidade", exame.Periodicidade);
                 command.Parameters.AddWithValue("@anexo_imagem", EmptyToDbNull(exame.AnexoImagem));
+                command.Parameters.AddWithValue("@anexo_nome", EmptyToDbNull(exame.AnexoNome));
+                command.Parameters.AddWithValue("@anexo_tipo", EmptyToDbNull(exame.AnexoTipo));
+                command.Parameters.AddWithValue("@anexo_arquivo", exame.AnexoArquivo == null || exame.AnexoArquivo.Length == 0 ? (object)DBNull.Value : exame.AnexoArquivo);
                 command.Parameters.AddWithValue("@empregado_id", exame.EmpregadoId.HasValue && exame.EmpregadoId.Value > 0 ? (object)exame.EmpregadoId.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@medico_id", exame.MedicoId.HasValue && exame.MedicoId.Value > 0 ? (object)exame.MedicoId.Value : DBNull.Value);
                 command.ExecuteNonQuery();
@@ -869,17 +936,37 @@ namespace SistemaTstLargoTreze
 
         public static void DeleteMedicos(IEnumerable<int> ids)
         {
-            SoftDeleteByIds("medicos", ids);
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                foreach (int id in ids)
+                {
+                    DeleteEsocialEventos(connection, "S-2220", "SELECT id FROM asos WHERE medico_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM aso_exames WHERE aso_id IN (SELECT id FROM asos WHERE medico_id = @id)", id);
+                    ExecuteNonQuery(connection, "DELETE FROM aso_exames WHERE tipo_exame_id IN (SELECT id FROM tipos_exames WHERE medico_id = @id)", id);
+                    ExecuteNonQuery(connection, "DELETE FROM asos WHERE medico_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM tipos_exames WHERE medico_id = @id", id);
+                    ExecuteNonQuery(connection, "UPDATE empregados SET medico_id = NULL WHERE medico_id = @id", id);
+                    ExecuteNonQuery(connection, "UPDATE cats SET medico_id = NULL WHERE medico_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM medicos WHERE id = @id", id);
+                }
+            }
         }
 
         public static void DeleteTiposExames(IEnumerable<int> ids)
         {
-            SoftDeleteByIds("tipos_exames", ids);
+            DeleteByIdsWithChildren("tipos_exames", ids, delegate(MySqlConnection connection, int id)
+            {
+                ExecuteNonQuery(connection, "DELETE FROM aso_exames WHERE tipo_exame_id = @id", id);
+            });
         }
 
         public static void DeleteAmbientes(IEnumerable<int> ids)
         {
-            SoftDeleteByIds("ambientes_trabalho", ids);
+            DeleteByIdsWithChildren("ambientes_trabalho", ids, delegate(MySqlConnection connection, int id)
+            {
+                DeleteEsocialEventos(connection, "S-2240", "SELECT id FROM fatores_risco WHERE ambiente_id = @id", id);
+                ExecuteNonQuery(connection, "DELETE FROM fatores_risco WHERE ambiente_id = @id", id);
+            });
         }
 
         public static List<EmpregadoRecord> GetEmpregados()
@@ -1038,14 +1125,16 @@ namespace SistemaTstLargoTreze
             {
                 foreach (int id in ids)
                 {
-                    using (MySqlCommand command = new MySqlCommand(
-                        @"UPDATE empregados
-                          SET ativo = 0
-                          WHERE id = @id", connection))
-                    {
-                        command.Parameters.AddWithValue("@id", id);
-                        command.ExecuteNonQuery();
-                    }
+                    DeleteEsocialEventos(connection, "S-2210", "SELECT id FROM cats WHERE empregado_id = @id", id);
+                    DeleteEsocialEventos(connection, "S-2220", "SELECT id FROM asos WHERE empregado_id = @id", id);
+                    DeleteEsocialEventos(connection, "S-2240", "SELECT id FROM fatores_risco WHERE empregado_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM cat_testemunhas WHERE cat_id IN (SELECT id FROM cats WHERE empregado_id = @id)", id);
+                    ExecuteNonQuery(connection, "DELETE FROM aso_exames WHERE aso_id IN (SELECT id FROM asos WHERE empregado_id = @id)", id);
+                    ExecuteNonQuery(connection, "DELETE FROM fatores_risco WHERE empregado_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM tipos_exames WHERE empregado_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM asos WHERE empregado_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM cats WHERE empregado_id = @id", id);
+                    ExecuteNonQuery(connection, "DELETE FROM empregados WHERE id = @id", id);
                 }
             }
         }
@@ -1059,7 +1148,7 @@ namespace SistemaTstLargoTreze
                 @"SELECT c.id, c.empregado_id, e.nome AS empregado_nome, c.data_acidente, c.hora_acidente,
                          c.data_comunicacao, c.local_acidente, c.descricao, c.tipo_cat, c.situacao, c.resultado_aso,
                          c.parte_corpo_atingida, c.lateralidade, c.agente_causador, c.cid10, c.natureza_lesao,
-                         c.duracao_tratamento, c.medico_assistente, c.observacao_medica,
+                         c.duracao_tratamento, c.medico_id, c.medico_assistente, c.observacao_medica,
                          c.aposentado, c.area, c.filiacao_prev_social, c.emitente, c.tipo_acidente,
                          c.horas_trabalhadas_antes, c.houve_obito, c.data_obito, c.houve_afastamento,
                          c.registro_policia, c.ultimo_dia_trabalho, c.codificacao_acidente,
@@ -1103,6 +1192,7 @@ namespace SistemaTstLargoTreze
                             WHEN resultado_aso IS NULL
                               OR TRIM(resultado_aso) = ''
                               OR LOWER(TRIM(resultado_aso)) LIKE 'aguardando%'
+                              OR LOWER(TRIM(COALESCE(situacao, ''))) LIKE 'aguardando%'
                             THEN empregado_id
                           END) AS aguardando
                   FROM cats
@@ -1131,7 +1221,7 @@ namespace SistemaTstLargoTreze
                 @"SELECT c.id, c.empregado_id, e.nome AS empregado_nome, c.data_acidente, c.hora_acidente,
                          c.data_comunicacao, c.local_acidente, c.descricao, c.tipo_cat, c.situacao, c.resultado_aso,
                          c.parte_corpo_atingida, c.lateralidade, c.agente_causador, c.cid10, c.natureza_lesao,
-                         c.duracao_tratamento, c.medico_assistente, c.observacao_medica,
+                         c.duracao_tratamento, c.medico_id, c.medico_assistente, c.observacao_medica,
                          c.aposentado, c.area, c.filiacao_prev_social, c.emitente, c.tipo_acidente,
                          c.horas_trabalhadas_antes, c.houve_obito, c.data_obito, c.houve_afastamento,
                          c.registro_policia, c.ultimo_dia_trabalho, c.codificacao_acidente,
@@ -1164,7 +1254,7 @@ namespace SistemaTstLargoTreze
                 @"SELECT c.id, c.empregado_id, e.nome AS empregado_nome, c.data_acidente, c.hora_acidente,
                          c.data_comunicacao, c.local_acidente, c.descricao, c.tipo_cat, c.situacao, c.resultado_aso,
                          c.parte_corpo_atingida, c.lateralidade, c.agente_causador, c.cid10, c.natureza_lesao,
-                         c.duracao_tratamento, c.medico_assistente, c.observacao_medica,
+                         c.duracao_tratamento, c.medico_id, c.medico_assistente, c.observacao_medica,
                          c.aposentado, c.area, c.filiacao_prev_social, c.emitente, c.tipo_acidente,
                          c.horas_trabalhadas_antes, c.houve_obito, c.data_obito, c.houve_afastamento,
                          c.registro_policia, c.ultimo_dia_trabalho, c.codificacao_acidente,
@@ -1196,7 +1286,7 @@ namespace SistemaTstLargoTreze
                             descricao = @descricao, tipo_cat = @tipo_cat, situacao = @situacao, resultado_aso = @resultado_aso,
                             parte_corpo_atingida = @parte_corpo_atingida, lateralidade = @lateralidade,
                             agente_causador = @agente_causador, cid10 = @cid10, natureza_lesao = @natureza_lesao,
-                            duracao_tratamento = @duracao_tratamento, medico_assistente = @medico_assistente,
+                            duracao_tratamento = @duracao_tratamento, medico_id = @medico_id, medico_assistente = @medico_assistente,
                             observacao_medica = @observacao_medica, aposentado = @aposentado, area = @area,
                             filiacao_prev_social = @filiacao_prev_social, emitente = @emitente, tipo_acidente = @tipo_acidente,
                             horas_trabalhadas_antes = @horas_trabalhadas_antes, houve_obito = @houve_obito,
@@ -1210,14 +1300,14 @@ namespace SistemaTstLargoTreze
                             cep = @cep, codigo_postal = @codigo_postal, observacao_cat = @observacao_cat
                         WHERE id = @id"
                     : @"INSERT INTO cats (empregado_id, data_acidente, hora_acidente, data_comunicacao, local_acidente, descricao, tipo_cat, situacao, resultado_aso,
-                            parte_corpo_atingida, lateralidade, agente_causador, cid10, natureza_lesao, duracao_tratamento, medico_assistente, observacao_medica,
+                            parte_corpo_atingida, lateralidade, agente_causador, cid10, natureza_lesao, duracao_tratamento, medico_id, medico_assistente, observacao_medica,
                             aposentado, area, filiacao_prev_social, emitente, tipo_acidente, horas_trabalhadas_antes,
                             houve_obito, data_obito, houve_afastamento, registro_policia, ultimo_dia_trabalho,
                             codificacao_acidente, situacao_geradora, cat_emitida_por, especificacao_local,
                             tipo_logradouro, numero, tipo_inscricao, inscricao_estabelecimento, logradouro, municipio,
                             uf, bairro, complemento, cep, codigo_postal, observacao_cat)
                         VALUES (@empregado_id, @data_acidente, @hora_acidente, @data_comunicacao, @local_acidente, @descricao, @tipo_cat, @situacao, @resultado_aso,
-                            @parte_corpo_atingida, @lateralidade, @agente_causador, @cid10, @natureza_lesao, @duracao_tratamento, @medico_assistente, @observacao_medica,
+                            @parte_corpo_atingida, @lateralidade, @agente_causador, @cid10, @natureza_lesao, @duracao_tratamento, @medico_id, @medico_assistente, @observacao_medica,
                             @aposentado, @area, @filiacao_prev_social, @emitente, @tipo_acidente, @horas_trabalhadas_antes,
                             @houve_obito, @data_obito, @houve_afastamento, @registro_policia, @ultimo_dia_trabalho,
                             @codificacao_acidente, @situacao_geradora, @cat_emitida_por, @especificacao_local,
@@ -1233,13 +1323,14 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@descricao", EmptyToDbNull(cat.Descricao));
                 command.Parameters.AddWithValue("@tipo_cat", EmptyToDbNull(cat.TipoCat));
                 command.Parameters.AddWithValue("@situacao", string.IsNullOrWhiteSpace(cat.Situacao) ? "Aberta" : cat.Situacao);
-                command.Parameters.AddWithValue("@resultado_aso", NormalizarResultadoAso(cat.ResultadoAso));
+                command.Parameters.AddWithValue("@resultado_aso", NormalizarResultadoAso(string.IsNullOrWhiteSpace(cat.ResultadoAso) ? "Aguardando ASO de Retorno" : cat.ResultadoAso));
                 command.Parameters.AddWithValue("@parte_corpo_atingida", EmptyToDbNull(cat.ParteCorpoAtingida));
                 command.Parameters.AddWithValue("@lateralidade", EmptyToDbNull(cat.Lateralidade));
                 command.Parameters.AddWithValue("@agente_causador", EmptyToDbNull(cat.AgenteCausador));
                 command.Parameters.AddWithValue("@cid10", EmptyToDbNull(cat.Cid10));
                 command.Parameters.AddWithValue("@natureza_lesao", EmptyToDbNull(cat.NaturezaLesao));
                 command.Parameters.AddWithValue("@duracao_tratamento", EmptyToDbNull(cat.DuracaoTratamento));
+                command.Parameters.AddWithValue("@medico_id", cat.MedicoId.HasValue && cat.MedicoId.Value > 0 ? (object)cat.MedicoId.Value : DBNull.Value);
                 command.Parameters.AddWithValue("@medico_assistente", EmptyToDbNull(cat.MedicoAssistente));
                 command.Parameters.AddWithValue("@observacao_medica", EmptyToDbNull(cat.ObservacaoMedica));
                 command.Parameters.AddWithValue("@aposentado", cat.Aposentado ? 1 : 0);
@@ -1270,7 +1361,10 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@codigo_postal", EmptyToDbNull(cat.CodigoPostal));
                 command.Parameters.AddWithValue("@observacao_cat", EmptyToDbNull(cat.ObservacaoCat));
                 command.ExecuteNonQuery();
-                return cat.Id > 0 ? cat.Id : (int)command.LastInsertedId;
+                int catId = cat.Id > 0 ? cat.Id : (int)command.LastInsertedId;
+                if (cat.Id <= 0)
+                    AtualizarStatusEmpregadoPorCat(connection, cat.EmpregadoId, cat.HouveAfastamento);
+                return catId;
             }
         }
 
@@ -1306,7 +1400,12 @@ namespace SistemaTstLargoTreze
 
         public static void DeleteCats(IEnumerable<int> ids)
         {
-            SoftDeleteByIds("cats", ids);
+            DeleteByIdsWithChildren("cats", ids, delegate(MySqlConnection connection, int id)
+            {
+                DeleteEsocialEventos(connection, "S-2210", id);
+                ExecuteNonQuery(connection, "UPDATE asos SET cat_id = NULL WHERE cat_id = @id", id);
+                ExecuteNonQuery(connection, "DELETE FROM cat_testemunhas WHERE cat_id = @id", id);
+            });
         }
 
         public static List<CatTestemunhaRecord> GetCatTestemunhas(int catId)
@@ -1350,13 +1449,13 @@ namespace SistemaTstLargoTreze
             List<CatRecord> cats = GetCats(string.Empty);
             foreach (CatRecord cat in cats)
             {
-                RegistrarTransmissaoEvento(
+                if (RegistrarTransmissaoEvento(
                     "S-2210",
                     cat.Id,
                     "CAT " + cat.Id + " - " + cat.EmpregadoNome,
                     "{\"catId\":" + cat.Id + ",\"empregado\":\"" + JsonEscape(cat.EmpregadoNome) + "\",\"resultadoAso\":\"" + JsonEscape(cat.ResultadoAso) + "\"}"
-                );
-                total++;
+                ))
+                    total++;
             }
 
             return total;
@@ -1368,31 +1467,31 @@ namespace SistemaTstLargoTreze
 
             foreach (AsoRecord aso in GetAsos(string.Empty))
             {
-                RegistrarTransmissaoEvento(
+                if (RegistrarTransmissaoEvento(
                     "S-2220",
                     aso.Id,
                     "ASO " + aso.Id + " - " + aso.EmpregadoNome,
                     "{\"asoId\":" + aso.Id + ",\"empregado\":\"" + JsonEscape(aso.EmpregadoNome) + "\",\"medico\":\"" + JsonEscape(aso.MedicoNome) + "\",\"resultado\":\"" + JsonEscape(aso.Resultado) + "\"}"
-                );
-                total++;
+                ))
+                    total++;
             }
 
             foreach (RiskFactorRecord risco in GetFatoresRisco(string.Empty))
             {
                 string trabalhador = string.IsNullOrWhiteSpace(risco.EmpregadoNome) ? risco.AmbienteNome : risco.EmpregadoNome;
-                RegistrarTransmissaoEvento(
+                if (RegistrarTransmissaoEvento(
                     "S-2240",
                     risco.Id,
                     "Fator de risco " + risco.Id + " - " + trabalhador,
                     "{\"fatorRiscoId\":" + risco.Id + ",\"trabalhador\":\"" + JsonEscape(trabalhador) + "\",\"agente\":\"" + JsonEscape(risco.Agente) + "\"}"
-                );
-                total++;
+                ))
+                    total++;
             }
 
             return total;
         }
 
-        private static void RegistrarTransmissaoEvento(string codigoEvento, int origemId, string descricao, string payload)
+        private static bool RegistrarTransmissaoEvento(string codigoEvento, int origemId, string descricao, string payload)
         {
             string protocolo = "P" + DateTime.Now.ToString("yyyyMMddHHmmss") + origemId.ToString("0000");
             string recibo = "R-" + codigoEvento.Replace("-", string.Empty) + "-" + origemId.ToString("000000");
@@ -1401,15 +1500,30 @@ namespace SistemaTstLargoTreze
             {
                 int eventoId;
 
+                using (MySqlCommand existsCommand = new MySqlCommand(
+                    @"SELECT COUNT(*)
+                      FROM esocial_eventos
+                      WHERE codigo_evento = @codigo_evento
+                        AND origem_id = @origem_id
+                        AND status = 'Transmitido'", connection))
+                {
+                    existsCommand.Parameters.AddWithValue("@codigo_evento", codigoEvento);
+                    existsCommand.Parameters.AddWithValue("@origem_id", origemId);
+                    if (Convert.ToInt32(existsCommand.ExecuteScalar()) > 0)
+                        return false;
+                }
+
                 using (MySqlCommand command = new MySqlCommand(
-                    @"INSERT INTO esocial_eventos (codigo_evento, descricao, status, payload, protocolo, recibo, enviado_em)
-                      VALUES (@codigo_evento, @descricao, 'Transmitido', @payload, @protocolo, @recibo, NOW())", connection))
+                    @"INSERT INTO esocial_eventos (codigo_evento, descricao, status, payload, protocolo, recibo, origem_tipo, origem_id, enviado_em)
+                      VALUES (@codigo_evento, @descricao, 'Transmitido', @payload, @protocolo, @recibo, @origem_tipo, @origem_id, NOW())", connection))
                 {
                     command.Parameters.AddWithValue("@codigo_evento", codigoEvento);
                     command.Parameters.AddWithValue("@descricao", descricao);
                     command.Parameters.AddWithValue("@payload", payload);
                     command.Parameters.AddWithValue("@protocolo", protocolo);
                     command.Parameters.AddWithValue("@recibo", recibo);
+                    command.Parameters.AddWithValue("@origem_tipo", codigoEvento);
+                    command.Parameters.AddWithValue("@origem_id", origemId);
                     command.ExecuteNonQuery();
                     eventoId = (int)command.LastInsertedId;
                 }
@@ -1424,6 +1538,8 @@ namespace SistemaTstLargoTreze
                     command.ExecuteNonQuery();
                 }
             }
+
+            return true;
         }
 
         public static List<EsocialTransmissaoRecord> GetEsocialTransmissoes()
@@ -1495,17 +1611,19 @@ namespace SistemaTstLargoTreze
                 asoId = (int)command.LastInsertedId;
             }
 
-            if (aso.CatId.HasValue && aso.CatId.Value > 0)
+            if (aso.CatId.HasValue && aso.CatId.Value > 0 && IsAsoRetornoTrabalho(aso.TipoExame))
             {
                 using (MySqlConnection connection = Database.OpenConnection())
                 using (MySqlCommand command = new MySqlCommand(
                     @"UPDATE cats
                       SET resultado_aso = @resultado_aso,
-                          situacao = 'Avaliada'
+                          situacao = @situacao
                       WHERE id = @cat_id", connection))
                 {
+                    string resultado = NormalizarResultadoAso(aso.Resultado);
                     command.Parameters.AddWithValue("@cat_id", aso.CatId.Value);
-                    command.Parameters.AddWithValue("@resultado_aso", NormalizarResultadoAso(aso.Resultado));
+                    command.Parameters.AddWithValue("@resultado_aso", resultado);
+                    command.Parameters.AddWithValue("@situacao", resultado == "Apto" ? "Encerrada - retorno apto" : "Aguardando novo ASO de retorno");
                     command.ExecuteNonQuery();
                 }
             }
@@ -1668,7 +1786,11 @@ namespace SistemaTstLargoTreze
 
         public static void DeleteAsos(IEnumerable<int> ids)
         {
-            SoftDeleteByIds("asos", ids);
+            DeleteByIdsWithChildren("asos", ids, delegate(MySqlConnection connection, int id)
+            {
+                DeleteEsocialEventos(connection, "S-2220", id);
+                ExecuteNonQuery(connection, "DELETE FROM aso_exames WHERE aso_id = @id", id);
+            });
         }
 
         public static List<RiskFactorRecord> GetFatoresRisco(string termo)
@@ -1725,7 +1847,10 @@ namespace SistemaTstLargoTreze
 
         public static void DeleteFatoresRisco(IEnumerable<int> ids)
         {
-            SoftDeleteByIds("fatores_risco", ids);
+            DeleteByIdsWithChildren("fatores_risco", ids, delegate(MySqlConnection connection, int id)
+            {
+                DeleteEsocialEventos(connection, "S-2240", id);
+            });
         }
 
         public static RiskFactorRecord GetFatorRisco(int id)
@@ -1791,6 +1916,76 @@ namespace SistemaTstLargoTreze
             }
         }
 
+        private static void DeleteByIdsWithChildren(string tableName, IEnumerable<int> ids, Action<MySqlConnection, int> beforeDelete)
+        {
+            using (MySqlConnection connection = Database.OpenConnection())
+            {
+                foreach (int id in ids)
+                {
+                    if (beforeDelete != null)
+                        beforeDelete(connection, id);
+
+                    ExecuteNonQuery(connection, "DELETE FROM " + tableName + " WHERE id = @id", id);
+                }
+            }
+        }
+
+        private static void ExecuteNonQuery(MySqlConnection connection, string sql, int id)
+        {
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private static void DeleteEsocialEventos(MySqlConnection connection, string codigoEvento, int origemId)
+        {
+            using (MySqlCommand command = new MySqlCommand(
+                @"DELETE l
+                  FROM esocial_logs l
+                  INNER JOIN esocial_eventos e ON e.id = l.evento_id
+                  WHERE e.codigo_evento = @codigo_evento
+                    AND e.origem_id = @origem_id", connection))
+            {
+                command.Parameters.AddWithValue("@codigo_evento", codigoEvento);
+                command.Parameters.AddWithValue("@origem_id", origemId);
+                command.ExecuteNonQuery();
+            }
+
+            using (MySqlCommand command = new MySqlCommand(
+                @"DELETE FROM esocial_eventos
+                  WHERE codigo_evento = @codigo_evento
+                    AND origem_id = @origem_id", connection))
+            {
+                command.Parameters.AddWithValue("@codigo_evento", codigoEvento);
+                command.Parameters.AddWithValue("@origem_id", origemId);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private static void DeleteEsocialEventos(MySqlConnection connection, string codigoEvento, string selectOrigemIdsSql, int ownerId)
+        {
+            List<int> origemIds = new List<int>();
+
+            using (MySqlCommand command = new MySqlCommand(selectOrigemIdsSql, connection))
+            {
+                command.Parameters.AddWithValue("@id", ownerId);
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        origemIds.Add(reader.GetInt32(0));
+                    }
+                }
+            }
+
+            foreach (int origemId in origemIds)
+            {
+                DeleteEsocialEventos(connection, codigoEvento, origemId);
+            }
+        }
+
         private static AsoRecord ReadAso(MySqlDataReader reader)
         {
             return new AsoRecord
@@ -1823,13 +2018,14 @@ namespace SistemaTstLargoTreze
                 Descricao = reader.IsDBNull(reader.GetOrdinal("descricao")) ? string.Empty : reader.GetString("descricao"),
                 TipoCat = reader.IsDBNull(reader.GetOrdinal("tipo_cat")) ? string.Empty : reader.GetString("tipo_cat"),
                 Situacao = reader.GetString("situacao"),
-                ResultadoAso = reader.IsDBNull(reader.GetOrdinal("resultado_aso")) ? "Aguardando ASO" : reader.GetString("resultado_aso"),
+                ResultadoAso = reader.IsDBNull(reader.GetOrdinal("resultado_aso")) ? "Aguardando ASO de Retorno" : reader.GetString("resultado_aso"),
                 ParteCorpoAtingida = ReaderString(reader, "parte_corpo_atingida"),
                 Lateralidade = ReaderString(reader, "lateralidade"),
                 AgenteCausador = ReaderString(reader, "agente_causador"),
                 Cid10 = ReaderString(reader, "cid10"),
                 NaturezaLesao = ReaderString(reader, "natureza_lesao"),
                 DuracaoTratamento = ReaderString(reader, "duracao_tratamento"),
+                MedicoId = reader.IsDBNull(reader.GetOrdinal("medico_id")) ? (int?)null : reader.GetInt32("medico_id"),
                 MedicoAssistente = ReaderString(reader, "medico_assistente"),
                 ObservacaoMedica = ReaderString(reader, "observacao_medica"),
                 Aposentado = ReaderBool(reader, "aposentado"),
@@ -1904,7 +2100,7 @@ namespace SistemaTstLargoTreze
         private static string NormalizarResultadoAso(string resultado)
         {
             if (string.IsNullOrWhiteSpace(resultado))
-                return "Aguardando ASO";
+                return "Aguardando ASO de Retorno";
 
             string valor = resultado.Trim();
 
@@ -1915,9 +2111,31 @@ namespace SistemaTstLargoTreze
                 return "Inapto";
 
             if (valor.StartsWith("aguardando", StringComparison.OrdinalIgnoreCase))
-                return "Aguardando ASO";
+                return "Aguardando ASO de Retorno";
 
             return valor;
+        }
+
+        private static bool IsAsoRetornoTrabalho(string tipoExame)
+        {
+            return !string.IsNullOrWhiteSpace(tipoExame) &&
+                   tipoExame.IndexOf("retorno", StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static void AtualizarStatusEmpregadoPorCat(MySqlConnection connection, int empregadoId, bool houveAfastamento)
+        {
+            using (MySqlCommand command = new MySqlCommand(
+                @"UPDATE empregados
+                  SET status_aso = @status_aso
+                  WHERE id = @empregado_id
+                    AND (status_aso IS NULL
+                      OR status_aso = ''
+                      OR status_aso IN ('Pendente', 'Vigente', 'A vencer', 'Vencido', 'Apto'))", connection))
+            {
+                command.Parameters.AddWithValue("@empregado_id", empregadoId);
+                command.Parameters.AddWithValue("@status_aso", houveAfastamento ? "Aguardando retorno" : "CAT aberta");
+                command.ExecuteNonQuery();
+            }
         }
 
         private static object DateToDbNull(string value)

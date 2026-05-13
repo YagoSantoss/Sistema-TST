@@ -288,6 +288,7 @@ namespace SistemaTstLargoTreze
 
             cardApto.Cursor = Cursors.Hand;
             cardApto.Click += ResultadoApto_Click;
+            cardApto.MouseDown += ResultadoApto_MouseDown;
             form.Controls.Add(cardApto);
 
             cardApto.Controls.Add(
@@ -328,6 +329,7 @@ namespace SistemaTstLargoTreze
 
             cardInapto.Cursor = Cursors.Hand;
             cardInapto.Click += ResultadoInapto_Click;
+            cardInapto.MouseDown += ResultadoInapto_MouseDown;
             form.Controls.Add(cardInapto);
 
             cardInapto.Controls.Add(
@@ -356,7 +358,22 @@ namespace SistemaTstLargoTreze
                 )
             );
 
+            TornarCardResultadoClicavel(cardApto, ResultadoApto_Click, ResultadoApto_MouseDown);
+            TornarCardResultadoClicavel(cardInapto, ResultadoInapto_Click, ResultadoInapto_MouseDown);
             SelecionarResultado("Apto");
+        }
+
+        private void TornarCardResultadoClicavel(Control parent, System.EventHandler clickHandler, MouseEventHandler mouseDownHandler)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                control.Cursor = Cursors.Hand;
+                control.Click += clickHandler;
+                control.MouseDown += mouseDownHandler;
+
+                if (control.Controls.Count > 0)
+                    TornarCardResultadoClicavel(control, clickHandler, mouseDownHandler);
+            }
         }
 
         private void MontarMedicoObservacoes(RoundPanel form, int largura)
@@ -477,7 +494,6 @@ namespace SistemaTstLargoTreze
             combo.Items.Add("Demissional - Tabela 27");
             combo.Items.Add("Retorno ao trabalho - Tabela 27");
             combo.Items.Add("Mudanca de risco - Tabela 27");
-            combo.Items.Add("Relacionado a CAT - Tabela 27");
             return combo;
         }
 

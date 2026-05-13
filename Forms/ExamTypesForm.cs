@@ -54,11 +54,11 @@ namespace SistemaTstLargoTreze
         {
             if (_selecionados.Count == 0)
             {
-                MessageBox.Show("Selecione um ou mais tipos de exame para excluir.", "Tipos de Exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione um ou mais exames realizados para excluir.", "Exames Realizados", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show("Deseja excluir os tipos de exame selecionados?", "Tipos de Exame", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBox.Show("Deseja excluir os exames realizados selecionados?", "Exames Realizados", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
             try
@@ -69,7 +69,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Tipos de Exame", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Exames Realizados", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

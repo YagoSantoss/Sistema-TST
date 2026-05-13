@@ -66,6 +66,9 @@ CREATE TABLE IF NOT EXISTS tipos_exames (
     tipo VARCHAR(80) NOT NULL,
     periodicidade VARCHAR(80) NOT NULL,
     anexo_imagem VARCHAR(500),
+    anexo_nome VARCHAR(255),
+    anexo_tipo VARCHAR(100),
+    anexo_arquivo LONGBLOB,
     empregado_id INT NULL,
     medico_id INT NULL,
     ativo TINYINT(1) NOT NULL DEFAULT 1,
@@ -168,13 +171,14 @@ CREATE TABLE IF NOT EXISTS cats (
     observacao_cat TEXT,
     tipo_cat VARCHAR(80),
     situacao VARCHAR(40) NOT NULL DEFAULT 'Aberta',
-    resultado_aso VARCHAR(40) NOT NULL DEFAULT 'Aguardando ASO',
+    resultado_aso VARCHAR(40) NOT NULL DEFAULT 'Aguardando ASO de Retorno',
     parte_corpo_atingida VARCHAR(180),
     lateralidade VARCHAR(80),
     agente_causador VARCHAR(180),
     cid10 VARCHAR(80),
     natureza_lesao VARCHAR(180),
     duracao_tratamento VARCHAR(80),
+    medico_id INT NULL,
     medico_assistente VARCHAR(180),
     observacao_medica TEXT,
     ativo TINYINT(1) NOT NULL DEFAULT 1,
@@ -183,6 +187,10 @@ CREATE TABLE IF NOT EXISTS cats (
     INDEX idx_cats_empregado (empregado_id),
     CONSTRAINT fk_cats_empregado
         FOREIGN KEY (empregado_id) REFERENCES empregados (id)
+        ON DELETE RESTRICT,
+    CONSTRAINT fk_cats_medico
+        FOREIGN KEY (medico_id) REFERENCES medicos (id)
+        ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS cat_testemunhas (
@@ -235,9 +243,12 @@ CREATE TABLE IF NOT EXISTS esocial_eventos (
     payload JSON,
     protocolo VARCHAR(100),
     recibo VARCHAR(100),
+    origem_tipo VARCHAR(30),
+    origem_id INT,
     criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     enviado_em DATETIME,
-    atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP
+    atualizado_em DATETIME NULL ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY uk_esocial_origem (codigo_evento, origem_id)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS esocial_logs (

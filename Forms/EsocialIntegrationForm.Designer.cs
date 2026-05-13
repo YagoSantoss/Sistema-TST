@@ -20,8 +20,8 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "Integracao eSocial",
-                "Controle interno e simulacao de eventos SST",
+                "eSocial SST - Simulado",
+                "Controle didatico dos eventos S-2210, S-2220 e S-2240",
                 DashboardMenu.Esocial
             );
 
@@ -75,9 +75,9 @@ namespace SistemaTstLargoTreze
                 margem + larguraCardMetrica + espacamento,
                 18,
                 larguraCardMetrica,
-                "APTOS",
+                "RETORNOS APTOS",
                 resumo.Aptos.ToString(),
-                resumo.Aptos == 1 ? "empregado apto" : "empregados aptos",
+                resumo.Aptos == 1 ? "retorno apto" : "retornos aptos",
                 UiColors.Green,
                 Color.FromArgb(217, 248, 234)
             );
@@ -87,9 +87,9 @@ namespace SistemaTstLargoTreze
                 margem + ((larguraCardMetrica + espacamento) * 2),
                 18,
                 larguraCardMetrica,
-                "AGUARDANDO",
+                "AGUARDANDO ASO",
                 resumo.Aguardando.ToString(),
-                resumo.Aguardando == 1 ? "empregado pendente" : "empregados pendentes",
+                resumo.Aguardando == 1 ? "pendente" : "pendentes",
                 UiColors.Orange,
                 Color.FromArgb(255, 246, 206)
             );
@@ -99,9 +99,9 @@ namespace SistemaTstLargoTreze
                 margem + ((larguraCardMetrica + espacamento) * 3),
                 18,
                 larguraCardMetrica,
-                "INAPTOS",
+                "RETORNOS INAPTOS",
                 resumo.Inaptos.ToString(),
-                resumo.Inaptos == 1 ? "empregado inapto" : "empregados inaptos",
+                resumo.Inaptos == 1 ? "retorno inapto" : "retornos inaptos",
                 UiColors.Red,
                 Color.FromArgb(255, 230, 232)
             );
@@ -194,9 +194,13 @@ namespace SistemaTstLargoTreze
         private void MontarPainelEventos(int largura)
         {
             List<CatRecord> cats = CarregarCatsEsocial();
-            int alturaEventos = 70 + (cats.Count * 42) + 20;
-            if (alturaEventos < 250)
-                alturaEventos = 250;
+            List<AsoRecord> asos = CarregarAsosEsocial();
+            List<RiskFactorRecord> riscos = CarregarRiscosEsocial();
+
+            int totalEventos = cats.Count + asos.Count + riscos.Count;
+            int alturaEventos = 98 + (totalEventos * 42) + 20;
+            if (alturaEventos < 310)
+                alturaEventos = 310;
             _logTop = 120 + alturaEventos + 20;
 
             RoundPanel eventsCard = UiBuilder.Card(18, 120, largura, alturaEventos);
@@ -205,7 +209,7 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(
                 UiBuilder.Label(
-                    "Controle interno eSocial - Indicadores de CAT",
+                    "Eventos SST para aprendizagem e simulação",
                     16,
                     14,
                     largura - 260,
@@ -239,6 +243,19 @@ namespace SistemaTstLargoTreze
                 UiColors.BodyText
             );
 
+            eventsCard.Controls.Add(
+                UiBuilder.Label(
+                    "Este painel nao envia ao governo; ele simula a organizacao dos eventos usados em sistemas como SOC/TOTVS.",
+                    16,
+                    32,
+                    largura - 260,
+                    16,
+                    7.3F,
+                    FontStyle.Regular,
+                    UiColors.MutedText
+                )
+            );
+
             btnSincronizar.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnSincronizar.BorderColor = UiColors.Border;
             btnSincronizar.Click += BtnSincronizar_Click;
@@ -246,7 +263,7 @@ namespace SistemaTstLargoTreze
 
             Panel divider = new Panel
             {
-                Location = new Point(0, 52),
+                Location = new Point(0, 66),
                 Size = new Size(largura, 1),
                 BackColor = UiColors.Border,
                 Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right
@@ -256,23 +273,34 @@ namespace SistemaTstLargoTreze
 
             try
             {
-                if (cats.Count == 0)
+                if (totalEventos == 0)
                 {
-                    eventsCard.Controls.Add(UiBuilder.CenterLabel("Nenhuma CAT gerada", 0, 130, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    eventsCard.Controls.Add(UiBuilder.CenterLabel("Nenhum evento SST cadastrado", 0, 145, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
                     return;
                 }
 
-                int y = 70;
-                for (int i = 0; i < cats.Count; i++)
+                int y = 84;
+                foreach (CatRecord cat in cats)
                 {
-                    CatRecord cat = cats[i];
                     AddCatEventRow(eventsCard, largura, y, cat);
+                    y += 42;
+                }
+
+                foreach (AsoRecord aso in asos)
+                {
+                    AddAsoEventRow(eventsCard, largura, y, aso);
+                    y += 42;
+                }
+
+                foreach (RiskFactorRecord risco in riscos)
+                {
+                    AddRiskEventRow(eventsCard, largura, y, risco);
                     y += 42;
                 }
             }
             catch
             {
-                eventsCard.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar as CATs do MySQL", 0, 130, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                eventsCard.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os eventos SST do MySQL", 0, 145, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -285,6 +313,30 @@ namespace SistemaTstLargoTreze
             catch
             {
                 return new List<CatRecord>();
+            }
+        }
+
+        private List<AsoRecord> CarregarAsosEsocial()
+        {
+            try
+            {
+                return CadastrosRepository.GetAsos(string.Empty);
+            }
+            catch
+            {
+                return new List<AsoRecord>();
+            }
+        }
+
+        private List<RiskFactorRecord> CarregarRiscosEsocial()
+        {
+            try
+            {
+                return CadastrosRepository.GetFatoresRisco(string.Empty);
+            }
+            catch
+            {
+                return new List<RiskFactorRecord>();
             }
         }
 
@@ -301,7 +353,7 @@ namespace SistemaTstLargoTreze
 
             logCard.Controls.Add(
                 UiBuilder.Label(
-                    "Log interno de transmissoes",
+                    "Log interno de transmissoes simuladas",
                     16,
                     12,
                     largura - 420,
@@ -309,6 +361,19 @@ namespace SistemaTstLargoTreze
                     9F,
                     FontStyle.Bold,
                     UiColors.AccentBlue
+                )
+            );
+
+            logCard.Controls.Add(
+                UiBuilder.Label(
+                    "Use o log para treinar consulta por data, protocolo, recibo e status do evento.",
+                    16,
+                    29,
+                    largura - 420,
+                    16,
+                    7.2F,
+                    FontStyle.Regular,
+                    UiColors.MutedText
                 )
             );
 
@@ -415,7 +480,7 @@ namespace SistemaTstLargoTreze
         {
             string status = string.IsNullOrWhiteSpace(cat.ResultadoAso) ? "Aguardando" : cat.ResultadoAso;
             Color color = StatusColor(status);
-            string subtitle = cat.DataAcidente + " - " + status;
+            string subtitle = "Acidente em " + cat.DataAcidente + " - " + status;
 
             AddEventRow(
                 parent,
@@ -431,6 +496,45 @@ namespace SistemaTstLargoTreze
             );
         }
 
+        private void AddAsoEventRow(Panel parent, int largura, int y, AsoRecord aso)
+        {
+            string status = string.IsNullOrWhiteSpace(aso.Resultado) ? "Pendente" : aso.Resultado;
+            Color color = StatusColor(status);
+            string subtitle = aso.DataAso + " - " + aso.TipoExame;
+
+            AddEventRow(
+                parent,
+                largura,
+                y,
+                "S-2220",
+                "ASO " + aso.Id + " - " + aso.EmpregadoNome,
+                subtitle,
+                status,
+                color,
+                "Abrir ASO",
+                delegate { AppNavigator.Show(new AsoHistoryForm(aso.EmpregadoId)); }
+            );
+        }
+
+        private void AddRiskEventRow(Panel parent, int largura, int y, RiskFactorRecord risco)
+        {
+            string trabalhador = string.IsNullOrWhiteSpace(risco.EmpregadoNome) ? risco.AmbienteNome : risco.EmpregadoNome;
+            string subtitle = risco.TipoFator + " - " + risco.Agente;
+
+            AddEventRow(
+                parent,
+                largura,
+                y,
+                "S-2240",
+                "Fator " + risco.Id + " - " + trabalhador,
+                subtitle,
+                "Pronto",
+                UiColors.AccentBlue,
+                "Abrir Risco",
+                delegate { AppNavigator.Show(new RiskFactorsForm(risco.Id)); }
+            );
+        }
+
         private Color StatusColor(string status)
         {
             string value = (status ?? string.Empty).Trim().ToLowerInvariant();
@@ -442,6 +546,9 @@ namespace SistemaTstLargoTreze
 
             if (value.StartsWith("transmitido") || value.StartsWith("aceito"))
                 return UiColors.Green;
+
+            if (value.StartsWith("pronto"))
+                return UiColors.AccentBlue;
 
             return UiColors.Orange;
         }
@@ -485,7 +592,7 @@ namespace SistemaTstLargoTreze
             );
 
             int buttonW = 112;
-            int statusW = 90;
+            int statusW = 150;
             int titleX = 85;
             int titleW = rowW - titleX - buttonW - statusW - 45;
 

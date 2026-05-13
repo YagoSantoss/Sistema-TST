@@ -74,7 +74,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(card, "Vencimento ASO", txtVencimentoAso, 212, 244, 170, false);
 
             cmbStatusAso = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList, Font = new Font("Segoe UI", 9F) };
-            cmbStatusAso.Items.AddRange(new[] { "Pendente", "Vigente", "A vencer", "Vencido" });
+            cmbStatusAso.Items.AddRange(new[] { "Pendente", "Vigente", "A vencer", "Vencido", "CAT aberta", "Aguardando retorno", "Apto", "Inapto" });
             cmbStatusAso.SelectedIndex = 0;
             UiBuilder.AddField(card, "Status ASO", cmbStatusAso, 402, 244, 190, false);
 

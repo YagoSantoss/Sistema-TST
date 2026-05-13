@@ -32,7 +32,8 @@ namespace SistemaTstLargoTreze
                 cat.Cid10 = txtCid10.Text.Trim();
                 cat.NaturezaLesao = txtNaturezaLesao.Text.Trim();
                 cat.DuracaoTratamento = txtDuracaoTratamento.Text.Trim();
-                cat.MedicoAssistente = txtMedicoAssistente.Text.Trim();
+                cat.MedicoId = MedicoAssistenteId();
+                cat.MedicoAssistente = TextoMedicoAssistente();
                 cat.ObservacaoMedica = txtObservacaoMedica.Text.Trim();
 
                 int catId = CadastrosRepository.SaveCat(cat);
@@ -92,7 +93,7 @@ namespace SistemaTstLargoTreze
                 CodigoPostal = draft.CodigoPostal,
                 ObservacaoCat = draft.ObservacaoCat,
                 Situacao = "Aberta",
-                ResultadoAso = "Aguardando ASO"
+                ResultadoAso = "Aguardando ASO de Retorno"
             };
         }
 
@@ -111,7 +112,10 @@ namespace SistemaTstLargoTreze
             txtCid10.Text = cat.Cid10;
             txtNaturezaLesao.Text = cat.NaturezaLesao;
             txtDuracaoTratamento.Text = cat.DuracaoTratamento;
-            txtMedicoAssistente.Text = cat.MedicoAssistente;
+            if (cat.MedicoId.HasValue && cat.MedicoId.Value > 0)
+                SelecionarMedicoPorId(cat.MedicoId.Value);
+            else
+                SelecionarMedico(cat.MedicoAssistente);
             txtObservacaoMedica.Text = cat.ObservacaoMedica;
         }
 
@@ -123,6 +127,97 @@ namespace SistemaTstLargoTreze
         private void BtnAdicionarMedico_Click(object sender, EventArgs e)
         {
             AppNavigator.Show(new DoctorsForm());
+        }
+
+        private void CmbMedicoAssistente_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboItem item = cmbMedicoAssistente == null ? null : cmbMedicoAssistente.SelectedItem as ComboItem;
+            if (item != null && item.Id > 0)
+                cmbMedicoAssistente.Text = item.Text;
+        }
+
+        private void CmbMedicoAssistente_Leave(object sender, EventArgs e)
+        {
+            SelecionarMedico(cmbMedicoAssistente == null ? string.Empty : cmbMedicoAssistente.Text);
+        }
+
+        private string TextoMedicoAssistente()
+        {
+            ComboItem item = cmbMedicoAssistente == null ? null : cmbMedicoAssistente.SelectedItem as ComboItem;
+            if (item != null && item.Id > 0)
+                return item.Text;
+
+            string texto = cmbMedicoAssistente == null ? string.Empty : cmbMedicoAssistente.Text.Trim();
+            if (texto == "Digite o nome ou CRM do medico" || texto == "Nenhum medico cadastrado" || texto == "MySQL indisponivel")
+                return string.Empty;
+
+            return texto;
+        }
+
+        private int? MedicoAssistenteId()
+        {
+            ComboItem item = cmbMedicoAssistente == null ? null : cmbMedicoAssistente.SelectedItem as ComboItem;
+            return item != null && item.Id > 0 ? (int?)item.Id : null;
+        }
+
+        private void SelecionarMedicoPorId(int medicoId)
+        {
+            if (cmbMedicoAssistente == null)
+                return;
+
+            for (int i = 0; i < cmbMedicoAssistente.Items.Count; i++)
+            {
+                ComboItem item = cmbMedicoAssistente.Items[i] as ComboItem;
+                if (item != null && item.Id == medicoId)
+                {
+                    cmbMedicoAssistente.SelectedIndex = i;
+                    cmbMedicoAssistente.Text = item.Text;
+                    return;
+                }
+            }
+        }
+
+        private void SelecionarMedico(string texto)
+        {
+            if (cmbMedicoAssistente == null || string.IsNullOrWhiteSpace(texto))
+                return;
+
+            string busca = NormalizarMedicoBusca(texto);
+            for (int i = 0; i < cmbMedicoAssistente.Items.Count; i++)
+            {
+                ComboItem item = cmbMedicoAssistente.Items[i] as ComboItem;
+                if (item == null || item.Id <= 0)
+                    continue;
+
+                string itemBusca = NormalizarMedicoBusca(item.Text);
+                if (itemBusca == busca || itemBusca.Contains(busca))
+                {
+                    cmbMedicoAssistente.SelectedIndex = i;
+                    cmbMedicoAssistente.Text = item.Text;
+                    return;
+                }
+            }
+
+            cmbMedicoAssistente.Text = texto.Trim();
+        }
+
+        private string TextoMedico(MedicoRecord medico)
+        {
+            string crm = string.IsNullOrWhiteSpace(medico.Crm) ? string.Empty : " - CRM " + medico.Crm;
+            string uf = string.IsNullOrWhiteSpace(medico.UfExpedidor) ? string.Empty : "/" + medico.UfExpedidor;
+            return medico.Nome + crm + uf;
+        }
+
+        private string NormalizarMedicoBusca(string texto)
+        {
+            return (texto ?? string.Empty)
+                .Replace("CRM", string.Empty)
+                .Replace("-", string.Empty)
+                .Replace("/", string.Empty)
+                .Replace(".", string.Empty)
+                .Replace(" ", string.Empty)
+                .Trim()
+                .ToLowerInvariant();
         }
 
         private void TabDados_Click(object sender, EventArgs e)
