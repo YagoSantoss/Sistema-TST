@@ -167,6 +167,8 @@ CREATE TABLE IF NOT EXISTS cats (
     complemento VARCHAR(120),
     cep VARCHAR(20),
     codigo_postal VARCHAR(30),
+    razao_social_empregador VARCHAR(255),
+    cnae_empregador VARCHAR(255),
     descricao TEXT,
     observacao_cat TEXT,
     tipo_cat VARCHAR(80),

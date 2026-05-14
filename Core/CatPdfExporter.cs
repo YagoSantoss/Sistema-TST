@@ -51,8 +51,8 @@ namespace SistemaTstLargoTreze
 
             AddPlainSection(content, "Informacoes do Empregador", ref y);
             AddFormRow(content, ref y, 16,
-                "Razao Social/Nome", "SISTEMA TST LARGO TREZE",
-                "CNAE", string.Empty);
+                "Razao Social/Nome", EmpregadorNome(cat),
+                "CNAE", cat.CnaeEmpregador);
             AddFormRow(content, ref y, 16,
                 "Tipo/Num Doc", cat.TipoInscricao + " " + cat.InscricaoEstabelecimento,
                 "Telefone", string.Empty);
@@ -207,6 +207,15 @@ namespace SistemaTstLargoTreze
             AddText(content, "Numero da CAT:", Margin + 182, y - 36, 11, false, "0 0 0");
             AddText(content, cat.Id.ToString(), Margin + 275, y - 36, 11, true, "0 0 0");
             y -= 78;
+        }
+
+        private static string EmpregadorNome(CatRecord cat)
+        {
+            if (!string.IsNullOrWhiteSpace(cat.RazaoSocialEmpregador))
+                return cat.RazaoSocialEmpregador;
+
+            string documento = (cat.TipoInscricao + " " + cat.InscricaoEstabelecimento).Trim();
+            return string.IsNullOrWhiteSpace(documento) ? string.Empty : documento;
         }
 
         private static void AddPlainSection(StringBuilder content, string title, ref double y)

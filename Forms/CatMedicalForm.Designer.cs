@@ -178,17 +178,18 @@ namespace SistemaTstLargoTreze
             form.Controls.Add(new Panel { Location = new Point(0, 58), Size = new Size(largura, 1), BackColor = UiColors.Border, Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right });
             AddTab(form, "DADOS CADASTRAIS", 18, activeTab == 0, TabDados_Click);
             AddTab(form, "TESTEMUNHAS", 190, activeTab == 1, TabTestemunhas_Click);
-            AddTab(form, "DADOS COMPLEMENTARES", 320, activeTab == 2, TabComplementares_Click);
+            AddTab(form, "DADOS COMPLEMENTARES", 370, activeTab == 2, TabComplementares_Click);
         }
 
         private void AddTab(Panel form, string text, int x, bool active, System.EventHandler handler)
         {
-            Button tab = new Button { Text = text, Location = new Point(x, 72), Size = new Size(165, 28), FlatStyle = FlatStyle.Flat, BackColor = Color.White, ForeColor = active ? UiColors.AccentBlue : UiColors.MutedText, Font = new Font("Segoe UI", 8F, FontStyle.Bold), Cursor = Cursors.Hand };
+            int larguraTab = text.Contains("COMPLEMENTARES") ? 225 : 165;
+            Button tab = new Button { Text = text, Location = new Point(x, 72), Size = new Size(larguraTab, 28), FlatStyle = FlatStyle.Flat, BackColor = Color.White, ForeColor = active ? UiColors.AccentBlue : UiColors.MutedText, Font = new Font("Segoe UI", 8F, FontStyle.Bold), Cursor = Cursors.Hand };
             tab.FlatAppearance.BorderSize = 0;
             tab.Click += handler;
             form.Controls.Add(tab);
             if (active)
-                form.Controls.Add(new Panel { Location = new Point(x, 101), Size = new Size(165, 2), BackColor = UiColors.Orange });
+                form.Controls.Add(new Panel { Location = new Point(x, 101), Size = new Size(larguraTab, 2), BackColor = UiColors.Orange });
         }
     }
 }

@@ -80,6 +80,7 @@ namespace SistemaTstLargoTreze
             AddRow(content, "Data de avaliacao", risco.DataAvaliacao, "Inicio da exposicao", risco.InicioExposicao, ref y);
             AddRow(content, "Fim da exposicao", risco.FimExposicao, "Usa EPI", risco.UsaEpi ? "Sim" : "Nao", ref y);
             AddFullRow(content, "EPI eficaz", risco.EpiEficaz ? "Sim" : "Nao", ref y);
+            AddFullRow(content, "EPIs selecionados", risco.EpisSelecionados, ref y);
             AddTextBox(content, "Descricao das atividades", risco.DescricaoAtividades, ref y, 92);
             AddSignature(content, "Responsavel tecnico", ref y);
             AddFooter(content, "Fator de risco " + risco.Id);

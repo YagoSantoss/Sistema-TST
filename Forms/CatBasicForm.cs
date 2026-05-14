@@ -6,6 +6,8 @@ namespace SistemaTstLargoTreze
     public partial class CatBasicForm : DashboardFormBase
     {
         private readonly int _catId;
+        private string _razaoSocialEmpregador = string.Empty;
+        private string _cnaeEmpregador = string.Empty;
 
         public CatBasicForm()
             : this(0)
@@ -79,6 +81,8 @@ namespace SistemaTstLargoTreze
                 txtBairro.Text = empresa.Bairro;
                 txtMunicipio.Text = empresa.Municipio;
                 txtUf.Text = empresa.Uf;
+                _razaoSocialEmpregador = empresa.RazaoSocial;
+                _cnaeEmpregador = empresa.CnaeDescricao;
 
                 MessageBox.Show(
                     "CNPJ encontrado.\n\nRazao social: " + empresa.RazaoSocial +

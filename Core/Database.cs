@@ -188,6 +188,9 @@ namespace SistemaTstLargoTreze
             EnsureColumn(connection, "cats", "cep", "VARCHAR(20) NULL");
             EnsureColumn(connection, "cats", "codigo_postal", "VARCHAR(30) NULL");
             EnsureColumn(connection, "cats", "observacao_cat", "TEXT NULL");
+            EnsureColumn(connection, "cats", "razao_social_empregador", "VARCHAR(255) NULL");
+            EnsureColumn(connection, "cats", "cnae_empregador", "VARCHAR(255) NULL");
+            EnsureColumn(connection, "fatores_risco", "epi_descricao", "TEXT NULL");
             EnsureColumn(connection, "esocial_eventos", "origem_tipo", "VARCHAR(30) NULL");
             EnsureColumn(connection, "esocial_eventos", "origem_id", "INT NULL");
             EnsureCatTestemunhasTable(connection);
@@ -392,6 +395,8 @@ namespace SistemaTstLargoTreze
         public string Cep { get; set; }
         public string CodigoPostal { get; set; }
         public string ObservacaoCat { get; set; }
+        public string RazaoSocialEmpregador { get; set; }
+        public string CnaeEmpregador { get; set; }
     }
 
     public sealed class CatTestemunhaRecord
@@ -446,6 +451,7 @@ namespace SistemaTstLargoTreze
         public string DescricaoAtividades { get; set; }
         public bool UsaEpi { get; set; }
         public bool EpiEficaz { get; set; }
+        public string EpisSelecionados { get; set; }
     }
 
     public sealed class CatStatusResumo
@@ -1154,7 +1160,8 @@ namespace SistemaTstLargoTreze
                          c.registro_policia, c.ultimo_dia_trabalho, c.codificacao_acidente,
                          c.situacao_geradora, c.cat_emitida_por, c.especificacao_local, c.tipo_logradouro,
                          c.numero, c.tipo_inscricao, c.inscricao_estabelecimento, c.logradouro, c.municipio,
-                         c.uf, c.bairro, c.complemento, c.cep, c.codigo_postal, c.observacao_cat
+                         c.uf, c.bairro, c.complemento, c.cep, c.codigo_postal, c.observacao_cat,
+                         c.razao_social_empregador, c.cnae_empregador
                   FROM cats c
                   INNER JOIN empregados e ON e.id = c.empregado_id
                   WHERE c.ativo = 1
@@ -1227,7 +1234,8 @@ namespace SistemaTstLargoTreze
                          c.registro_policia, c.ultimo_dia_trabalho, c.codificacao_acidente,
                          c.situacao_geradora, c.cat_emitida_por, c.especificacao_local, c.tipo_logradouro,
                          c.numero, c.tipo_inscricao, c.inscricao_estabelecimento, c.logradouro, c.municipio,
-                         c.uf, c.bairro, c.complemento, c.cep, c.codigo_postal, c.observacao_cat
+                         c.uf, c.bairro, c.complemento, c.cep, c.codigo_postal, c.observacao_cat,
+                         c.razao_social_empregador, c.cnae_empregador
                   FROM cats c
                   INNER JOIN empregados e ON e.id = c.empregado_id
                   WHERE c.ativo = 1 AND c.empregado_id = @empregado_id
@@ -1260,7 +1268,8 @@ namespace SistemaTstLargoTreze
                          c.registro_policia, c.ultimo_dia_trabalho, c.codificacao_acidente,
                          c.situacao_geradora, c.cat_emitida_por, c.especificacao_local, c.tipo_logradouro,
                          c.numero, c.tipo_inscricao, c.inscricao_estabelecimento, c.logradouro, c.municipio,
-                         c.uf, c.bairro, c.complemento, c.cep, c.codigo_postal, c.observacao_cat
+                         c.uf, c.bairro, c.complemento, c.cep, c.codigo_postal, c.observacao_cat,
+                         c.razao_social_empregador, c.cnae_empregador
                   FROM cats c
                   INNER JOIN empregados e ON e.id = c.empregado_id
                   WHERE c.ativo = 1 AND c.id = @id
@@ -1297,7 +1306,8 @@ namespace SistemaTstLargoTreze
                             numero = @numero, tipo_inscricao = @tipo_inscricao,
                             inscricao_estabelecimento = @inscricao_estabelecimento, logradouro = @logradouro,
                             municipio = @municipio, uf = @uf, bairro = @bairro, complemento = @complemento,
-                            cep = @cep, codigo_postal = @codigo_postal, observacao_cat = @observacao_cat
+                            cep = @cep, codigo_postal = @codigo_postal, observacao_cat = @observacao_cat,
+                            razao_social_empregador = @razao_social_empregador, cnae_empregador = @cnae_empregador
                         WHERE id = @id"
                     : @"INSERT INTO cats (empregado_id, data_acidente, hora_acidente, data_comunicacao, local_acidente, descricao, tipo_cat, situacao, resultado_aso,
                             parte_corpo_atingida, lateralidade, agente_causador, cid10, natureza_lesao, duracao_tratamento, medico_id, medico_assistente, observacao_medica,
@@ -1305,14 +1315,14 @@ namespace SistemaTstLargoTreze
                             houve_obito, data_obito, houve_afastamento, registro_policia, ultimo_dia_trabalho,
                             codificacao_acidente, situacao_geradora, cat_emitida_por, especificacao_local,
                             tipo_logradouro, numero, tipo_inscricao, inscricao_estabelecimento, logradouro, municipio,
-                            uf, bairro, complemento, cep, codigo_postal, observacao_cat)
+                            uf, bairro, complemento, cep, codigo_postal, observacao_cat, razao_social_empregador, cnae_empregador)
                         VALUES (@empregado_id, @data_acidente, @hora_acidente, @data_comunicacao, @local_acidente, @descricao, @tipo_cat, @situacao, @resultado_aso,
                             @parte_corpo_atingida, @lateralidade, @agente_causador, @cid10, @natureza_lesao, @duracao_tratamento, @medico_id, @medico_assistente, @observacao_medica,
                             @aposentado, @area, @filiacao_prev_social, @emitente, @tipo_acidente, @horas_trabalhadas_antes,
                             @houve_obito, @data_obito, @houve_afastamento, @registro_policia, @ultimo_dia_trabalho,
                             @codificacao_acidente, @situacao_geradora, @cat_emitida_por, @especificacao_local,
                             @tipo_logradouro, @numero, @tipo_inscricao, @inscricao_estabelecimento, @logradouro, @municipio,
-                            @uf, @bairro, @complemento, @cep, @codigo_postal, @observacao_cat)", connection))
+                            @uf, @bairro, @complemento, @cep, @codigo_postal, @observacao_cat, @razao_social_empregador, @cnae_empregador)", connection))
             {
                 command.Parameters.AddWithValue("@id", cat.Id);
                 command.Parameters.AddWithValue("@empregado_id", cat.EmpregadoId);
@@ -1360,6 +1370,8 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@cep", EmptyToDbNull(cat.Cep));
                 command.Parameters.AddWithValue("@codigo_postal", EmptyToDbNull(cat.CodigoPostal));
                 command.Parameters.AddWithValue("@observacao_cat", EmptyToDbNull(cat.ObservacaoCat));
+                command.Parameters.AddWithValue("@razao_social_empregador", EmptyToDbNull(cat.RazaoSocialEmpregador));
+                command.Parameters.AddWithValue("@cnae_empregador", EmptyToDbNull(cat.CnaeEmpregador));
                 command.ExecuteNonQuery();
                 int catId = cat.Id > 0 ? cat.Id : (int)command.LastInsertedId;
                 if (cat.Id <= 0)
@@ -1801,7 +1813,8 @@ namespace SistemaTstLargoTreze
             using (MySqlCommand command = new MySqlCommand(
                 @"SELECT f.id, f.empregado_id, e.nome AS empregado_nome, f.ambiente_id, a.ambiente AS ambiente_nome,
                          f.tipo_fator, f.agente, f.intensidade, f.tecnica_medicao, f.data_avaliacao,
-                         f.inicio_exposicao, f.fim_exposicao, f.descricao_atividades, f.usa_epi, f.epi_eficaz
+                         f.inicio_exposicao, f.fim_exposicao, f.descricao_atividades, f.usa_epi, f.epi_eficaz,
+                         f.epi_descricao
                   FROM fatores_risco f
                   LEFT JOIN empregados e ON e.id = f.empregado_id
                   LEFT JOIN ambientes_trabalho a ON a.id = f.ambiente_id
@@ -1836,7 +1849,8 @@ namespace SistemaTstLargoTreze
                             FimExposicao = reader.IsDBNull(reader.GetOrdinal("fim_exposicao")) ? string.Empty : reader.GetDateTime("fim_exposicao").ToString("dd/MM/yyyy"),
                             DescricaoAtividades = reader.IsDBNull(reader.GetOrdinal("descricao_atividades")) ? string.Empty : reader.GetString("descricao_atividades"),
                             UsaEpi = !reader.IsDBNull(reader.GetOrdinal("usa_epi")) && reader.GetBoolean("usa_epi"),
-                            EpiEficaz = !reader.IsDBNull(reader.GetOrdinal("epi_eficaz")) && reader.GetBoolean("epi_eficaz")
+                            EpiEficaz = !reader.IsDBNull(reader.GetOrdinal("epi_eficaz")) && reader.GetBoolean("epi_eficaz"),
+                            EpisSelecionados = reader.IsDBNull(reader.GetOrdinal("epi_descricao")) ? string.Empty : reader.GetString("epi_descricao")
                         });
                     }
                 }
@@ -1875,14 +1889,14 @@ namespace SistemaTstLargoTreze
                             agente = @agente, intensidade = @intensidade, tecnica_medicao = @tecnica_medicao,
                             data_avaliacao = @data_avaliacao, inicio_exposicao = @inicio_exposicao,
                             fim_exposicao = @fim_exposicao, descricao_atividades = @descricao_atividades,
-                            usa_epi = @usa_epi, epi_eficaz = @epi_eficaz
+                            usa_epi = @usa_epi, epi_eficaz = @epi_eficaz, epi_descricao = @epi_descricao
                         WHERE id = @id"
                     : @"INSERT INTO fatores_risco
                         (empregado_id, ambiente_id, tipo_fator, agente, intensidade, tecnica_medicao,
-                         data_avaliacao, inicio_exposicao, fim_exposicao, descricao_atividades, usa_epi, epi_eficaz)
+                         data_avaliacao, inicio_exposicao, fim_exposicao, descricao_atividades, usa_epi, epi_eficaz, epi_descricao)
                         VALUES
                         (@empregado_id, @ambiente_id, @tipo_fator, @agente, @intensidade, @tecnica_medicao,
-                         @data_avaliacao, @inicio_exposicao, @fim_exposicao, @descricao_atividades, @usa_epi, @epi_eficaz)", connection))
+                         @data_avaliacao, @inicio_exposicao, @fim_exposicao, @descricao_atividades, @usa_epi, @epi_eficaz, @epi_descricao)", connection))
             {
                 command.Parameters.AddWithValue("@id", risco.Id);
                 command.Parameters.AddWithValue("@empregado_id", risco.EmpregadoId.HasValue && risco.EmpregadoId.Value > 0 ? (object)risco.EmpregadoId.Value : DBNull.Value);
@@ -1897,6 +1911,7 @@ namespace SistemaTstLargoTreze
                 command.Parameters.AddWithValue("@descricao_atividades", EmptyToDbNull(risco.DescricaoAtividades));
                 command.Parameters.AddWithValue("@usa_epi", risco.UsaEpi);
                 command.Parameters.AddWithValue("@epi_eficaz", risco.EpiEficaz);
+                command.Parameters.AddWithValue("@epi_descricao", risco.UsaEpi ? EmptyToDbNull(risco.EpisSelecionados) : DBNull.Value);
                 command.ExecuteNonQuery();
             }
         }
@@ -2053,7 +2068,9 @@ namespace SistemaTstLargoTreze
                 Complemento = ReaderString(reader, "complemento"),
                 Cep = ReaderString(reader, "cep"),
                 CodigoPostal = ReaderString(reader, "codigo_postal"),
-                ObservacaoCat = ReaderString(reader, "observacao_cat")
+                ObservacaoCat = ReaderString(reader, "observacao_cat"),
+                RazaoSocialEmpregador = ReaderString(reader, "razao_social_empregador"),
+                CnaeEmpregador = ReaderString(reader, "cnae_empregador")
             };
         }
 

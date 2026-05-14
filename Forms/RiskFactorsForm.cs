@@ -6,6 +6,8 @@ namespace SistemaTstLargoTreze
     public partial class RiskFactorsForm : DashboardFormBase
     {
         private readonly int _id;
+        private string _episSelecionados = string.Empty;
+        private bool _alterandoEpi;
 
         public RiskFactorsForm()
             : this(0)
@@ -75,6 +77,9 @@ namespace SistemaTstLargoTreze
             if (string.IsNullOrWhiteSpace(txtDescricaoAtividades.Text))
                 throw new InvalidOperationException("Informe a descricao das atividades.");
 
+            if (cbUsaEpi.Checked && string.IsNullOrWhiteSpace(_episSelecionados))
+                throw new InvalidOperationException("Selecione pelo menos um EPI utilizado pelo trabalhador.");
+
             CadastrosRepository.SaveFatorRisco(new RiskFactorRecord
             {
                 Id = _id,
@@ -89,7 +94,8 @@ namespace SistemaTstLargoTreze
                 FimExposicao = txtFimExposicao.Text.Trim(),
                 DescricaoAtividades = txtDescricaoAtividades.Text.Trim(),
                 UsaEpi = cbUsaEpi.Checked,
-                EpiEficaz = cbEpiEficaz.Checked
+                EpiEficaz = cbUsaEpi.Checked && cbEpiEficaz.Checked,
+                EpisSelecionados = cbUsaEpi.Checked ? _episSelecionados : string.Empty
             });
         }
 
@@ -114,8 +120,12 @@ namespace SistemaTstLargoTreze
                 txtInicioExposicao.Text = risco.InicioExposicao;
                 txtFimExposicao.Text = risco.FimExposicao;
                 txtDescricaoAtividades.Text = risco.DescricaoAtividades;
+                _episSelecionados = risco.EpisSelecionados ?? string.Empty;
+                _alterandoEpi = true;
                 cbUsaEpi.Checked = risco.UsaEpi;
+                _alterandoEpi = false;
                 cbEpiEficaz.Checked = risco.EpiEficaz;
+                AtualizarResumoEpi();
             }
             catch (Exception ex)
             {
@@ -137,6 +147,47 @@ namespace SistemaTstLargoTreze
                     return;
                 }
             }
+        }
+
+        private void CbUsaEpi_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_alterandoEpi)
+                return;
+
+            if (!cbUsaEpi.Checked)
+            {
+                _episSelecionados = string.Empty;
+                cbEpiEficaz.Checked = false;
+                AtualizarResumoEpi();
+                return;
+            }
+
+            using (EpiSelectionForm modal = new EpiSelectionForm(_episSelecionados))
+            {
+                if (modal.ShowDialog(this) == DialogResult.OK)
+                {
+                    _episSelecionados = modal.SelectedEpis;
+                }
+                else if (string.IsNullOrWhiteSpace(_episSelecionados))
+                {
+                    _alterandoEpi = true;
+                    cbUsaEpi.Checked = false;
+                    _alterandoEpi = false;
+                }
+            }
+
+            AtualizarResumoEpi();
+        }
+
+        private void AtualizarResumoEpi()
+        {
+            if (lblEpisSelecionados == null)
+                return;
+
+            if (!cbUsaEpi.Checked || string.IsNullOrWhiteSpace(_episSelecionados))
+                lblEpisSelecionados.Text = "EPIs selecionados: nenhum";
+            else
+                lblEpisSelecionados.Text = "EPIs selecionados: " + _episSelecionados;
         }
     }
 }

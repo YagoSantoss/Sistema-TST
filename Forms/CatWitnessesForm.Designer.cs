@@ -323,11 +323,12 @@ namespace SistemaTstLargoTreze
 
         private void AddTab(Panel form, string text, int x, bool active, System.EventHandler handler)
         {
+            int larguraTab = text.Contains("COMPLEMENTARES") ? 245 : (text.Contains("TESTEMUNHAS") ? 120 : 165);
             Button tab = new Button
             {
                 Text = text,
                 Location = new Point(x, 72),
-                Size = new Size(165, 28),
+                Size = new Size(larguraTab, 28),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
                 ForeColor = active ? UiColors.AccentBlue : UiColors.MutedText,
@@ -346,7 +347,7 @@ namespace SistemaTstLargoTreze
                     new Panel
                     {
                         Location = new Point(x, 101),
-                        Size = new Size(165, 2),
+                        Size = new Size(larguraTab, 2),
                         BackColor = UiColors.Orange
                     }
                 );

@@ -20,6 +20,7 @@ namespace SistemaTstLargoTreze
         private CueTextBox txtTecnicaMedicao;
         private CheckBox cbUsaEpi;
         private CheckBox cbEpiEficaz;
+        private Label lblEpisSelecionados;
 
         private bool _montandoConteudo = false;
 
@@ -139,10 +140,16 @@ namespace SistemaTstLargoTreze
             form.Controls.Add(epiPanel);
 
             cbUsaEpi = new CheckBox { Text = "Trabalhador utiliza EPI conforme recomendado", Location = new Point(18, 22), Size = new Size(340, 22), BackColor = Color.Transparent, Font = new Font("Segoe UI", 8F, FontStyle.Bold), ForeColor = UiColors.BodyText };
+            cbUsaEpi.CheckedChanged += CbUsaEpi_CheckedChanged;
             epiPanel.Controls.Add(cbUsaEpi);
 
             cbEpiEficaz = new CheckBox { Text = "EPI e eficaz na neutralizacao / reducao do risco", Location = new Point(390, 22), Size = new Size(380, 22), BackColor = Color.Transparent, Font = new Font("Segoe UI", 8F, FontStyle.Bold), ForeColor = UiColors.BodyText };
             epiPanel.Controls.Add(cbEpiEficaz);
+
+            lblEpisSelecionados = UiBuilder.Label("EPIs selecionados: nenhum", 18, 54, largura - 80, 18, 7.5F, FontStyle.Regular, UiColors.MutedText);
+            lblEpisSelecionados.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            epiPanel.Controls.Add(lblEpisSelecionados);
+            AtualizarResumoEpi();
         }
 
         private ComboBox CriarComboEmpregados(int width)

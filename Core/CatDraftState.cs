@@ -36,6 +36,8 @@ namespace SistemaTstLargoTreze
         public string Complemento { get; set; }
         public string Cep { get; set; }
         public string CodigoPostal { get; set; }
+        public string RazaoSocialEmpregador { get; set; }
+        public string CnaeEmpregador { get; set; }
         public string EntradaTrabalho { get; set; }
         public string SaidaTrabalho { get; set; }
         public string Descricao { get; set; }

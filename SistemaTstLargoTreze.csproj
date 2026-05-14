@@ -185,6 +185,9 @@
     <Compile Include="Forms\RiskFactorsForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\EpiSelectionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\RiskFactorsListForm.cs">
       <SubType>Form</SubType>
     </Compile>

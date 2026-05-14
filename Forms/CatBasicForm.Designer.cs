@@ -92,7 +92,6 @@ namespace SistemaTstLargoTreze
             AddSectionTitle(form, "DADOS CADASTRAIS", 126, larguraDisponivel);
             MontarDadosCadastrais(form, larguraDisponivel);
 
-            AddSectionTitle(form, "COMUNICACAO DE ACIDENTE DE TRABALHO", 250, larguraDisponivel);
             MontarComunicacaoAcidente(form, larguraDisponivel);
 
             AddSectionTitle(form, "LOCAL DO ACIDENTE", 472, larguraDisponivel);
@@ -250,7 +249,7 @@ namespace SistemaTstLargoTreze
 
             y = 389;
             int amplo = ((largura - (margem * 2) - gap) / 2);
-            UiBuilder.AddField(form, "SITUACAO GERADORA DO ACIDENTE OU DOENCA", txtSituacaoGeradora = UiBuilder.TextBox("Descreva ou informe o codigo", 0, 0, amplo), margem, y, amplo, false);
+            UiBuilder.AddField(form, "SITUACAO GERADORA DO ACIDENTE OU DOENCA", txtSituacaoGeradora = UiBuilder.TextBox("Descreva ou informe o codigo", 0, 0, amplo), margem, y, amplo, true);
             UiBuilder.AddField(form, "CAT EMITIDA POR", cmbCatEmitidaPor = UiBuilder.Combo("1 - Iniciativa do empregador", 0, 0, amplo), margem + amplo + gap, y, amplo, false);
             cmbCatEmitidaPor.Items.Add("2 - Ordem judicial");
             cmbCatEmitidaPor.Items.Add("3 - Determinacao de orgao fiscalizador");
@@ -335,14 +334,14 @@ namespace SistemaTstLargoTreze
             int margem = 18;
             form.Controls.Add(
                 UiBuilder.Label(
-                    "OBSERVACAO DA CAT *",
+                    "OBSERVACAO DA CAT",
                     margem,
                     720,
                     240,
                     20,
                     8F,
                     FontStyle.Bold,
-                    UiColors.Red
+                    UiColors.BodyText
                 )
             );
 
@@ -428,16 +427,17 @@ namespace SistemaTstLargoTreze
 
             AddTab(form, "DADOS CADASTRAIS", 18, activeTab == 0, TabDados_Click);
             AddTab(form, "TESTEMUNHAS", 190, activeTab == 1, TabTestemunhas_Click);
-            AddTab(form, "DADOS COMPLEMENTARES", 320, activeTab == 2, TabComplementares_Click);
+            AddTab(form, "DADOS COMPLEMENTARES", 370, activeTab == 2, TabComplementares_Click);
         }
 
         private void AddTab(Panel form, string text, int x, bool active, System.EventHandler handler)
         {
+            int larguraTab = text.Contains("COMPLEMENTARES") ? 225 : 165;
             Button tab = new Button
             {
                 Text = text,
                 Location = new Point(x, 72),
-                Size = new Size(165, 28),
+                Size = new Size(larguraTab, 28),
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
                 ForeColor = active ? UiColors.AccentBlue : UiColors.MutedText,
@@ -451,7 +451,7 @@ namespace SistemaTstLargoTreze
 
             if (active)
             {
-                form.Controls.Add(new Panel { Location = new Point(x, 101), Size = new Size(165, 2), BackColor = UiColors.Orange });
+                form.Controls.Add(new Panel { Location = new Point(x, 101), Size = new Size(larguraTab, 2), BackColor = UiColors.Orange });
             }
         }
 
@@ -525,6 +525,8 @@ namespace SistemaTstLargoTreze
             txtCep.Text = cat.Cep;
             txtCodigoPostal.Text = cat.CodigoPostal;
             txtDescricao.Text = string.IsNullOrWhiteSpace(cat.ObservacaoCat) ? cat.Descricao : cat.ObservacaoCat;
+            _razaoSocialEmpregador = cat.RazaoSocialEmpregador ?? string.Empty;
+            _cnaeEmpregador = cat.CnaeEmpregador ?? string.Empty;
         }
 
         private void CarregarRascunho()
@@ -566,6 +568,8 @@ namespace SistemaTstLargoTreze
             txtCep.Text = draft.Cep ?? string.Empty;
             txtCodigoPostal.Text = draft.CodigoPostal ?? string.Empty;
             txtDescricao.Text = string.IsNullOrWhiteSpace(draft.ObservacaoCat) ? (draft.Descricao ?? string.Empty) : draft.ObservacaoCat;
+            _razaoSocialEmpregador = draft.RazaoSocialEmpregador ?? string.Empty;
+            _cnaeEmpregador = draft.CnaeEmpregador ?? string.Empty;
         }
 
         private void SalvarRascunho()
@@ -609,6 +613,8 @@ namespace SistemaTstLargoTreze
                 Complemento = txtComplemento.Text.Trim(),
                 Cep = txtCep.Text.Trim(),
                 CodigoPostal = txtCodigoPostal.Text.Trim(),
+                RazaoSocialEmpregador = _razaoSocialEmpregador,
+                CnaeEmpregador = _cnaeEmpregador,
                 Descricao = txtDescricao.Text.Trim(),
                 ObservacaoCat = txtDescricao.Text.Trim(),
                 Testemunhas = testemunhas
@@ -628,7 +634,7 @@ namespace SistemaTstLargoTreze
                 empregado.Id <= 0 ||
                 string.IsNullOrWhiteSpace(cmbEmitente.Text) ||
                 string.IsNullOrWhiteSpace(cmbLocalAcidente.Text) ||
-                string.IsNullOrWhiteSpace(txtDescricao.Text))
+                string.IsNullOrWhiteSpace(txtSituacaoGeradora.Text))
             {
                 mensagem = "Preencha todos os campos obrigatorios marcados com asterisco antes de avancar.";
                 return false;
@@ -730,6 +736,8 @@ namespace SistemaTstLargoTreze
                 Complemento = txtComplemento.Text.Trim(),
                 Cep = txtCep.Text.Trim(),
                 CodigoPostal = txtCodigoPostal.Text.Trim(),
+                RazaoSocialEmpregador = _razaoSocialEmpregador,
+                CnaeEmpregador = _cnaeEmpregador,
                 Descricao = txtDescricao.Text.Trim(),
                 ObservacaoCat = txtDescricao.Text.Trim(),
                 Situacao = catExistente == null ? "Aberta" : catExistente.Situacao,
