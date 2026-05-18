@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -20,8 +20,8 @@ namespace SistemaTstLargoTreze
             SuspendLayout();
 
             BuildDashboardShell(
-                "CAT — Acidente de Trabalho",
-                "S-2210 · Comunicação de Acidente",
+                "CAT - Acidente de Trabalho",
+                "S-2210 - Comunicação de Acidente",
                 DashboardMenu.Cat
             );
 
@@ -204,11 +204,11 @@ namespace SistemaTstLargoTreze
                 false
             );
 
-            CueTextBox txtEndereco = UiBuilder.TextBox("Endereco da testemunha", 0, 0, larguraInterna);
+            CueTextBox txtEndereco = UiBuilder.TextBox("Endereço da testemunha", 0, 0, larguraInterna);
             txtEndereco.Text = testemunhaAtual == null ? string.Empty : testemunhaAtual.Endereco;
             UiBuilder.AddField(
                 witness,
-                "ENDERECO",
+                "ENDEREÇO",
                 txtEndereco,
                 12,
                 90,
@@ -279,7 +279,7 @@ namespace SistemaTstLargoTreze
             );
 
             btnSalvar = UiBuilder.SmallButton(
-                "💾 Salvar CAT",
+                "Salvar CAT",
                 largura - 110,
                 16,
                 92,
@@ -316,9 +316,9 @@ namespace SistemaTstLargoTreze
 
             form.Controls.Add(line);
 
-            AddTab(form, "📋 DADOS CADASTRAIS", 18, activeTab == 0, TabDados_Click);
-            AddTab(form, "👤 TESTEMUNHAS", 190, activeTab == 1, TabTestemunhas_Click);
-            AddTab(form, "🩹 DADOS COMPLEMENTARES", 320, activeTab == 2, TabComplementares_Click);
+            AddTab(form, "DADOS CADASTRAIS", 18, activeTab == 0, TabDados_Click);
+            AddTab(form, "TESTEMUNHAS", 190, activeTab == 1, TabTestemunhas_Click);
+            AddTab(form, "DADOS COMPLEMENTARES", 370, activeTab == 2, TabComplementares_Click);
         }
 
         private void AddTab(Panel form, string text, int x, bool active, System.EventHandler handler)

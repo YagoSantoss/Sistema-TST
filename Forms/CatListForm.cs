@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -94,7 +94,7 @@ namespace SistemaTstLargoTreze
             int localW = largura - checkW - empregadoW - dataW - tipoW - situacaoW - resultadoW - acoesW - 20;
             int x = 5;
 
-            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            header.Controls.Add(UiBuilder.HeaderCell("SEL.", x, 0, checkW));
             x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("EMPREGADO", x, 0, empregadoW));
             x += empregadoW;
@@ -108,7 +108,7 @@ namespace SistemaTstLargoTreze
             x += situacaoW;
             header.Controls.Add(UiBuilder.HeaderCell("RESULTADO ASO", x, 0, resultadoW));
             x += resultadoW;
-            header.Controls.Add(UiBuilder.HeaderCell("ACOES", x, 0, acoesW));
+            header.Controls.Add(UiBuilder.HeaderCell("AÇÕES", x, 0, acoesW));
         }
 
         private void MontarLinhas(RoundPanel table, int largura)
@@ -132,7 +132,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar as CATs do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar as CATs do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -251,7 +251,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível excluir no MySQL.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -263,7 +263,7 @@ namespace SistemaTstLargoTreze
                 CatRecord cat = CadastrosRepository.GetCat(id);
                 if (cat == null)
                 {
-                    MessageBox.Show("CAT nao encontrada.", "CAT", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("CAT não encontrada.", "CAT", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -272,7 +272,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel gerar o PDF da CAT.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível gerar o PDF da CAT.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

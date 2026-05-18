@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -44,15 +44,15 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                lblErro.Text = "Nao foi possivel conectar ao MySQL.";
+                lblErro.Text = "Não foi possível conectar ao MySQL.";
                 lblErro.Visible = true;
-                MessageBox.Show("Verifique se o XAMPP/MySQL esta aberto e se o banco sistema_tst foi criado.\n\n" + ex.Message, "Conexao MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Verifique se o XAMPP/MySQL está aberto e se o banco sistema_tst foi criado.\n\n" + ex.Message, "Conexão MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (!loginValido)
             {
-                lblErro.Text = "Usuario ou senha nao encontrados no banco.";
+                lblErro.Text = "Usuário ou senha não encontrados no banco.";
                 lblErro.Visible = true;
                 return;
             }

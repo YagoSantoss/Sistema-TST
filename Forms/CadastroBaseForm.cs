@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -86,42 +86,42 @@ namespace SistemaTstLargoTreze
             switch (_tipo)
             {
                 case CadastroBaseTipo.Medico:
-                    AddTextField(card, "N Registro", "Numero do registro", 22, 100, 130, true);
+                    AddTextField(card, "N Registro", "Número do registro", 22, 100, 130, true);
                     AddComboField(card, "UF Exped.", new[] { "SP", "GO", "MG", "RJ", "PR", "SC", "RS", "BA", "PE", "CE", "DF" }, 182, 100, 95, true);
-                    AddTextField(card, "Descricao", "Nome do medico/responsavel", 307, 100, 245, true);
-                    AddComboField(card, "Orgao de Classe", new[] { "Conselho Regional de Medicina (CRM)", "Conselho Regional de Engenharia e Agronomia (CREA)", "Outros" }, 22, 172, 530, true);
+                    AddTextField(card, "Descrição", "Nome do médico/responsável", 307, 100, 245, true);
+                    AddComboField(card, "Órgão de Classe", new[] { "Conselho Regional de Medicina (CRM)", "Conselho Regional de Engenharia e Agronomia (CREA)", "Outros" }, 22, 172, 530, true);
                     AddTextField(card, "Sigla", "Ex.: CRM, CREA", 22, 244, 530, false);
-                    AddTextField(card, "Logradouro", "Rua, avenida ou endereco", 22, 316, 530, false);
+                    AddTextField(card, "Logradouro", "Rua, avenida ou endereço", 22, 316, 530, false);
                     AddTextField(card, "Bairro", "Bairro", 22, 388, 255, false);
-                    AddTextField(card, "Numero", "Numero", 307, 388, 95, false);
+                    AddTextField(card, "Número", "Número", 307, 388, 95, false);
                     AddTextField(card, "Cidade", "Cidade - UF", 22, 460, 255, false);
                     AddTextField(card, "CEP", "CEP", 307, 460, 120, false);
                     btnBuscarCep = UiBuilder.SmallButton("Buscar CEP", 437, 484, 90, UiColors.Orange, Color.White);
                     btnBuscarCep.Font = new Font("Segoe UI", 7F, FontStyle.Bold);
                     btnBuscarCep.Click += BuscarCep_Click;
                     card.Controls.Add(btnBuscarCep);
-                    AddTextField(card, "E-mail", "medico@empresa.com", 22, 532, 255, false);
+                    AddTextField(card, "E-mail", "médico@empresa.com", 22, 532, 255, false);
                     AddTextField(card, "DDD", "DDD", 307, 532, 70, false);
-                    AddTextField(card, "Telefone", "Numero do telefone", 397, 532, 155, false);
+                    AddTextField(card, "Telefone", "Número do telefone", 397, 532, 155, false);
                     AddTextField(card, "NIT", "NIT/PIS/PASEP", 22, 604, 255, false);
                     AddTextField(card, "CPF", "CPF", 307, 604, 245, false);
                     AddComboField(card, "Tipo telefone", new[] { "Celular", "Comercial", "Residencial" }, 22, 676, 255, false);
                     break;
 
                 case CadastroBaseTipo.TipoExame:
-                    AddTextField(card, "Codigo", "Ex.: EX005", 22, 100, 130, true);
+                    AddTextField(card, "Código", "Ex.: EX005", 22, 100, 130, true);
                     AddTextField(card, "Nome do exame", "Nome do exame", 182, 100, 370, true);
                     AddComboField(card, "Tipo", new[] { "Laboratorial", "Clinico", "Especializado", "Imagem" }, 22, 172, 255, true);
                     AddComboField(card, "Periodicidade", new[] { "Anual", "Bienal", "Semestral", "Admissional", "Conforme risco" }, 307, 172, 245, true);
                     AddLookupField(card, "Paciente", CriarComboEmpregados(255), 22, 244, 255, true);
-                    AddLookupField(card, "Medico responsavel", CriarComboMedicos(245), 307, 244, 245, true);
+                    AddLookupField(card, "Médico responsável", CriarComboMedicos(245), 307, 244, 245, true);
                     AddAttachmentField(card, "Anexo PDF", 22, 316, 410);
                     break;
 
                 case CadastroBaseTipo.AmbienteTrabalho:
-                    AddTextField(card, "Codigo", "Ex.: ADM-01", 22, 100, 130, true);
+                    AddTextField(card, "Código", "Ex.: ADM-01", 22, 100, 130, true);
                     AddTextField(card, "Ambiente", "Nome do ambiente", 182, 100, 370, true);
-                    AddTextField(card, "Setor", "Setor responsavel", 22, 172, 255, true);
+                    AddTextField(card, "Setor", "Setor responsável", 22, 172, 255, true);
                     AddComboField(card, "Status", new[] { "Ativo", "Revisar", "Inativo" }, 307, 172, 245, true);
                     break;
             }
@@ -186,7 +186,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -202,7 +202,7 @@ namespace SistemaTstLargoTreze
                 Width = width
             };
 
-            combo.Items.Add(new ComboItem(0, "Selecione o medico"));
+            combo.Items.Add(new ComboItem(0, "Selecione o médico"));
 
             try
             {
@@ -213,7 +213,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -264,7 +264,7 @@ namespace SistemaTstLargoTreze
             switch (_tipo)
             {
                 case CadastroBaseTipo.Medico:
-                    return "Novo medico";
+                    return "Novo médico";
                 case CadastroBaseTipo.TipoExame:
                     return "Novo exame realizado";
                 default:
@@ -279,7 +279,7 @@ namespace SistemaTstLargoTreze
             switch (_tipo)
             {
                 case CadastroBaseTipo.Medico:
-                    return acao + " medico";
+                    return acao + " médico";
                 case CadastroBaseTipo.TipoExame:
                     return acao + " exame realizado";
                 default:
@@ -292,9 +292,9 @@ namespace SistemaTstLargoTreze
             switch (_tipo)
             {
                 case CadastroBaseTipo.Medico:
-                    return "Preencha os dados do medico habilitado para ASO e laudos.";
+                    return "Preencha os dados do médico habilitado para ASO e laudos.";
                 case CadastroBaseTipo.TipoExame:
-                    return "Cadastre o exame realizado, vinculando paciente, medico e PDF do exame.";
+                    return "Cadastre o exame realizado, vinculando paciente, médico e PDF do exame.";
                 default:
                     return "Cadastre o local, setor e status do ambiente de trabalho.";
             }
@@ -311,7 +311,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel salvar no MySQL.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível salvar no MySQL.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -354,11 +354,11 @@ namespace SistemaTstLargoTreze
                 SetValue("Logradouro", endereco.Logradouro);
                 SetValue("Bairro", endereco.Bairro);
                 SetValue("Cidade", endereco.Localidade + " - " + endereco.Uf);
-                MessageBox.Show("Endereco preenchido pelo ViaCEP.", TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Endereço preenchido pelo ViaCEP.", TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel consultar o CEP.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível consultar o CEP.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -377,12 +377,12 @@ namespace SistemaTstLargoTreze
                         {
                             SetValue("N Registro", medico.Crm);
                             SetValue("UF Exped.", string.IsNullOrWhiteSpace(medico.UfExpedidor) ? ExtrairUf(medico.OrgaoUf) : medico.UfExpedidor);
-                            SetValue("Descricao", medico.Nome);
-                            SetValue("Orgao de Classe", string.IsNullOrWhiteSpace(medico.OrgaoClasse) ? "Conselho Regional de Medicina (CRM)" : medico.OrgaoClasse);
+                            SetValue("Descrição", medico.Nome);
+                            SetValue("Órgão de Classe", string.IsNullOrWhiteSpace(medico.OrgaoClasse) ? "Conselho Regional de Medicina (CRM)" : medico.OrgaoClasse);
                             SetValue("Sigla", medico.Sigla);
                             SetValue("Logradouro", medico.Logradouro);
                             SetValue("Bairro", medico.Bairro);
-                            SetValue("Numero", medico.Numero);
+                            SetValue("Número", medico.Numero);
                             SetValue("Cidade", medico.Cidade);
                             SetValue("CEP", medico.Cep);
                             SetValue("E-mail", medico.Email);
@@ -398,12 +398,12 @@ namespace SistemaTstLargoTreze
                         TipoExameRecord exame = CadastrosRepository.GetTipoExame(_id);
                         if (exame != null)
                         {
-                            SetValue("Codigo", exame.Codigo);
+                            SetValue("Código", exame.Codigo);
                             SetValue("Nome do exame", exame.Nome);
                             SetValue("Tipo", exame.Tipo);
                             SetValue("Periodicidade", exame.Periodicidade);
                             SetComboById("Paciente", exame.EmpregadoId);
-                            SetComboById("Medico responsavel", exame.MedicoId);
+                            SetComboById("Médico responsável", exame.MedicoId);
                             _anexoArquivo = exame.AnexoArquivo;
                             _anexoNome = exame.AnexoNome;
                             _anexoTipo = exame.AnexoTipo;
@@ -415,7 +415,7 @@ namespace SistemaTstLargoTreze
                         AmbienteTrabalhoRecord ambiente = CadastrosRepository.GetAmbiente(_id);
                         if (ambiente != null)
                         {
-                            SetValue("Codigo", ambiente.Codigo);
+                            SetValue("Código", ambiente.Codigo);
                             SetValue("Ambiente", ambiente.Ambiente);
                             SetValue("Setor", ambiente.Setor);
                             SetValue("Status", ambiente.Status);
@@ -425,7 +425,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel carregar o cadastro do MySQL.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível carregar o cadastro do MySQL.\n\n" + ex.Message, TituloJanela(), MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -436,7 +436,7 @@ namespace SistemaTstLargoTreze
                 case CadastroBaseTipo.Medico:
                     string email = Value("E-mail");
                     if (!string.IsNullOrWhiteSpace(email) && !ValidationHelper.IsValidEmail(email))
-                        throw new InvalidOperationException("Informe um e-mail valido para o medico.");
+                        throw new InvalidOperationException("Informe um e-mail valido para o médico.");
 
                     if (!string.IsNullOrWhiteSpace(Value("CPF")) && !ValidationHelper.IsCompleteCpf(Value("CPF")))
                         throw new InvalidOperationException("Informe o CPF no formato 000.000.000-00.");
@@ -447,23 +447,23 @@ namespace SistemaTstLargoTreze
                     if (!string.IsNullOrWhiteSpace(Value("CEP")) && !ValidationHelper.IsCompleteCep(Value("CEP")))
                         throw new InvalidOperationException("Informe o CEP no formato 00000-000.");
 
-                    string orgaoClasse = Required("Orgao de Classe");
+                    string orgaoClasse = Required("Órgão de Classe");
                     string ufExpedidor = Required("UF Exped.");
 
                     CadastrosRepository.SaveMedico(new MedicoRecord
                     {
                         Id = _id,
-                        Nome = Required("Descricao"),
+                        Nome = Required("Descrição"),
                         Crm = Required("N Registro"),
                         OrgaoUf = SiglaOrgao(orgaoClasse) + "-" + ufExpedidor,
-                        Especialidade = "Medico/Responsavel Tecnico",
+                        Especialidade = "Médico/Responsável Tecnico",
                         Email = email,
                         UfExpedidor = ufExpedidor,
                         OrgaoClasse = orgaoClasse,
                         Sigla = Value("Sigla"),
                         Logradouro = Value("Logradouro"),
                         Bairro = Value("Bairro"),
-                        Numero = Value("Numero"),
+                        Numero = Value("Número"),
                         Cidade = Value("Cidade"),
                         Cep = Value("CEP"),
                         Ddd = Value("DDD"),
@@ -478,12 +478,12 @@ namespace SistemaTstLargoTreze
                     CadastrosRepository.SaveTipoExame(new TipoExameRecord
                     {
                         Id = _id,
-                        Codigo = Required("Codigo"),
+                        Codigo = Required("Código"),
                         Nome = Required("Nome do exame"),
                         Tipo = Required("Tipo"),
                         Periodicidade = Required("Periodicidade"),
                         EmpregadoId = RequiredId("Paciente"),
-                        MedicoId = RequiredId("Medico responsavel"),
+                        MedicoId = RequiredId("Médico responsável"),
                         AnexoImagem = Value("Anexo PDF"),
                         AnexoNome = _anexoNome,
                         AnexoTipo = _anexoTipo,
@@ -495,7 +495,7 @@ namespace SistemaTstLargoTreze
                     CadastrosRepository.SaveAmbiente(new AmbienteTrabalhoRecord
                     {
                         Id = _id,
-                        Codigo = Required("Codigo"),
+                        Codigo = Required("Código"),
                         Ambiente = Required("Ambiente"),
                         Setor = Required("Setor"),
                         Status = Required("Status")

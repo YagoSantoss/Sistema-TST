@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -51,7 +51,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "CAT - Acidente de Trabalho",
-                "S-2210 - Comunicacao de Acidente",
+                "S-2210 - Comunicação de Acidente",
                 DashboardMenu.Cat
             );
 
@@ -185,7 +185,7 @@ namespace SistemaTstLargoTreze
             );
             cmbFiliacaoPrevSocial.Items.Add("Trabalhador avulso");
             cmbFiliacaoPrevSocial.Items.Add("Segurado especial");
-            cmbFiliacaoPrevSocial.Items.Add("Medico residente");
+            cmbFiliacaoPrevSocial.Items.Add("Médico residente");
 
             UiBuilder.AddField(
                 form,
@@ -197,7 +197,7 @@ namespace SistemaTstLargoTreze
                 true
             );
             cmbEmitente.Items.Add("Sindicato");
-            cmbEmitente.Items.Add("Medico");
+            cmbEmitente.Items.Add("Médico");
             cmbEmitente.Items.Add("Segurado ou dependente");
             cmbEmitente.Items.Add("Autoridade publica");
         }
@@ -217,7 +217,7 @@ namespace SistemaTstLargoTreze
             InputFormatHelper.ApplyDateMask(txtDataAcidente);
             x += col + gap;
             UiBuilder.AddField(form, "TIPO DO ACIDENTE", cmbTipoAcidente = UiBuilder.Combo("Acidente tipico", 0, 0, col), x, y, col, true);
-            cmbTipoAcidente.Items.Add("Doenca");
+            cmbTipoAcidente.Items.Add("Doença");
             cmbTipoAcidente.Items.Add("Trajeto");
             x += col + gap;
             UiBuilder.AddField(form, "HORA DO ACIDENTE", txtHoraAcidente = UiBuilder.TextBox("hh:mm", 0, 0, col), x, y, col, true);
@@ -228,31 +228,31 @@ namespace SistemaTstLargoTreze
             x += col + gap;
             UiBuilder.AddField(form, "TIPO DA CAT", cmbTipoCat = UiBuilder.Combo("Inicial", 0, 0, col), x, y, col, true);
             cmbTipoCat.Items.Add("Reabertura");
-            cmbTipoCat.Items.Add("Comunicacao de obito");
+            cmbTipoCat.Items.Add("Comunicação de óbito");
 
             y = 333;
-            chkHouveObito = CriarCheck("Houve obito", margem, y + 28, 115);
+            chkHouveObito = CriarCheck("Houve óbito", margem, y + 28, 115);
             form.Controls.Add(chkHouveObito);
 
-            UiBuilder.AddField(form, "DATA DO OBITO", txtDataObito = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, col), margem + 130, y, col, false);
+            UiBuilder.AddField(form, "DATA DO ÓBITO", txtDataObito = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, col), margem + 130, y, col, false);
             InputFormatHelper.ApplyDateMask(txtDataObito);
 
             chkHouveAfastamento = CriarCheck("Houve afastamento", margem + 130 + col + gap, y + 28, 150);
             form.Controls.Add(chkHouveAfastamento);
 
-            chkRegistroPolicia = CriarCheck("Registro policia", margem + 130 + col + gap + 160, y + 28, 140);
+            chkRegistroPolicia = CriarCheck("Registro polícia", margem + 130 + col + gap + 160, y + 28, 140);
             form.Controls.Add(chkRegistroPolicia);
 
             UiBuilder.AddField(form, "ULTIMO DIA TRABALHO", txtUltimoDiaTrabalho = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, col), largura - margem - (col * 2) - gap, y, col, false);
             InputFormatHelper.ApplyDateMask(txtUltimoDiaTrabalho);
-            UiBuilder.AddField(form, "CODIFICACAO ACIDENTE", txtCodificacaoAcidente = UiBuilder.TextBox("Codigo", 0, 0, col), largura - margem - col, y, col, false);
+            UiBuilder.AddField(form, "CODIFICACAO ACIDENTE", txtCodificacaoAcidente = UiBuilder.TextBox("Código", 0, 0, col), largura - margem - col, y, col, false);
 
             y = 389;
             int amplo = ((largura - (margem * 2) - gap) / 2);
-            UiBuilder.AddField(form, "SITUACAO GERADORA DO ACIDENTE OU DOENCA", txtSituacaoGeradora = UiBuilder.TextBox("Descreva ou informe o codigo", 0, 0, amplo), margem, y, amplo, true);
+            UiBuilder.AddField(form, "SITUACAO GERADORA DO ACIDENTE OU DOENÇA", txtSituacaoGeradora = UiBuilder.TextBox("Descreva ou informe o código", 0, 0, amplo), margem, y, amplo, true);
             UiBuilder.AddField(form, "CAT EMITIDA POR", cmbCatEmitidaPor = UiBuilder.Combo("1 - Iniciativa do empregador", 0, 0, amplo), margem + amplo + gap, y, amplo, false);
             cmbCatEmitidaPor.Items.Add("2 - Ordem judicial");
-            cmbCatEmitidaPor.Items.Add("3 - Determinacao de orgao fiscalizador");
+            cmbCatEmitidaPor.Items.Add("3 - Determinacao de órgão fiscalizador");
         }
 
         private void MontarLocalAcidente(RoundPanel form, int largura)
@@ -269,7 +269,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(form, "TIPO DO LOCAL DO ACIDENTE", cmbLocalAcidente = UiBuilder.Combo("Estabelecimento do empregador no Brasil", 0, 0, col), x, y, col, true);
             cmbLocalAcidente.Items.Add("Estabelecimento de terceiros");
             cmbLocalAcidente.Items.Add("Via publica");
-            cmbLocalAcidente.Items.Add("Area rural");
+            cmbLocalAcidente.Items.Add("Área rural");
             cmbLocalAcidente.Items.Add("Trajeto");
             x += col + gap;
             UiBuilder.AddField(form, "ESPECIFICACAO DO LOCAL", txtEspecificacaoLocal = UiBuilder.TextBox("Ex: setor, sala, maquina ou referencia", 0, 0, col), x, y, col, false);
@@ -280,7 +280,7 @@ namespace SistemaTstLargoTreze
             cmbTipoLogradouro.Items.Add("Estrada");
             cmbTipoLogradouro.Items.Add("Travessa");
             x += col + gap;
-            UiBuilder.AddField(form, "NUMERO", txtNumero = UiBuilder.TextBox("Numero", 0, 0, col), x, y, col, false);
+            UiBuilder.AddField(form, "NUMERO", txtNumero = UiBuilder.TextBox("Número", 0, 0, col), x, y, col, false);
 
             y = 556;
             x = margem;
@@ -303,7 +303,7 @@ namespace SistemaTstLargoTreze
             x += col + gap;
             UiBuilder.AddField(form, "LOGRADOURO", txtLogradouro = UiBuilder.TextBox("Logradouro", 0, 0, col), x, y, col, false);
             x += col + gap;
-            UiBuilder.AddField(form, "MUNICIPIO", txtMunicipio = UiBuilder.TextBox("Municipio", 0, 0, col), x, y, col, false);
+            UiBuilder.AddField(form, "MUNICIPIO", txtMunicipio = UiBuilder.TextBox("Município", 0, 0, col), x, y, col, false);
 
             y = 612;
             x = margem;
@@ -326,7 +326,7 @@ namespace SistemaTstLargoTreze
                 form.Controls.Add(btnBuscarCep);
             }
 
-            UiBuilder.AddField(form, "CODIGO POSTAL", txtCodigoPostal = UiBuilder.TextBox("Codigo postal", 0, 0, col), margem, 668, col, false);
+            UiBuilder.AddField(form, "CÓDIGO POSTAL", txtCodigoPostal = UiBuilder.TextBox("Código postal", 0, 0, col), margem, 668, col, false);
         }
 
         private void MontarObservacao(RoundPanel form, int largura)
@@ -334,7 +334,7 @@ namespace SistemaTstLargoTreze
             int margem = 18;
             form.Controls.Add(
                 UiBuilder.Label(
-                    "OBSERVACAO DA CAT",
+                    "OBSERVAÇÃO DA CAT",
                     margem,
                     720,
                     240,
@@ -346,7 +346,7 @@ namespace SistemaTstLargoTreze
             );
 
             txtDescricao = UiBuilder.TextBox(
-                "Descreva como o acidente ocorreu, as circunstancias e outras observacoes...",
+                "Descreva como o acidente ocorreu, as circunstancias e outras observações...",
                 margem,
                 746,
                 largura - (margem * 2)
@@ -380,7 +380,7 @@ namespace SistemaTstLargoTreze
 
             form.Controls.Add(
                 UiBuilder.Label(
-                    "Comunicacao de Acidente de Trabalho (CAT)",
+                    "Comunicação de Acidente de Trabalho (CAT)",
                     88,
                     14,
                     largura - 320,
@@ -393,7 +393,7 @@ namespace SistemaTstLargoTreze
 
             form.Controls.Add(
                 UiBuilder.Label(
-                    "Registro de novo acidente ou doenca ocupacional",
+                    "Registro de novo acidente ou doença ocupacional",
                     88,
                     31,
                     largura - 320,
@@ -476,7 +476,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -669,13 +669,13 @@ namespace SistemaTstLargoTreze
 
             if (!string.IsNullOrWhiteSpace(txtDataObito.Text) && !ValidationHelper.IsValidDate(txtDataObito.Text))
             {
-                mensagem = "Informe a data do obito no formato dd/mm/aaaa.";
+                mensagem = "Informe a data do óbito no formato dd/mm/aaaa.";
                 return false;
             }
 
             if (!string.IsNullOrWhiteSpace(txtUltimoDiaTrabalho.Text) && !ValidationHelper.IsValidDate(txtUltimoDiaTrabalho.Text))
             {
-                mensagem = "Informe o ultimo dia de trabalho no formato dd/mm/aaaa.";
+                mensagem = "Informe o último dia de trabalho no formato dd/mm/aaaa.";
                 return false;
             }
 

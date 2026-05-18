@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -19,7 +19,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "Ambientes de Trabalho",
-                "Cadastros Base · Locais e setores produtivos",
+                "Cadastros Base - Locais e setores produtivos",
                 DashboardMenu.WorkEnvironments
             );
 
@@ -133,7 +133,7 @@ namespace SistemaTstLargoTreze
 
             int x = 5;
 
-            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            header.Controls.Add(UiBuilder.HeaderCell("SEL.", x, 0, checkW));
             x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("CÓDIGO", x, 0, codigoW));
             x += codigoW;
@@ -171,7 +171,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os ambientes do MySQL", 0, 112, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar os ambientes do MySQL", 0, 112, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -307,7 +307,7 @@ namespace SistemaTstLargoTreze
             x += statusW;
 
             btnEditar = UiBuilder.SmallButton(
-                "✎ Editar",
+                "\u270E Editar",
                 x + 8,
                 8,
                 68,
@@ -332,7 +332,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                return "MySQL indisponivel";
+                return "MySQL indisponível";
             }
         }
     }

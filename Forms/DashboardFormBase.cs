@@ -24,11 +24,13 @@ namespace SistemaTstLargoTreze
         protected Panel SidebarPanel;
         protected Panel ContentPanel;
         protected Panel HeaderPanel;
+        private DashboardMenu _activeMenu;
 
         protected void BuildDashboardShell(string title, string subtitle, DashboardMenu active)
         {
             BackColor = UiColors.PageBg;
             WindowState = FormWindowState.Maximized;
+            _activeMenu = active;
 
             AppFrame = new RoundPanel
             {
@@ -40,7 +42,7 @@ namespace SistemaTstLargoTreze
             Controls.Add(AppFrame);
 
             BuildSidebar(active);
-            BuildHeader(title, subtitle);
+            BuildHeader(title, subtitle, active);
 
             ContentPanel = new Panel
             {
@@ -117,7 +119,7 @@ namespace SistemaTstLargoTreze
             nome.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             SidebarPanel.Controls.Add(nome);
 
-            Label cargo = UiBuilder.Label("Usuario logado", 50, SidebarPanel.Height - 46, 130, 15, 7F, FontStyle.Regular, UiColors.MutedText);
+            Label cargo = UiBuilder.Label("Usuário logado", 50, SidebarPanel.Height - 46, 130, 15, 7F, FontStyle.Regular, UiColors.MutedText);
             cargo.Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
             SidebarPanel.Controls.Add(cargo);
 
@@ -172,7 +174,7 @@ namespace SistemaTstLargoTreze
             if (AppState.CurrentUser != null && !string.IsNullOrWhiteSpace(AppState.CurrentUser.Name))
                 return AppState.CurrentUser.Name.Trim();
 
-            return "Usuario";
+            return "Usuário";
         }
 
         private string UsuarioIniciais()
@@ -189,7 +191,7 @@ namespace SistemaTstLargoTreze
             return (partes[0].Substring(0, 1) + partes[partes.Length - 1].Substring(0, 1)).ToUpperInvariant();
         }
 
-        private void BuildHeader(string title, string subtitle)
+        private void BuildHeader(string title, string subtitle, DashboardMenu active)
         {
             HeaderPanel = new Panel
             {
@@ -204,13 +206,20 @@ namespace SistemaTstLargoTreze
             HeaderPanel.Controls.Add(UiBuilder.Label(title, 18, 8, 480, 20, 11F, FontStyle.Bold, UiColors.AccentBlue));
             HeaderPanel.Controls.Add(UiBuilder.Label(subtitle, 18, 25, 480, 16, 7.5F, FontStyle.Bold, UiColors.MutedText));
 
-            Label competenciaTexto = UiBuilder.Label("Competência:", 585, 13, 75, 18, 7.5F, FontStyle.Bold, UiColors.MutedText);
+            Label competenciaTexto = UiBuilder.Label("Competência:", 545, 13, 75, 18, 7.5F, FontStyle.Bold, UiColors.MutedText);
             competenciaTexto.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             HeaderPanel.Controls.Add(competenciaTexto);
 
-            Label competenciaValor = UiBuilder.Label("03/2026", 655, 13, 60, 18, 8F, FontStyle.Bold, UiColors.AccentBlue);
+            Label competenciaValor = UiBuilder.Label("03/2026", 615, 13, 60, 18, 8F, FontStyle.Bold, UiColors.AccentBlue);
             competenciaValor.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             HeaderPanel.Controls.Add(competenciaValor);
+
+            RoundButton help = UiBuilder.SmallButton("?", 676, 10, 28, Color.White, UiColors.AccentBlue);
+            help.BorderColor = UiColors.Border;
+            help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            help.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            help.Click += Help_Click;
+            HeaderPanel.Controls.Add(help);
 
             RoundButton settings = UiBuilder.SmallButton("⚙ Configurações", 708, 10, 112, Color.White, UiColors.BodyText);
             settings.BorderColor = UiColors.Border;
@@ -281,6 +290,11 @@ namespace SistemaTstLargoTreze
                 form.StartPosition = FormStartPosition.CenterParent;
                 form.ShowDialog(this);
             }
+        }
+
+        private void Help_Click(object sender, System.EventArgs e)
+        {
+            TutorialHelper.Show(_activeMenu, this);
         }
 
         private void Logout_Click(object sender, System.EventArgs e)

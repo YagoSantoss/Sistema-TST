@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -46,7 +46,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel salvar a CAT.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível salvar a CAT.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -107,7 +107,7 @@ namespace SistemaTstLargoTreze
                 return;
 
             cmbParteCorpo.Text = cat.ParteCorpoAtingida;
-            cmbLateralidade.Text = string.IsNullOrWhiteSpace(cat.Lateralidade) ? "Nao aplicavel" : cat.Lateralidade;
+            cmbLateralidade.Text = string.IsNullOrWhiteSpace(cat.Lateralidade) ? "Não aplicavel" : cat.Lateralidade;
             txtAgenteCausador.Text = cat.AgenteCausador;
             txtCid10.Text = cat.Cid10;
             txtNaturezaLesao.Text = cat.NaturezaLesao;
@@ -148,7 +148,7 @@ namespace SistemaTstLargoTreze
                 return item.Text;
 
             string texto = cmbMedicoAssistente == null ? string.Empty : cmbMedicoAssistente.Text.Trim();
-            if (texto == "Digite o nome ou CRM do medico" || texto == "Nenhum medico cadastrado" || texto == "MySQL indisponivel")
+            if (texto == "Digite o nome ou CRM do médico" || texto == "Nenhum médico cadastrado" || texto == "MySQL indisponível")
                 return string.Empty;
 
             return texto;

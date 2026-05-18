@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -22,7 +22,7 @@ namespace SistemaTstLargoTreze
         private void InitializeComponent()
         {
             SuspendLayout();
-            BuildDashboardShell("CAT - Acidente de Trabalho", "S-2210 - Comunicacao de Acidente", DashboardMenu.Cat);
+            BuildDashboardShell("CAT - Acidente de Trabalho", "S-2210 - Comunicação de Acidente", DashboardMenu.Cat);
             ContentPanel.AutoScroll = true;
             MontarConteudoDadosMedicos();
             ContentPanel.Resize += (sender, e) => MontarConteudoDadosMedicos();
@@ -48,7 +48,7 @@ namespace SistemaTstLargoTreze
             ContentPanel.Controls.Add(form);
 
             BuildCatHeader(form, 2, largura);
-            form.Controls.Add(UiBuilder.CenterLabel("DADOS COMPLEMENTARES E MEDICOS", 0, 126, largura, 20, 8F, FontStyle.Bold, UiColors.AccentBlue));
+            form.Controls.Add(UiBuilder.CenterLabel("DADOS COMPLEMENTARES E MÉDICOS", 0, 126, largura, 20, 8F, FontStyle.Bold, UiColors.AccentBlue));
             MontarCamposMedicos(form, largura);
 
             ContentPanel.ResumeLayout(false);
@@ -67,25 +67,25 @@ namespace SistemaTstLargoTreze
             int xDir = margem + metadeW + gap;
 
             UiBuilder.AddField(form, "PARTE DO CORPO ATINGIDA", cmbParteCorpo = CriarComboPartesCorpo(metadeW), xEsq, 154, metadeW, true);
-            UiBuilder.AddField(form, "LATERALIDADE", cmbLateralidade = UiBuilder.Combo("Nao aplicavel", 0, 0, metadeW), xDir, 154, metadeW, false);
+            UiBuilder.AddField(form, "LATERALIDADE", cmbLateralidade = UiBuilder.Combo("Não aplicavel", 0, 0, metadeW), xDir, 154, metadeW, false);
             cmbLateralidade.Items.Add("Direita");
             cmbLateralidade.Items.Add("Esquerda");
             cmbLateralidade.Items.Add("Bilateral");
 
             UiBuilder.AddField(form, "AGENTE CAUSADOR", txtAgenteCausador = UiBuilder.TextBox("Ex.: composto de fosforo", 0, 0, metadeW), xEsq, 232, metadeW, true);
-            UiBuilder.AddField(form, "NATUREZA DA LESAO", txtNaturezaLesao = UiBuilder.TextBox("Ex.: doenca, NIC", 0, 0, metadeW), xDir, 232, metadeW, true);
+            UiBuilder.AddField(form, "NATUREZA DA LESÃO", txtNaturezaLesao = UiBuilder.TextBox("Ex.: doença, NIC", 0, 0, metadeW), xDir, 232, metadeW, true);
             UiBuilder.AddField(form, "CID-10", txtCid10 = UiBuilder.TextBox("Ex.: A23.0", 0, 0, metadeW), xEsq, 310, metadeW, true);
             UiBuilder.AddField(form, "DURACAO DO TRATAMENTO", txtDuracaoTratamento = UiBuilder.TextBox("Ex.: 10 dias", 0, 0, metadeW), xDir, 310, metadeW, false);
 
             int botaoW = 28;
             int medicoW = metadeW - botaoW - 8;
-            UiBuilder.AddField(form, "MEDICO / DENTISTA", cmbMedicoAssistente = CriarComboMedicos(medicoW), xEsq, 388, medicoW, false);
+            UiBuilder.AddField(form, "MÉDICO / DENTISTA", cmbMedicoAssistente = CriarComboMedicos(medicoW), xEsq, 388, medicoW, false);
             btnAdicionarMedico = UiBuilder.Button("+", xEsq + medicoW + 6, 412, botaoW, 30, Color.White, UiColors.AccentBlue);
             btnAdicionarMedico.BorderColor = UiColors.Border;
             btnAdicionarMedico.Click += BtnAdicionarMedico_Click;
             form.Controls.Add(btnAdicionarMedico);
 
-            UiBuilder.AddField(form, "OBSERVACAO", txtObservacaoMedica = UiBuilder.TextBox("Observacao complementar da lesao", 0, 0, metadeW), xDir, 388, metadeW, false);
+            UiBuilder.AddField(form, "OBSERVAÇÃO", txtObservacaoMedica = UiBuilder.TextBox("Observação complementar da lesão", 0, 0, metadeW), xDir, 388, metadeW, false);
 
             CarregarDadosComplementares();
         }
@@ -118,7 +118,7 @@ namespace SistemaTstLargoTreze
             combo.Items.Add("Sistema respiratorio");
             combo.Items.Add("Sistema circulatorio");
             combo.Items.Add("Multiplas partes");
-            combo.Items.Add("Nao aplicavel");
+            combo.Items.Add("Não aplicavel");
             return combo;
         }
 
@@ -134,7 +134,7 @@ namespace SistemaTstLargoTreze
                 AutoCompleteSource = AutoCompleteSource.ListItems
             };
 
-            combo.Items.Add(new ComboItem(0, "Digite o nome ou CRM do medico"));
+            combo.Items.Add(new ComboItem(0, "Digite o nome ou CRM do médico"));
 
             try
             {
@@ -144,11 +144,11 @@ namespace SistemaTstLargoTreze
                 }
 
                 if (combo.Items.Count == 1)
-                    combo.Items.Add(new ComboItem(0, "Nenhum medico cadastrado"));
+                    combo.Items.Add(new ComboItem(0, "Nenhum médico cadastrado"));
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -160,8 +160,8 @@ namespace SistemaTstLargoTreze
         private void BuildCatHeader(Panel form, int activeTab, int largura)
         {
             form.Controls.Add(UiBuilder.Pill("S-2210", 18, 18, 58, UiColors.Red, Color.White));
-            form.Controls.Add(UiBuilder.Label("Comunicacao de Acidente de Trabalho (CAT)", 88, 14, largura - 320, 20, 9.5F, FontStyle.Bold, UiColors.AccentBlue));
-            form.Controls.Add(UiBuilder.Label("Registro de novo acidente ou doenca ocupacional", 88, 31, largura - 320, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
+            form.Controls.Add(UiBuilder.Label("Comunicação de Acidente de Trabalho (CAT)", 88, 14, largura - 320, 20, 9.5F, FontStyle.Bold, UiColors.AccentBlue));
+            form.Controls.Add(UiBuilder.Label("Registro de novo acidente ou doença ocupacional", 88, 31, largura - 320, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
 
             btnSalvar = UiBuilder.SmallButton("Salvar CAT", largura - 110, 16, 92, UiColors.AccentBlue, Color.White);
             btnSalvar.Anchor = AnchorStyles.Top | AnchorStyles.Right;

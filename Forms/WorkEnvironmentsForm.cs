@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -69,7 +69,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Ambientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível excluir no MySQL.\n\n" + ex.Message, "Ambientes", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

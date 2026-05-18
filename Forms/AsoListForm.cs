@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -14,7 +14,7 @@ namespace SistemaTstLargoTreze
 
         public AsoListForm()
         {
-            BuildDashboardShell("Monitoramento da Saude / ASO", "S-2220 - Consulta e registro de ASO", DashboardMenu.Aso);
+            BuildDashboardShell("Monitoramento da Saúde / ASO", "S-2220 - Consulta e registro de ASO", DashboardMenu.Aso);
             ContentPanel.AutoScroll = true;
             MontarConteudo();
             ContentPanel.Resize += (sender, e) => MontarConteudo();
@@ -40,14 +40,14 @@ namespace SistemaTstLargoTreze
             ContentPanel.Controls.Add(table);
 
             table.Controls.Add(UiBuilder.Label("ASOs registrados", 16, 12, largura - 240, 20, 9F, FontStyle.Bold, UiColors.AccentBlue));
-            table.Controls.Add(UiBuilder.Label("Pesquise, consulte ou registre monitoramentos de saude ocupacional", 16, 30, largura - 240, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
+            table.Controls.Add(UiBuilder.Label("Pesquise, consulte ou registre monitoramentos de saúde ocupacional", 16, 30, largura - 240, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
 
             RoundButton novo = UiBuilder.SmallButton("+ Novo ASO", largura - 105, 16, 88, UiColors.AccentBlue, Color.White);
             novo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             novo.Click += (sender, e) => AppNavigator.Show(new AsoForm());
             table.Controls.Add(novo);
 
-            txtBusca = UiBuilder.TextBox("Buscar por empregado, medico, exame ou resultado", 16, 62, largura - 130);
+            txtBusca = UiBuilder.TextBox("Buscar por empregado, médico, exame ou resultado", 16, 62, largura - 130);
             txtBusca.Text = _termoBusca;
             txtBusca.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             table.Controls.Add(txtBusca);
@@ -89,7 +89,7 @@ namespace SistemaTstLargoTreze
             int empregadoW = largura - checkW - dataW - tipoW - medicoW - resultadoW - acoesW - 20;
             int x = 5;
 
-            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            header.Controls.Add(UiBuilder.HeaderCell("SEL.", x, 0, checkW));
             x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("EMPREGADO", x, 0, empregadoW));
             x += empregadoW;
@@ -97,11 +97,11 @@ namespace SistemaTstLargoTreze
             x += dataW;
             header.Controls.Add(UiBuilder.HeaderCell("TIPO", x, 0, tipoW));
             x += tipoW;
-            header.Controls.Add(UiBuilder.HeaderCell("MEDICO", x, 0, medicoW));
+            header.Controls.Add(UiBuilder.HeaderCell("MÉDICO", x, 0, medicoW));
             x += medicoW;
             header.Controls.Add(UiBuilder.HeaderCell("RESULTADO", x, 0, resultadoW));
             x += resultadoW;
-            header.Controls.Add(UiBuilder.HeaderCell("ACOES", x, 0, acoesW));
+            header.Controls.Add(UiBuilder.HeaderCell("AÇÕES", x, 0, acoesW));
         }
 
         private void MontarLinhas(RoundPanel table, int largura)
@@ -125,7 +125,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os ASOs do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar os ASOs do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -228,7 +228,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível excluir no MySQL.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -240,7 +240,7 @@ namespace SistemaTstLargoTreze
                 AsoRecord aso = CadastrosRepository.GetAso(id);
                 if (aso == null)
                 {
-                    MessageBox.Show("ASO nao encontrado.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("ASO não encontrado.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -249,7 +249,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel gerar o PDF do ASO.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível gerar o PDF do ASO.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

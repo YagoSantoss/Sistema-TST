@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -32,7 +32,7 @@ namespace SistemaTstLargoTreze
             CreateAuthCard(480, 126, 360, 300);
 
             CardPanel.Controls.Add(UiBuilder.CenterLabel("Esqueci a senha", 0, 32, 360, 34, 18F, FontStyle.Bold, UiColors.Navy));
-            CardPanel.Controls.Add(UiBuilder.CenterLabel("Informe seu e-mail para receber o codigo", 30, 72, 300, 18, 8.5F, FontStyle.Regular, UiColors.BodyText));
+            CardPanel.Controls.Add(UiBuilder.CenterLabel("Informe seu e-mail para receber o código", 30, 72, 300, 18, 8.5F, FontStyle.Regular, UiColors.BodyText));
 
             CardPanel.Controls.Add(UiBuilder.Label("E-mail", 40, 112, 280, 18, 9F, FontStyle.Bold, UiColors.Navy));
             txtEmail = UiBuilder.TextBox("Digite seu e-mail cadastrado", 40, 136, 280);
@@ -42,7 +42,7 @@ namespace SistemaTstLargoTreze
             lblErro.Visible = false;
             CardPanel.Controls.Add(lblErro);
 
-            btnRecuperar = UiBuilder.Button("Enviar codigo", 40, 200, 280, 34, UiColors.Orange, Color.White);
+            btnRecuperar = UiBuilder.Button("Enviar código", 40, 200, 280, 34, UiColors.Orange, Color.White);
             btnRecuperar.Click += BtnRecuperar_Click;
             CardPanel.Controls.Add(btnRecuperar);
 

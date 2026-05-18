@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System;
 using System.Windows.Forms;
@@ -40,7 +40,7 @@ namespace SistemaTstLargoTreze
             ContentPanel.Controls.Add(table);
 
             table.Controls.Add(UiBuilder.Label("Fatores de risco cadastrados", 16, 12, largura - 260, 20, 9F, FontStyle.Bold, UiColors.AccentBlue));
-            table.Controls.Add(UiBuilder.Label("Pesquise, consulte ou cadastre condicoes ambientais de trabalho", 16, 30, largura - 260, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
+            table.Controls.Add(UiBuilder.Label("Pesquise, consulte ou cadastre condições ambientais de trabalho", 16, 30, largura - 260, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
 
             RoundButton novo = UiBuilder.SmallButton("+ Novo S-2240", largura - 120, 16, 102, UiColors.AccentBlue, Color.White);
             novo.Anchor = AnchorStyles.Top | AnchorStyles.Right;
@@ -83,7 +83,7 @@ namespace SistemaTstLargoTreze
             int agenteW = largura - checkW - empregadoW - ambienteW - tipoW - dataW - acoesW - 20;
             int x = 5;
 
-            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            header.Controls.Add(UiBuilder.HeaderCell("SEL.", x, 0, checkW));
             x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("EMPREGADO", x, 0, empregadoW));
             x += empregadoW;
@@ -93,9 +93,9 @@ namespace SistemaTstLargoTreze
             x += tipoW;
             header.Controls.Add(UiBuilder.HeaderCell("AGENTE", x, 0, agenteW));
             x += agenteW;
-            header.Controls.Add(UiBuilder.HeaderCell("AVALIACAO", x, 0, dataW));
+            header.Controls.Add(UiBuilder.HeaderCell("AVALIAÇÃO", x, 0, dataW));
             x += dataW;
-            header.Controls.Add(UiBuilder.HeaderCell("ACOES", x, 0, acoesW));
+            header.Controls.Add(UiBuilder.HeaderCell("AÇÕES", x, 0, acoesW));
         }
 
         private void MontarLinhas(RoundPanel table, int largura)
@@ -119,7 +119,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar fatores de risco do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar fatores de risco do MySQL", 0, 190, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -222,7 +222,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível excluir no MySQL.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -234,7 +234,7 @@ namespace SistemaTstLargoTreze
                 RiskFactorRecord risco = CadastrosRepository.GetFatorRisco(id);
                 if (risco == null)
                 {
-                    MessageBox.Show("Fator de risco nao encontrado.", "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Fator de risco não encontrado.", "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -243,7 +243,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel gerar o PDF do fator de risco.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível gerar o PDF do fator de risco.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

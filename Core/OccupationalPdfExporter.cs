@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -27,13 +27,13 @@ namespace SistemaTstLargoTreze
             StringBuilder content = new StringBuilder();
             double y = PageHeight - 42;
 
-            AddBrandHeader(content, logoBytes != null, "ATESTADO DE SAUDE OCUPACIONAL - ASO", ref y);
+            AddBrandHeader(content, logoBytes != null, "ATESTADO DE SAÚDE OCUPACIONAL - ASO", ref y);
 
             AddSection(content, "DADOS DO ASO", ref y);
-            AddRow(content, "Codigo ASO", aso.Id.ToString(), "Data do ASO", aso.DataAso, ref y);
-            AddRow(content, "Empregado", aso.EmpregadoNome, "Medico responsavel", aso.MedicoNome, ref y);
+            AddRow(content, "Código ASO", aso.Id.ToString(), "Data do ASO", aso.DataAso, ref y);
+            AddRow(content, "Empregado", aso.EmpregadoNome, "Médico responsável", aso.MedicoNome, ref y);
             AddRow(content, "Tipo de exame", aso.TipoExame, "Resultado", aso.Resultado, ref y);
-            AddFullRow(content, "CAT vinculada", aso.CatId.HasValue ? "CAT " + aso.CatId.Value : "Nao vinculada", ref y);
+            AddFullRow(content, "CAT vinculada", aso.CatId.HasValue ? "CAT " + aso.CatId.Value : "Não vinculada", ref y);
 
             AddSection(content, "EXAMES COMPLEMENTARES", ref y);
             if (exames.Count == 0)
@@ -45,12 +45,12 @@ namespace SistemaTstLargoTreze
                 foreach (AsoExameRecord exame in exames)
                 {
                     AddRow(content, "Exame", exame.TipoExameNome, "Data", exame.DataExame, ref y);
-                    AddRow(content, "Resultado", exame.Resultado, "Observacoes", exame.Observacoes, ref y);
+                    AddRow(content, "Resultado", exame.Resultado, "Observações", exame.Observacoes, ref y);
                 }
             }
 
-            AddTextBox(content, "Observacoes do ASO", aso.Observacoes, ref y, 70);
-            AddSignature(content, "Assinatura do medico responsavel", ref y);
+            AddTextBox(content, "Observações do ASO", aso.Observacoes, ref y, 70);
+            AddSignature(content, "Assinatura do médico responsável", ref y);
             AddFooter(content, "ASO " + aso.Id);
 
             EscreverPdf(arquivo, content.ToString(), logoBytes, logoWidth, logoHeight);
@@ -71,18 +71,18 @@ namespace SistemaTstLargoTreze
             AddBrandHeader(content, logoBytes != null, "RELATORIO DE FATORES DE RISCO - S-2240", ref y);
 
             AddSection(content, "VINCULOS", ref y);
-            AddRow(content, "Codigo", risco.Id.ToString(), "Empregado", risco.EmpregadoNome, ref y);
+            AddRow(content, "Código", risco.Id.ToString(), "Empregado", risco.EmpregadoNome, ref y);
             AddRow(content, "Ambiente", risco.AmbienteNome, "Tipo de fator", risco.TipoFator, ref y);
 
-            AddSection(content, "AVALIACAO DO RISCO", ref y);
+            AddSection(content, "AVALIAÇÃO DO RISCO", ref y);
             AddFullRow(content, "Agente", risco.Agente, ref y);
-            AddRow(content, "Intensidade", risco.Intensidade, "Tecnica de medicao", risco.TecnicaMedicao, ref y);
-            AddRow(content, "Data de avaliacao", risco.DataAvaliacao, "Inicio da exposicao", risco.InicioExposicao, ref y);
-            AddRow(content, "Fim da exposicao", risco.FimExposicao, "Usa EPI", risco.UsaEpi ? "Sim" : "Nao", ref y);
-            AddFullRow(content, "EPI eficaz", risco.EpiEficaz ? "Sim" : "Nao", ref y);
+            AddRow(content, "Intensidade", risco.Intensidade, "Técnica de medição", risco.TecnicaMedicao, ref y);
+            AddRow(content, "Data de avaliação", risco.DataAvaliacao, "Início da exposição", risco.InicioExposicao, ref y);
+            AddRow(content, "Fim da exposição", risco.FimExposicao, "Usa EPI", risco.UsaEpi ? "Sim" : "Não", ref y);
+            AddFullRow(content, "EPI eficaz", risco.EpiEficaz ? "Sim" : "Não", ref y);
             AddFullRow(content, "EPIs selecionados", risco.EpisSelecionados, ref y);
-            AddTextBox(content, "Descricao das atividades", risco.DescricaoAtividades, ref y, 92);
-            AddSignature(content, "Responsavel tecnico", ref y);
+            AddTextBox(content, "Descrição das atividades", risco.DescricaoAtividades, ref y, 92);
+            AddSignature(content, "Responsável tecnico", ref y);
             AddFooter(content, "Fator de risco " + risco.Id);
 
             EscreverPdf(arquivo, content.ToString(), logoBytes, logoWidth, logoHeight);
@@ -238,16 +238,19 @@ namespace SistemaTstLargoTreze
 
         private static void EscreverPdf(string arquivo, string pageContent, byte[] logoBytes, int logoWidth, int logoHeight)
         {
-            byte[] contentBytes = Encoding.ASCII.GetBytes(pageContent);
+            byte[] contentBytes = Encoding.GetEncoding(1252).GetBytes(pageContent);
             string xObjects = logoBytes == null ? string.Empty : " /XObject << /Im1 7 0 R >>";
             List<byte[]> objects = new List<byte[]>
             {
                 Encoding.ASCII.GetBytes("<< /Type /Catalog /Pages 2 0 R >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 900] /Resources << /Font << /F1 4 0 R /F2 5 0 R >>" + xObjects + " >> /Contents 6 0 R >>"),
-                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"),
-                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>"),
-                Encoding.ASCII.GetBytes("<< /Length " + contentBytes.Length + " >>\nstream\n" + pageContent + "endstream")
+                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>"),
+                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"),
+                Combine(
+                    Encoding.ASCII.GetBytes("<< /Length " + contentBytes.Length + " >>\nstream\n"),
+                    contentBytes,
+                    Encoding.ASCII.GetBytes("endstream"))
             };
 
             if (logoBytes != null)
@@ -344,18 +347,18 @@ namespace SistemaTstLargoTreze
         private static string RemoverCaracteresInvalidos(string text)
         {
             return text
-                .Replace("ç", "c").Replace("Ç", "C")
-                .Replace("ã", "a").Replace("á", "a").Replace("à", "a").Replace("â", "a")
-                .Replace("é", "e").Replace("ê", "e")
-                .Replace("í", "i")
-                .Replace("ó", "o").Replace("õ", "o").Replace("ô", "o")
-                .Replace("ú", "u")
                 .Replace("Ã§", "c").Replace("Ã‡", "C")
                 .Replace("Ã£", "a").Replace("Ã¡", "a").Replace("Ã ", "a").Replace("Ã¢", "a")
                 .Replace("Ã©", "e").Replace("Ãª", "e")
                 .Replace("Ã­", "i")
                 .Replace("Ã³", "o").Replace("Ãµ", "o").Replace("Ã´", "o")
-                .Replace("Ãº", "u");
+                .Replace("Ãº", "u")
+                .Replace("ÃƒÂ§", "c").Replace("Ãƒâ€¡", "C")
+                .Replace("ÃƒÂ£", "a").Replace("ÃƒÂ¡", "a").Replace("ÃƒÂ ", "a").Replace("ÃƒÂ¢", "a")
+                .Replace("ÃƒÂ©", "e").Replace("ÃƒÂª", "e")
+                .Replace("ÃƒÂ­", "i")
+                .Replace("ÃƒÂ³", "o").Replace("ÃƒÂµ", "o").Replace("ÃƒÂ´", "o")
+                .Replace("ÃƒÂº", "u");
         }
     }
 }

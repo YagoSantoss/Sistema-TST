@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -29,7 +29,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "Monitoramento da Saúde / ASO",
-                "S-2220 · Atestado de Saúde Ocupacional",
+                "S-2220 - Atestado de Saúde Ocupacional",
                 DashboardMenu.Aso
             );
 
@@ -116,7 +116,7 @@ namespace SistemaTstLargoTreze
             );
 
             btnRegistrar = UiBuilder.SmallButton(
-                "💾 Registrar ASO",
+                "Registrar ASO",
                 largura - 125,
                 16,
                 107,
@@ -293,7 +293,7 @@ namespace SistemaTstLargoTreze
 
             cardApto.Controls.Add(
                 UiBuilder.CenterLabel(
-                    "✅",
+                    "\u2713",
                     0,
                     10,
                     cardW,
@@ -334,7 +334,7 @@ namespace SistemaTstLargoTreze
 
             cardInapto.Controls.Add(
                 UiBuilder.CenterLabel(
-                    "✕",
+                    "\u2715",
                     0,
                     10,
                     cardW,
@@ -447,7 +447,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -478,7 +478,7 @@ namespace SistemaTstLargoTreze
                 }
                 catch
                 {
-                    combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                    combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
                 }
             }
 
@@ -507,7 +507,7 @@ namespace SistemaTstLargoTreze
                 DropDownStyle = ComboBoxStyle.DropDownList
             };
 
-            combo.Items.Add(new ComboItem(0, "Selecione um medico"));
+            combo.Items.Add(new ComboItem(0, "Selecione um médico"));
 
             try
             {
@@ -518,7 +518,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;

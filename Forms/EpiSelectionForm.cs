@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
@@ -11,16 +11,16 @@ namespace SistemaTstLargoTreze
         private readonly List<CheckBox> _checks = new List<CheckBox>();
         private readonly string[] _epis =
         {
-            "Capacete de seguranca",
-            "Oculos de protecao",
+            "Capacete de segurança",
+            "Oculos de proteção",
             "Protetor auricular",
             "Mascara ou respirador",
-            "Luvas de protecao",
-            "Calcado ou bota de seguranca",
-            "Avental de protecao",
-            "Cinto de seguranca",
+            "Luvas de proteção",
+            "Calcado ou bota de segurança",
+            "Avental de proteção",
+            "Cinto de segurança",
             "Protetor facial",
-            "Creme de protecao"
+            "Creme de proteção"
         };
 
         public string SelectedEpis { get; private set; }

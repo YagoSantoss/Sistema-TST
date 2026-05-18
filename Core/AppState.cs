@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Security.Cryptography;
 
 namespace SistemaTstLargoTreze
@@ -52,7 +52,7 @@ namespace SistemaTstLargoTreze
         public static void ResendPasswordRecoveryCode()
         {
             if (string.IsNullOrWhiteSpace(PendingRecoveryEmail))
-                throw new InvalidOperationException("Informe o e-mail novamente para reenviar o codigo.");
+                throw new InvalidOperationException("Informe o e-mail novamente para reenviar o código.");
 
             VerificationCode = GenerateVerificationCode();
             VerificationCodeExpiresAt = DateTime.Now.AddMinutes(10);
@@ -70,7 +70,7 @@ namespace SistemaTstLargoTreze
         public static void ResetPendingPassword(string password)
         {
             if (string.IsNullOrWhiteSpace(PendingRecoveryEmail))
-                throw new System.InvalidOperationException("Inicie a recuperacao de senha pelo e-mail cadastrado.");
+                throw new System.InvalidOperationException("Inicie a recuperação de senha pelo e-mail cadastrado.");
 
             UserRepository.UpdatePassword(PendingRecoveryEmail, password);
             PendingRecoveryEmail = null;

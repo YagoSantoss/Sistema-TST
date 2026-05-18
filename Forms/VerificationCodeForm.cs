@@ -33,7 +33,7 @@ namespace SistemaTstLargoTreze
 
             if (!AppState.CheckVerificationCode(code))
             {
-                lblErro.Text = "Codigo invalido.";
+                lblErro.Text = "Código inválido.";
                 lblErro.Visible = true;
                 return;
             }
@@ -48,13 +48,13 @@ namespace SistemaTstLargoTreze
             try
             {
                 AppState.ResendPasswordRecoveryCode();
-                MessageBox.Show("Codigo reenviado para o e-mail cadastrado.", "Codigo de verificacao", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Código reenviado para o e-mail cadastrado.", "Código de verificação", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                lblErro.Text = "Nao foi possivel reenviar o codigo.";
+                lblErro.Text = "Não foi possível reenviar o código.";
                 lblErro.Visible = true;
-                MessageBox.Show(ex.Message, "Codigo de verificacao", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Código de verificação", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

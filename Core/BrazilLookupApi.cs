@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -53,7 +53,7 @@ namespace SistemaTstLargoTreze
             };
 
             if (result.Erro)
-                throw new InvalidOperationException("CEP nao encontrado.");
+                throw new InvalidOperationException("CEP não encontrado.");
 
             return result;
         }
@@ -70,7 +70,7 @@ namespace SistemaTstLargoTreze
                 Cnpj = JsonValue(json, "cnpj"),
                 RazaoSocial = JsonValue(json, "razao_social"),
                 NomeFantasia = JsonValue(json, "nome_fantasia"),
-                CnaeDescricao = JsonValue(json, "cnae_fiscal_descricao"),
+                CnaeDescricao = JsonValue(json, "cnae_fiscal_descrição"),
                 Cep = JsonValue(json, "cep"),
                 Logradouro = JsonValue(json, "logradouro"),
                 Numero = JsonValue(json, "numero"),

@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -18,7 +18,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "Médicos",
-                "Cadastros Base · Médicos habilitados",
+                "Cadastros Base - Médicos habilitados",
                 DashboardMenu.Doctors
             );
 
@@ -133,7 +133,7 @@ namespace SistemaTstLargoTreze
 
             int x = 5;
 
-            header.Controls.Add(UiBuilder.HeaderCell("☑", x, 0, checkW));
+            header.Controls.Add(UiBuilder.HeaderCell("SEL.", x, 0, checkW));
             x += checkW;
             header.Controls.Add(UiBuilder.HeaderCell("NOME", x, 0, nomeW));
             x += nomeW;
@@ -161,7 +161,7 @@ namespace SistemaTstLargoTreze
 
                 if (medicos.Count == 0)
                 {
-                    table.Controls.Add(UiBuilder.CenterLabel("Nenhum medico cadastrado", 0, 98, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    table.Controls.Add(UiBuilder.CenterLabel("Nenhum médico cadastrado", 0, 98, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
                     return;
                 }
 
@@ -174,7 +174,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os medicos do MySQL", 0, 98, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar os médicos do MySQL", 0, 98, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -333,7 +333,7 @@ namespace SistemaTstLargoTreze
             x += emailW;
 
             RoundButton edit = UiBuilder.SmallButton(
-                "✎ Editar",
+                "\u270E Editar",
                 x + 8,
                 8,
                 68,
@@ -354,11 +354,11 @@ namespace SistemaTstLargoTreze
             try
             {
                 int total = CadastrosRepository.GetMedicos().Count;
-                return total + (total == 1 ? " medico cadastrado" : " medicos cadastrados");
+                return total + (total == 1 ? " médico cadastrado" : " médicos cadastrados");
             }
             catch
             {
-                return "MySQL indisponivel";
+                return "MySQL indisponível";
             }
         }
 

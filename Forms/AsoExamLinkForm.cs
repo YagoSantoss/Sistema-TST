@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -50,7 +50,7 @@ namespace SistemaTstLargoTreze
             Controls.Add(card);
 
             card.Controls.Add(UiBuilder.Label("Adicionar exame", 22, 18, 360, 25, 13F, FontStyle.Bold, UiColors.AccentBlue));
-            card.Controls.Add(UiBuilder.Label("Confirme o paciente, o medico responsavel e o exame realizado.", 22, 43, 500, 18, 8F, FontStyle.Regular, UiColors.MutedText));
+            card.Controls.Add(UiBuilder.Label("Confirme o paciente, o médico responsável e o exame realizado.", 22, 43, 500, 18, 8F, FontStyle.Regular, UiColors.MutedText));
 
             Panel line = new Panel { Location = new Point(0, 76), Size = new Size(584, 1), BackColor = UiColors.Border };
             card.Controls.Add(line);
@@ -60,16 +60,16 @@ namespace SistemaTstLargoTreze
             txtPaciente.ReadOnly = true;
             UiBuilder.AddField(card, "PACIENTE", txtPaciente, 22, 100, 255, true);
 
-            txtMedico = UiBuilder.TextBox("Nome do medico", 0, 0, 245);
+            txtMedico = UiBuilder.TextBox("Nome do médico", 0, 0, 245);
             txtMedico.Text = _medicoNome;
             txtMedico.ReadOnly = true;
-            UiBuilder.AddField(card, "MEDICO", txtMedico, 307, 100, 245, true);
+            UiBuilder.AddField(card, "MÉDICO", txtMedico, 307, 100, 245, true);
 
             UiBuilder.AddField(card, "EXAME", cmbTipoExame = CriarComboExames(350), 22, 172, 350, true);
             UiBuilder.AddField(card, "DATA", txtDataExame = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, 160), 392, 172, 160, false);
             InputFormatHelper.ApplyDateMask(txtDataExame);
             UiBuilder.AddField(card, "RESULTADO", txtResultado = UiBuilder.TextBox("Ex.: Normal, Alterado, Apto", 0, 0, 255), 22, 244, 255, false);
-            UiBuilder.AddField(card, "OBSERVACOES", txtObservacoes = UiBuilder.TextBox("Observacoes do exame", 0, 0, 245), 307, 244, 245, false);
+            UiBuilder.AddField(card, "OBSERVAÇÕES", txtObservacoes = UiBuilder.TextBox("Observações do exame", 0, 0, 245), 307, 244, 245, false);
 
             Panel footerLine = new Panel { Location = new Point(0, 326), Size = new Size(584, 1), BackColor = UiColors.Border };
             card.Controls.Add(footerLine);
@@ -110,7 +110,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -127,7 +127,7 @@ namespace SistemaTstLargoTreze
 
             if (string.IsNullOrWhiteSpace(txtMedico.Text))
             {
-                MessageBox.Show("Informe o medico responsavel pelo exame.", "Exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Informe o médico responsável pelo exame.", "Exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

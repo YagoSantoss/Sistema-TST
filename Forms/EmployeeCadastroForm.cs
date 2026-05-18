@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -46,11 +46,11 @@ namespace SistemaTstLargoTreze
             Controls.Add(card);
 
             card.Controls.Add(UiBuilder.Label(_empregadoId > 0 ? "Editar empregado" : "Novo empregado", 22, 18, 360, 25, 13F, FontStyle.Bold, UiColors.AccentBlue));
-            card.Controls.Add(UiBuilder.Label("Cadastre o funcionario para uso em CAT, ASO e riscos.", 22, 43, 470, 18, 8F, FontStyle.Regular, UiColors.MutedText));
+            card.Controls.Add(UiBuilder.Label("Cadastre o funcionário para uso em CAT, ASO e riscos.", 22, 43, 470, 18, 8F, FontStyle.Regular, UiColors.MutedText));
             card.Controls.Add(new Panel { Location = new Point(0, 76), Size = new Size(614, 1), BackColor = UiColors.Border });
 
             txtMatricula = UiBuilder.TextBox("Ex.: 00412", 0, 0, 130);
-            UiBuilder.AddField(card, "Matricula", txtMatricula, 22, 100, 130, true);
+            UiBuilder.AddField(card, "Matrícula", txtMatricula, 22, 100, 130, true);
 
             txtNome = UiBuilder.TextBox("Nome completo", 0, 0, 420);
             UiBuilder.AddField(card, "Nome", txtNome, 172, 100, 420, true);
@@ -79,7 +79,7 @@ namespace SistemaTstLargoTreze
             UiBuilder.AddField(card, "Status ASO", cmbStatusAso, 402, 244, 190, false);
 
             cmbMedico = CriarComboMedicos(570);
-            UiBuilder.AddField(card, "Medico responsavel", cmbMedico, 22, 316, 570, false);
+            UiBuilder.AddField(card, "Médico responsável", cmbMedico, 22, 316, 570, false);
 
             card.Controls.Add(new Panel { Location = new Point(0, 392), Size = new Size(614, 1), BackColor = UiColors.Border });
 
@@ -144,7 +144,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel salvar o empregado no MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível salvar o empregado no MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -156,7 +156,7 @@ namespace SistemaTstLargoTreze
                 Font = new Font("Segoe UI", 9F)
             };
 
-            combo.Items.Add(new ComboItem(0, "-- Sem medico vinculado --"));
+            combo.Items.Add(new ComboItem(0, "-- Sem médico vinculado --"));
 
             try
             {
@@ -167,7 +167,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
 
             combo.SelectedIndex = 0;
@@ -199,7 +199,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel carregar o empregado do MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível carregar o empregado do MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

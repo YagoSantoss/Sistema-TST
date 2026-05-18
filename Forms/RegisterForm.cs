@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -41,8 +41,8 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                ShowError("Nao foi possivel salvar no MySQL.");
-                MessageBox.Show("Verifique se o XAMPP/MySQL esta aberto e se o banco sistema_tst foi criado.\n\n" + ex.Message, "Conexao MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ShowError("Não foi possível salvar no MySQL.");
+                MessageBox.Show("Verifique se o XAMPP/MySQL está aberto e se o banco sistema_tst foi criado.\n\n" + ex.Message, "Conexão MySQL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

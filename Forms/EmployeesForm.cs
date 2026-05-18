@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -75,7 +75,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível excluir no MySQL.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -88,7 +88,7 @@ namespace SistemaTstLargoTreze
                 string arquivo = Path.Combine(pasta, "empregados_" + DateTime.Now.ToString("yyyyMMdd_HHmmss") + ".csv");
 
                 StringBuilder csv = new StringBuilder();
-                csv.AppendLine("Matricula;Nome;CPF;Setor;Cargo;Admissao;Vencimento ASO;Status ASO;Medico");
+                csv.AppendLine("Matricula;Nome;CPF;Setor;Cargo;Admissao;Vencimento ASO;Status ASO;Médico");
 
                 foreach (EmpregadoRecord empregado in CadastrosRepository.GetEmpregados())
                 {
@@ -109,7 +109,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel exportar os empregados.\n\n" + ex.Message, "Exportar", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível exportar os empregados.\n\n" + ex.Message, "Exportar", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -144,7 +144,7 @@ namespace SistemaTstLargoTreze
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Nao foi possivel importar a planilha.\n\n" + ex.Message, "Importar CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Não foi possível importar a planilha.\n\n" + ex.Message, "Importar CSV", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -226,7 +226,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel selecionar os empregados.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível selecionar os empregados.\n\n" + ex.Message, "Empregados", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

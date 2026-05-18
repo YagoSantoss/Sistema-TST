@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -38,20 +38,20 @@ namespace SistemaTstLargoTreze
 
             AddCatOfficialHeader(content, logoBytes != null, cat, ref y);
 
-            AddPlainSection(content, "Informacoes do Emitente", ref y);
+            AddPlainSection(content, "Informações do Emitente", ref y);
             AddFormRow(content, ref y, 16,
                 "Emitente", cat.Emitente,
-                "Data Emissao", cat.DataComunicacao);
+                "Data Emissão", cat.DataComunicacao);
             AddFormRow(content, ref y, 16,
                 "Tipo de CAT", cat.TipoCat,
-                "Comunicacao Obito", cat.HouveObito ? "Sim" : "Nao");
+                "Comunicação Óbito", cat.HouveObito ? "Sim" : "Não");
             AddFormRow(content, ref y, 16,
-                "Filiacao", cat.FiliacaoPrevSocial,
+                "Filiação", cat.FiliacaoPrevSocial,
                 "E-mail", string.Empty);
 
-            AddPlainSection(content, "Informacoes do Empregador", ref y);
+            AddPlainSection(content, "Informações do Empregador", ref y);
             AddFormRow(content, ref y, 16,
-                "Razao Social/Nome", EmpregadorNome(cat),
+                "Razão Social/Nome", EmpregadorNome(cat),
                 "CNAE", cat.CnaeEmpregador);
             AddFormRow(content, ref y, 16,
                 "Tipo/Num Doc", cat.TipoInscricao + " " + cat.InscricaoEstabelecimento,
@@ -63,13 +63,13 @@ namespace SistemaTstLargoTreze
                 "Bairro", cat.Bairro,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 16,
-                "Endereco", cat.Logradouro + " " + cat.Numero,
+                "Endereço", cat.Logradouro + " " + cat.Numero,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 16,
-                "Municipio", cat.Municipio,
+                "Município", cat.Municipio,
                 string.Empty, string.Empty);
 
-            AddPlainSection(content, "Informacoes do Acidentado", ref y);
+            AddPlainSection(content, "Informações do Acidentado", ref y);
             AddFormRow(content, ref y, 16,
                 "Nome", cat.EmpregadoNome,
                 string.Empty, string.Empty);
@@ -80,11 +80,11 @@ namespace SistemaTstLargoTreze
                 "Data de Nascimento", string.Empty,
                 "Sexo", string.Empty);
             AddFormRow(content, ref y, 16,
-                "Grau de Instrucao", string.Empty,
+                "Grau de Instrução", string.Empty,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 16,
                 "Estado Civil", string.Empty,
-                "Remuneracao", string.Empty);
+                "Remuneração", string.Empty);
             AddFormRow(content, ref y, 16,
                 "CTPS", string.Empty,
                 "Identidade", string.Empty);
@@ -92,19 +92,19 @@ namespace SistemaTstLargoTreze
                 "PIS/PASEP/NIT", string.Empty,
                 "CEP", empregado == null ? string.Empty : empregado.Cpf);
             AddFormRow(content, ref y, 16,
-                "Endereco", string.Empty,
+                "Endereço", string.Empty,
                 "Bairro", string.Empty);
             AddFormRow(content, ref y, 16,
                 "Estado", cat.Uf,
-                "Municipio", cat.Municipio);
+                "Município", cat.Municipio);
             AddFormRow(content, ref y, 16,
                 "Telefone", string.Empty,
                 "CBO", empregado == null ? string.Empty : empregado.Cargo);
             AddFormRow(content, ref y, 16,
-                "Aposentadoria", cat.Aposentado ? "Sim" : "Nao",
-                "Area", cat.Area);
+                "Aposentadoria", cat.Aposentado ? "Sim" : "Não",
+                "Área", cat.Area);
 
-            AddPlainSection(content, "Informacoes do Acidente", ref y);
+            AddPlainSection(content, "Informações do Acidente", ref y);
             AddFormRow(content, ref y, 17,
                 "Data do Acidente", cat.DataAcidente,
                 "Hora do Acidente", cat.HoraAcidente);
@@ -112,8 +112,8 @@ namespace SistemaTstLargoTreze
                 "Horas Trabalhadas", cat.HorasTrabalhadasAntes,
                 "Tipo", cat.TipoAcidente);
             AddFormRow(content, ref y, 17,
-                "Houve Afastamento?", cat.HouveAfastamento ? "Sim" : "Nao",
-                "Reg. Policial", cat.RegistroPolicia ? "Sim" : "Nao");
+                "Houve Afastamento?", cat.HouveAfastamento ? "Sim" : "Não",
+                "Reg. Policial", cat.RegistroPolicia ? "Sim" : "Não");
             AddFormRow(content, ref y, 17,
                 "Local do Acidente", cat.LocalAcidente,
                 string.Empty, string.Empty);
@@ -124,8 +124,8 @@ namespace SistemaTstLargoTreze
                 "CNPJ / CGC ou CEI da Prestadora", cat.InscricaoEstabelecimento,
                 "UF do Acidente", cat.Uf);
             AddFormRow(content, ref y, 24,
-                "Municipio do Acidente", cat.Municipio,
-                "Ultimo dia Trab. Dt Obito", string.IsNullOrWhiteSpace(cat.DataObito) ? cat.UltimoDiaTrabalho : cat.DataObito);
+                "Município do Acidente", cat.Municipio,
+                "Último dia Trab. Dt Óbito", string.IsNullOrWhiteSpace(cat.DataObito) ? cat.UltimoDiaTrabalho : cat.DataObito);
             AddFormRow(content, ref y, 17,
                 "Parte do Corpo", cat.ParteCorpoAtingida,
                 string.Empty, string.Empty);
@@ -136,15 +136,15 @@ namespace SistemaTstLargoTreze
                 "Sit. Geradora", cat.SituacaoGeradora,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 17,
-                "Morte", cat.HouveObito ? "Sim" : "Nao",
-                "Data Obito", cat.DataObito);
+                "Morte", cat.HouveObito ? "Sim" : "Não",
+                "Data Óbito", cat.DataObito);
 
             y -= 34;
             AddSignatureLine(content, Margin + 10, y, 230, "Local e Data");
             AddSignatureLine(content, Margin + 270, y, 255, "Assinatura e carimbo do emitente");
             y -= 34;
 
-            AddPlainSection(content, "Informacoes do Atestado Medico", ref y);
+            AddPlainSection(content, "Informações do Atestado Médico", ref y);
             AddFormRow(content, ref y, 17,
                 "Unidade", string.Empty,
                 string.Empty, string.Empty);
@@ -152,16 +152,16 @@ namespace SistemaTstLargoTreze
                 "Data Atendimento", cat.DataComunicacao,
                 "Hora Atendimento", string.Empty);
             AddFormRow(content, ref y, 17,
-                "Houve Internacao", string.Empty,
-                "Sera afastado?", cat.HouveAfastamento ? "Sim" : "Nao");
+                "Houve Internação", string.Empty,
+                "Será afastado?", cat.HouveAfastamento ? "Sim" : "Não");
             AddFormRow(content, ref y, 17,
-                "Nat. Lesao", cat.NaturezaLesao,
+                "Nat. Lesão", cat.NaturezaLesao,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 17,
                 "CID - 10", cat.Cid10,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 17,
-                "Observacoes", cat.ObservacaoMedica,
+                "Observações", cat.ObservacaoMedica,
                 string.Empty, string.Empty);
             AddFormRow(content, ref y, 17,
                 "CRM", cat.MedicoAssistente,
@@ -169,7 +169,7 @@ namespace SistemaTstLargoTreze
 
             y -= 34;
             AddSignatureLine(content, Margin + 10, y, 230, "Local e Data");
-            AddSignatureLine(content, Margin + 270, y, 255, "Assinatura (*) e carimbo (legivel) do medico com CRM/UF");
+            AddSignatureLine(content, Margin + 270, y, 255, "Assinatura (*) e carimbo (legível) do médico com CRM/UF");
             y -= 36;
 
             AddPlainSection(content, "Testemunhas", ref y);
@@ -187,12 +187,12 @@ namespace SistemaTstLargoTreze
                         "Telefone", testemunha.Telefone);
                     AddFormRow(content, ref y, 17,
                         "CPF", testemunha.Cpf,
-                        "Endereco", testemunha.Endereco);
+                        "Endereço", testemunha.Endereco);
                 }
             }
 
             AddText(content, "Cadastrada em: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm"), Margin, 55, 7, false, "0 0 0");
-            AddText(content, "* A impressao desta CAT deve ser apresentada juntamente com os documentos originais do segurado.", Margin, 42, 7, false, "0 0 0");
+            AddText(content, "* A impressão desta CAT deve ser apresentada juntamente com os documentos originais do segurado.", Margin, 42, 7, false, "0 0 0");
 
             EscreverPdf(arquivo, content.ToString(), logoBytes, logoWidth, logoHeight);
             return arquivo;
@@ -203,8 +203,8 @@ namespace SistemaTstLargoTreze
             if (hasLogo)
                 AddImage(content, "Im1", Margin, y - 50, 72, 42);
 
-            AddText(content, "CAT - Comunicacao de Acidente de Trabalho", Margin + 154, y - 10, 16, false, "0 0 0");
-            AddText(content, "Numero da CAT:", Margin + 182, y - 36, 11, false, "0 0 0");
+            AddText(content, "CAT - Comunicação de Acidente de Trabalho", Margin + 154, y - 10, 16, false, "0 0 0");
+            AddText(content, "Número da CAT:", Margin + 182, y - 36, 11, false, "0 0 0");
             AddText(content, cat.Id.ToString(), Margin + 275, y - 36, 11, true, "0 0 0");
             y -= 78;
         }
@@ -387,16 +387,19 @@ namespace SistemaTstLargoTreze
 
         private static void EscreverPdf(string arquivo, string pageContent, byte[] logoBytes, int logoWidth, int logoHeight)
         {
-            byte[] contentBytes = Encoding.ASCII.GetBytes(pageContent);
+            byte[] contentBytes = Encoding.GetEncoding(1252).GetBytes(pageContent);
             string xObjects = logoBytes == null ? string.Empty : " /XObject << /Im1 7 0 R >>";
             List<byte[]> objects = new List<byte[]>
             {
                 Encoding.ASCII.GetBytes("<< /Type /Catalog /Pages 2 0 R >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Pages /Kids [3 0 R] /Count 1 >>"),
                 Encoding.ASCII.GetBytes("<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 1180] /Resources << /Font << /F1 4 0 R /F2 5 0 R >>" + xObjects + " >> /Contents 6 0 R >>"),
-                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>"),
-                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>"),
-                Encoding.ASCII.GetBytes("<< /Length " + contentBytes.Length + " >>\nstream\n" + pageContent + "endstream")
+                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>"),
+                Encoding.ASCII.GetBytes("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>"),
+                Combine(
+                    Encoding.ASCII.GetBytes("<< /Length " + contentBytes.Length + " >>\nstream\n"),
+                    contentBytes,
+                    Encoding.ASCII.GetBytes("endstream"))
             };
 
             if (logoBytes != null)
@@ -493,18 +496,18 @@ namespace SistemaTstLargoTreze
         private static string RemoverCaracteresInvalidos(string text)
         {
             return text
-                .Replace("ç", "c").Replace("Ç", "C")
-                .Replace("ã", "a").Replace("á", "a").Replace("à", "a").Replace("â", "a")
-                .Replace("é", "e").Replace("ê", "e")
-                .Replace("í", "i")
-                .Replace("ó", "o").Replace("õ", "o").Replace("ô", "o")
-                .Replace("ú", "u")
                 .Replace("Ã§", "c").Replace("Ã‡", "C")
                 .Replace("Ã£", "a").Replace("Ã¡", "a").Replace("Ã ", "a").Replace("Ã¢", "a")
                 .Replace("Ã©", "e").Replace("Ãª", "e")
                 .Replace("Ã­", "i")
                 .Replace("Ã³", "o").Replace("Ãµ", "o").Replace("Ã´", "o")
-                .Replace("Ãº", "u");
+                .Replace("Ãº", "u")
+                .Replace("ÃƒÂ§", "c").Replace("Ãƒâ€¡", "C")
+                .Replace("ÃƒÂ£", "a").Replace("ÃƒÂ¡", "a").Replace("ÃƒÂ ", "a").Replace("ÃƒÂ¢", "a")
+                .Replace("ÃƒÂ©", "e").Replace("ÃƒÂª", "e")
+                .Replace("ÃƒÂ­", "i")
+                .Replace("ÃƒÂ³", "o").Replace("ÃƒÂµ", "o").Replace("ÃƒÂ´", "o")
+                .Replace("ÃƒÂº", "u");
         }
     }
 }

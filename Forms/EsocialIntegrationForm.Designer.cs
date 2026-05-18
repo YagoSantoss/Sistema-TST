@@ -21,7 +21,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "eSocial SST - Simulado",
-                "Controle didatico dos eventos S-2210, S-2220 e S-2240",
+                "Controle didático e sem transmissão real dos eventos S-2210, S-2220 e S-2240",
                 DashboardMenu.Esocial
             );
 
@@ -245,7 +245,7 @@ namespace SistemaTstLargoTreze
 
             eventsCard.Controls.Add(
                 UiBuilder.Label(
-                    "Este painel nao envia ao governo; ele simula a organizacao dos eventos usados em sistemas como SOC/TOTVS.",
+                    "Este painel não envia ao governo; ele simula a organização dos eventos usados em sistemas como SOC/TOTVS.",
                     16,
                     32,
                     largura - 260,
@@ -300,7 +300,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                eventsCard.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os eventos SST do MySQL", 0, 145, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                eventsCard.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar os eventos SST do MySQL", 0, 145, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -353,7 +353,7 @@ namespace SistemaTstLargoTreze
 
             logCard.Controls.Add(
                 UiBuilder.Label(
-                    "Log interno de transmissoes simuladas",
+                    "Log interno de transmissões simuladas",
                     16,
                     12,
                     largura - 420,
@@ -431,7 +431,7 @@ namespace SistemaTstLargoTreze
             {
                 if (logs.Count == 0)
                 {
-                    logCard.Controls.Add(UiBuilder.CenterLabel("Nenhuma transmissao registrada", 0, 96, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
+                    logCard.Controls.Add(UiBuilder.CenterLabel("Nenhuma transmissão registrada", 0, 96, largura, 34, 8.5F, FontStyle.Regular, UiColors.MutedText));
                     return;
                 }
 
@@ -444,7 +444,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                logCard.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar o log do MySQL", 0, 96, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                logCard.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar o log do MySQL", 0, 96, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 

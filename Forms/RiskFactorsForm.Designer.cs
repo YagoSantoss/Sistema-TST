@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -30,7 +30,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "Fatores de Risco Ambiental",
-                "S-2240 - Condicoes Ambientais do Trabalho",
+                "S-2240 - Condições Ambientais do Trabalho",
                 DashboardMenu.Risk
             );
 
@@ -70,7 +70,7 @@ namespace SistemaTstLargoTreze
         private void MontarCabecalho(RoundPanel form, int largura)
         {
             form.Controls.Add(UiBuilder.Pill("S-2240", 18, 18, 58, UiColors.AccentBlue, Color.White));
-            form.Controls.Add(UiBuilder.Label("Condicoes Ambientais do Trabalho - Fatores de Risco", 88, 14, largura - 300, 20, 9.5F, FontStyle.Bold, UiColors.AccentBlue));
+            form.Controls.Add(UiBuilder.Label("Condições Ambientais do Trabalho - Fatores de Risco", 88, 14, largura - 300, 20, 9.5F, FontStyle.Bold, UiColors.AccentBlue));
             form.Controls.Add(UiBuilder.Label("Cadastre ou edite o fator de risco ambiental do empregado", 88, 31, largura - 300, 16, 7.5F, FontStyle.Regular, UiColors.MutedText));
 
             btnSalvar = UiBuilder.SmallButton("Salvar", largura - 94, 16, 76, UiColors.AccentBlue, Color.White);
@@ -98,11 +98,11 @@ namespace SistemaTstLargoTreze
                 campoW = 170;
 
             UiBuilder.AddField(form, "EMPREGADO", cmbEmpregado = CriarComboEmpregados(campoW), margem, 84, campoW, true);
-            UiBuilder.AddField(form, "DATA DE AVALIACAO", txtDataAvaliacao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, campoW), margem + campoW + gap, 84, campoW, true);
+            UiBuilder.AddField(form, "DATA DE AVALIAÇÃO", txtDataAvaliacao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, campoW), margem + campoW + gap, 84, campoW, true);
             InputFormatHelper.ApplyDateMask(txtDataAvaliacao);
-            UiBuilder.AddField(form, "INICIO DA EXPOSICAO", txtInicioExposicao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, campoW), margem + ((campoW + gap) * 2), 84, campoW, true);
+            UiBuilder.AddField(form, "INÍCIO DA EXPOSIÇÃO", txtInicioExposicao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, campoW), margem + ((campoW + gap) * 2), 84, campoW, true);
             InputFormatHelper.ApplyDateMask(txtInicioExposicao);
-            UiBuilder.AddField(form, "FIM DA EXPOSICAO", txtFimExposicao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, campoW), margem + ((campoW + gap) * 3), 84, campoW, false);
+            UiBuilder.AddField(form, "FIM DA EXPOSIÇÃO", txtFimExposicao = UiBuilder.TextBox("dd/mm/yyyy", 0, 0, campoW), margem + ((campoW + gap) * 3), 84, campoW, false);
             InputFormatHelper.ApplyDateMask(txtFimExposicao);
 
             int metadeW = (largura - (margem * 2) - gap - 34) / 2;
@@ -115,12 +115,12 @@ namespace SistemaTstLargoTreze
             btnAdicionarAmbiente.Click += BtnAdicionarAmbiente_Click;
             form.Controls.Add(btnAdicionarAmbiente);
 
-            UiBuilder.AddField(form, "DESCRICAO DAS ATIVIDADES", txtDescricaoAtividades = UiBuilder.TextBox("Descreva as atividades realizadas", 0, 0, metadeW), margem + metadeW + gap + 34, 158, metadeW, true);
+            UiBuilder.AddField(form, "DESCRIÇÃO DAS ATIVIDADES", txtDescricaoAtividades = UiBuilder.TextBox("Descreva as atividades realizadas", 0, 0, metadeW), margem + metadeW + gap + 34, 158, metadeW, true);
 
             UiBuilder.AddField(form, "TIPO DE FATOR", cmbTipoFator = CriarComboTipoFator(campoW), margem, 244, campoW, true);
             UiBuilder.AddField(form, "AGENTE", txtAgente = UiBuilder.TextBox("Ex.: Ruido, calor, poeira", 0, 0, campoW), margem + campoW + gap, 244, campoW, true);
             UiBuilder.AddField(form, "INTENSIDADE", txtIntensidade = UiBuilder.TextBox("Ex.: 85 dB", 0, 0, campoW), margem + ((campoW + gap) * 2), 244, campoW, false);
-            UiBuilder.AddField(form, "TECNICA DE MEDICAO", txtTecnicaMedicao = UiBuilder.TextBox("Ex.: Dosimetria", 0, 0, campoW), margem + ((campoW + gap) * 3), 244, campoW, false);
+            UiBuilder.AddField(form, "TÉCNICA DE MEDIÇÃO", txtTecnicaMedicao = UiBuilder.TextBox("Ex.: Dosimetria", 0, 0, campoW), margem + ((campoW + gap) * 3), 244, campoW, false);
         }
 
         private void MontarEpiEpc(RoundPanel form, int largura)
@@ -143,7 +143,7 @@ namespace SistemaTstLargoTreze
             cbUsaEpi.CheckedChanged += CbUsaEpi_CheckedChanged;
             epiPanel.Controls.Add(cbUsaEpi);
 
-            cbEpiEficaz = new CheckBox { Text = "EPI e eficaz na neutralizacao / reducao do risco", Location = new Point(390, 22), Size = new Size(380, 22), BackColor = Color.Transparent, Font = new Font("Segoe UI", 8F, FontStyle.Bold), ForeColor = UiColors.BodyText };
+            cbEpiEficaz = new CheckBox { Text = "EPI e eficaz na neutralização / redução do risco", Location = new Point(390, 22), Size = new Size(380, 22), BackColor = Color.Transparent, Font = new Font("Segoe UI", 8F, FontStyle.Bold), ForeColor = UiColors.BodyText };
             epiPanel.Controls.Add(cbEpiEficaz);
 
             lblEpisSelecionados = UiBuilder.Label("EPIs selecionados: nenhum", 18, 54, largura - 80, 18, 7.5F, FontStyle.Regular, UiColors.MutedText);
@@ -163,7 +163,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
             combo.SelectedIndex = 0;
             return combo;
@@ -180,7 +180,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                combo.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                combo.Items.Add(new ComboItem(0, "MySQL indisponível"));
             }
             combo.SelectedIndex = 0;
             return combo;

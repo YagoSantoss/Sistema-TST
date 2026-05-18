@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -31,7 +31,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel salvar no MySQL.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível salvar no MySQL.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -57,25 +57,25 @@ namespace SistemaTstLargoTreze
                 throw new InvalidOperationException("Selecione o ambiente de trabalho.");
 
             if (string.IsNullOrWhiteSpace(txtDataAvaliacao.Text))
-                throw new InvalidOperationException("Informe a data de avaliacao.");
+                throw new InvalidOperationException("Informe a data de avaliação.");
 
             if (string.IsNullOrWhiteSpace(txtInicioExposicao.Text))
-                throw new InvalidOperationException("Informe o inicio da exposicao.");
+                throw new InvalidOperationException("Informe o início da exposição.");
 
             if (!ValidationHelper.IsValidDate(txtDataAvaliacao.Text))
-                throw new InvalidOperationException("Informe a data de avaliacao no formato dd/mm/aaaa.");
+                throw new InvalidOperationException("Informe a data de avaliação no formato dd/mm/aaaa.");
 
             if (!ValidationHelper.IsValidDate(txtInicioExposicao.Text))
-                throw new InvalidOperationException("Informe o inicio da exposicao no formato dd/mm/aaaa.");
+                throw new InvalidOperationException("Informe o início da exposição no formato dd/mm/aaaa.");
 
             if (!string.IsNullOrWhiteSpace(txtFimExposicao.Text) && !ValidationHelper.IsValidDate(txtFimExposicao.Text))
-                throw new InvalidOperationException("Informe o fim da exposicao no formato dd/mm/aaaa.");
+                throw new InvalidOperationException("Informe o fim da exposição no formato dd/mm/aaaa.");
 
             if (string.IsNullOrWhiteSpace(txtAgente.Text))
                 throw new InvalidOperationException("Informe o agente de risco.");
 
             if (string.IsNullOrWhiteSpace(txtDescricaoAtividades.Text))
-                throw new InvalidOperationException("Informe a descricao das atividades.");
+                throw new InvalidOperationException("Informe a descrição das atividades.");
 
             if (cbUsaEpi.Checked && string.IsNullOrWhiteSpace(_episSelecionados))
                 throw new InvalidOperationException("Selecione pelo menos um EPI utilizado pelo trabalhador.");
@@ -129,7 +129,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel carregar o fator de risco.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível carregar o fator de risco.\n\n" + ex.Message, "Fatores de Risco", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

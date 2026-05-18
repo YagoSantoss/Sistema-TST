@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -30,7 +30,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel salvar a CAT no MySQL.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível salvar a CAT no MySQL.\n\n" + ex.Message, "CAT", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -56,11 +56,11 @@ namespace SistemaTstLargoTreze
             {
                 CepLookupResult endereco = BrazilLookupApi.ConsultarCep(txtCep.Text);
                 AplicarEndereco(endereco);
-                MessageBox.Show("Endereco preenchido pelo ViaCEP.", "CEP", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Endereço preenchido pelo ViaCEP.", "CEP", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel consultar o CEP.\n\n" + ex.Message, "CEP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível consultar o CEP.\n\n" + ex.Message, "CEP", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -95,7 +95,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel consultar o CNPJ.\n\n" + ex.Message, "CNPJ", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível consultar o CNPJ.\n\n" + ex.Message, "CNPJ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

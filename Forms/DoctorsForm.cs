@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 
@@ -54,11 +54,11 @@ namespace SistemaTstLargoTreze
         {
             if (_selecionados.Count == 0)
             {
-                MessageBox.Show("Selecione um ou mais medicos para excluir.", "Medicos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione um ou mais médicos para excluir.", "Médicos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
-            if (MessageBox.Show("Deseja excluir os medicos selecionados?", "Medicos", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBox.Show("Deseja excluir os médicos selecionados?", "Médicos", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                 return;
 
             try
@@ -69,7 +69,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel excluir no MySQL.\n\n" + ex.Message, "Medicos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível excluir no MySQL.\n\n" + ex.Message, "Médicos", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -21,7 +21,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Nao foi possivel registrar o ASO no MySQL.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Não foi possível registrar o ASO no MySQL.\n\n" + ex.Message, "ASO", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -30,7 +30,7 @@ namespace SistemaTstLargoTreze
             ComboItem empregado = cmbEmpregado.SelectedItem as ComboItem;
             if (empregado == null || empregado.Id <= 0)
             {
-                MessageBox.Show("Selecione o empregado para consultar o historico de ASO.", "Historico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione o empregado para consultar o histórico de ASO.", "Histórico", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -50,7 +50,7 @@ namespace SistemaTstLargoTreze
 
             if (medico == null || medico.Id <= 0)
             {
-                MessageBox.Show("Selecione o medico responsavel antes de adicionar o exame.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Selecione o médico responsável antes de adicionar o exame.", "ASO", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -166,7 +166,7 @@ namespace SistemaTstLargoTreze
                 }
                 catch
                 {
-                    cmbCat.Items.Add(new ComboItem(0, "MySQL indisponivel"));
+                    cmbCat.Items.Add(new ComboItem(0, "MySQL indisponível"));
                 }
             }
 
@@ -211,7 +211,7 @@ namespace SistemaTstLargoTreze
                 throw new InvalidOperationException("Selecione o empregado.");
 
             if (medico == null || medico.Id <= 0)
-                throw new InvalidOperationException("Selecione o medico responsavel.");
+                throw new InvalidOperationException("Selecione o médico responsável.");
 
             if (string.IsNullOrWhiteSpace(txtDataAso.Text))
                 throw new InvalidOperationException("Informe a data do ASO no formato dd/mm/yyyy.");

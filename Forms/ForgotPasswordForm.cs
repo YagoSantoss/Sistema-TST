@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -23,14 +23,14 @@ namespace SistemaTstLargoTreze
             try
             {
                 AppState.BeginPasswordRecovery(txtEmail.Text.Trim());
-                MessageBox.Show("Enviamos um codigo de recuperacao para o e-mail informado.", "Recuperacao de senha", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Enviamos um código de recuperação para o e-mail informado.", "Recuperação de senha", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 AppNavigator.Show(new VerificationCodeForm());
             }
             catch (Exception ex)
             {
-                lblErro.Text = "Nao foi possivel enviar o codigo.";
+                lblErro.Text = "Não foi possível enviar o código.";
                 lblErro.Visible = true;
-                MessageBox.Show(ex.Message, "Recuperacao de senha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Recuperação de senha", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

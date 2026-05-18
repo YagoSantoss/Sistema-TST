@@ -285,7 +285,7 @@ namespace SistemaTstLargoTreze
                         empregado.Setor + " / " + empregado.Cargo,
                         empregado.DataAdmissao,
                         empregado.DataVencimentoAso,
-                        "â— " + empregado.StatusAso,
+                        "\u25CF " + empregado.StatusAso,
                         statusColor,
                         StatusBack(statusColor),
                         "Ver ASO");
@@ -294,7 +294,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                pnlListaEmpregados.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar empregados do MySQL", 0, 36, larguraTabela, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                pnlListaEmpregados.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar empregados do MySQL", 0, 36, larguraTabela, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -341,11 +341,11 @@ namespace SistemaTstLargoTreze
             info.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
             table.Controls.Add(info);
 
-            RoundButton voltar = UiBuilder.SmallButton("â€¹", larguraTabela - 75, y, 26, Color.White, UiColors.AccentBlue);
+            RoundButton voltar = UiBuilder.SmallButton("<", larguraTabela - 75, y, 26, Color.White, UiColors.AccentBlue);
             voltar.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
             table.Controls.Add(voltar);
 
-            RoundButton proximo = UiBuilder.SmallButton("â€º", larguraTabela - 42, y, 26, Color.White, UiColors.AccentBlue);
+            RoundButton proximo = UiBuilder.SmallButton(">", larguraTabela - 42, y, 26, Color.White, UiColors.AccentBlue);
             proximo.Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
             table.Controls.Add(proximo);
         }
@@ -475,7 +475,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                return "MySQL indisponivel";
+                return "MySQL indisponível";
             }
         }
 

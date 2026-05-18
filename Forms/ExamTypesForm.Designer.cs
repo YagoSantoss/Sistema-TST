@@ -20,7 +20,7 @@ namespace SistemaTstLargoTreze
 
             BuildDashboardShell(
                 "Exames Realizados",
-                "Lancamento de exames complementares por empregado e medico",
+                "Lançamento de exames complementares por empregado e médico",
                 DashboardMenu.ExamTypes
             );
 
@@ -84,7 +84,7 @@ namespace SistemaTstLargoTreze
 
             table.Controls.Add(
                 UiBuilder.Label(
-                    "Registre exames feitos por empregado, medico responsavel e anexo quando houver",
+                    "Registre exames feitos por empregado, médico responsável e anexo quando houver",
                     16,
                     30,
                     largura - 220,
@@ -184,7 +184,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar os exames do MySQL", 0, 126, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar os exames do MySQL", 0, 126, largura, 34, 8.5F, FontStyle.Regular, UiColors.Red));
             }
         }
 
@@ -406,7 +406,7 @@ namespace SistemaTstLargoTreze
             TipoExameRecord exame = CadastrosRepository.GetTipoExameAnexo(id);
             if (exame == null || exame.AnexoArquivo == null || exame.AnexoArquivo.Length == 0)
             {
-                MessageBox.Show("O PDF anexado nao foi encontrado no banco de dados.", "Anexo do exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("O PDF anexado não foi encontrado no banco de dados.", "Anexo do exame", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -427,7 +427,7 @@ namespace SistemaTstLargoTreze
             }
             catch
             {
-                return "MySQL indisponivel";
+                return "MySQL indisponível";
             }
         }
     }

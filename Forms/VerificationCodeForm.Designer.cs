@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using System.Windows.Forms;
 
 namespace SistemaTstLargoTreze
@@ -20,10 +20,10 @@ namespace SistemaTstLargoTreze
 
             string email = string.IsNullOrWhiteSpace(AppState.PendingRecoveryEmail) ? "seu e-mail" : AppState.PendingRecoveryEmail;
 
-            CardPanel.Controls.Add(UiBuilder.CenterLabel("Codigo enviado", 0, 30, 360, 30, 18F, FontStyle.Bold, UiColors.Navy));
-            CardPanel.Controls.Add(UiBuilder.CenterLabel("Digite o codigo de 6 digitos enviado para", 30, 72, 300, 18, 8.5F, FontStyle.Regular, UiColors.BodyText));
+            CardPanel.Controls.Add(UiBuilder.CenterLabel("Código enviado", 0, 30, 360, 30, 18F, FontStyle.Bold, UiColors.Navy));
+            CardPanel.Controls.Add(UiBuilder.CenterLabel("Digite o código de 6 digitos enviado para", 30, 72, 300, 18, 8.5F, FontStyle.Regular, UiColors.BodyText));
             CardPanel.Controls.Add(UiBuilder.CenterLabel(email, 30, 92, 300, 18, 8F, FontStyle.Bold, UiColors.BodyText));
-            CardPanel.Controls.Add(UiBuilder.Label("Codigo de verificacao", 40, 132, 280, 18, 9F, FontStyle.Bold, UiColors.Navy));
+            CardPanel.Controls.Add(UiBuilder.Label("Código de verificação", 40, 132, 280, 18, 9F, FontStyle.Bold, UiColors.Navy));
 
             codeBoxes = new CueTextBox[6];
             for (int i = 0; i < 6; i++)
@@ -46,15 +46,15 @@ namespace SistemaTstLargoTreze
             lblErro.Visible = false;
             CardPanel.Controls.Add(lblErro);
 
-            btnVerificar = UiBuilder.Button("Verificar codigo", 40, 244, 280, 34, Color.FromArgb(55, 113, 184), Color.White);
+            btnVerificar = UiBuilder.Button("Verificar código", 40, 244, 280, 34, Color.FromArgb(55, 113, 184), Color.White);
             btnVerificar.Click += BtnVerificar_Click;
             CardPanel.Controls.Add(btnVerificar);
 
-            linkReenviar = UiBuilder.Link("Reenviar codigo", 40, 292, 280, 22);
+            linkReenviar = UiBuilder.Link("Reenviar código", 40, 292, 280, 22);
             linkReenviar.LinkClicked += LinkReenviar_LinkClicked;
             CardPanel.Controls.Add(linkReenviar);
 
-            linkEmailErrado = UiBuilder.Link("Seu e-mail esta errado? Clique aqui para voltar.", 40, 318, 280, 22);
+            linkEmailErrado = UiBuilder.Link("Seu e-mail está errado? Clique aqui para voltar.", 40, 318, 280, 22);
             linkEmailErrado.LinkClicked += LinkEmailErrado_LinkClicked;
             CardPanel.Controls.Add(linkEmailErrado);
 

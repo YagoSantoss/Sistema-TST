@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
@@ -102,7 +102,7 @@ namespace SistemaTstLargoTreze
             }
             catch (Exception ex)
             {
-                table.Controls.Add(UiBuilder.CenterLabel("Nao foi possivel carregar ASOs: " + ex.Message, 0, 145, largura, 34, 8F, FontStyle.Regular, UiColors.Red));
+                table.Controls.Add(UiBuilder.CenterLabel("Não foi possível carregar ASOs: " + ex.Message, 0, 145, largura, 34, 8F, FontStyle.Regular, UiColors.Red));
             }
         }
 
